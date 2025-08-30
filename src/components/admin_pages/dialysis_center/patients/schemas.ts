@@ -1,0 +1,193 @@
+import type { FormSchemaConfig } from '../../../common/FormSchema';
+
+export const patientAddSchema: FormSchemaConfig = {
+  fields: [
+    {
+      name: 'name',
+      label: 'Patient Name',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter patient name',
+    },
+    {
+      name: 'nic',
+      label: 'NIC',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter NIC (e.g., 35202-1234567-8)',
+    },
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter phone number (e.g., +923001234567)',
+    },
+    {
+      name: 'address',
+      label: 'Address',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter patient address',
+    },
+    {
+      name: 'image',
+      label: 'Patient Image',
+      type: 'image',
+      required: false,
+      accept: 'image/*',
+      maxSize: 5, // 5MB max
+    },
+    {
+      name: 'dialysis_per_week',
+      label: 'Dialysis Per Week',
+      type: 'number',
+      required: true,
+      placeholder: 'Enter number of dialysis sessions per week',
+      min: 1,
+      max: 7,
+    },
+    {
+      name: 'zakat_eligible',
+      label: 'Zakat Eligible',
+      type: 'checkbox',
+      required: false,
+    },
+    {
+      name: 'relative_name',
+      label: 'Relative Name',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative name',
+    },
+    {
+      name: 'relative_nic',
+      label: 'Relative NIC',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative NIC (e.g., 35201-9876543-1)',
+    },
+    {
+      name: 'relative_phone',
+      label: 'Relative Phone',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative phone number (e.g., +923004567890)',
+    },
+    {
+      name: 'relative_address',
+      label: 'Relative Address',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter relative address',
+    },
+    {
+      name: 'document_path',
+      label: 'Patient Document',
+      type: 'file',
+      required: false,
+      accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
+      maxSize: 10, // 10MB max
+    },
+  ],
+  layout: 'two-column',
+};
+
+export const patientEditSchema: FormSchemaConfig = {
+  fields: [
+    {
+      name: 'name',
+      label: 'Patient Name',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter patient name',
+    },
+    {
+      name: 'nic',
+      label: 'NIC',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter NIC (e.g., 35202-1234567-8)',
+    },
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter phone number (e.g., +923001234567)',
+    },
+    {
+      name: 'address',
+      label: 'Address',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter patient address',
+    },
+    {
+      name: 'image',
+      label: 'Patient Image',
+      type: 'image',
+      required: false,
+      accept: 'image/*',
+      maxSize: 5, // 5MB max
+    },
+    {
+      name: 'dialysis_per_week',
+      label: 'Dialysis Per Week',
+      type: 'number',
+      required: true,
+      placeholder: 'Enter number of dialysis sessions per week',
+      min: 1,
+      max: 7,
+    },
+    {
+      name: 'next_dialysis_date',
+      label: 'Next Dialysis Date',
+      type: 'datetime-local',
+      required: true,
+    },
+    {
+      name: 'zakat_eligible',
+      label: 'Zakat Eligible',
+      type: 'checkbox',
+      required: false,
+    },
+    {
+      name: 'relative_name',
+      label: 'Relative Name',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative name',
+    },
+    {
+      name: 'relative_nic',
+      label: 'Relative NIC',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative NIC (e.g., 35201-9876543-1)',
+    },
+    {
+      name: 'relative_phone',
+      label: 'Relative Phone',
+      type: 'text',
+      required: false,
+      placeholder: 'Enter relative phone number (e.g., +923004567890)',
+    },
+    {
+      name: 'relative_address',
+      label: 'Relative Address',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter relative address',
+    },
+    {
+      name: 'document_path',
+      label: 'Patient Document',
+      type: 'file',
+      required: false,
+      accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
+      maxSize: 10, // 10MB max
+    },
+  ],
+  layout: 'two-column',
+};
