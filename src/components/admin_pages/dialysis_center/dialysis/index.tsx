@@ -59,6 +59,8 @@ const DialysisPageComponent = () => {
     bed: '',
     machine: '',
     shift: '',
+    date: '',
+    year: '',
   });
 
   // Fetch data on component mount
@@ -77,12 +79,36 @@ const DialysisPageComponent = () => {
     }
   }, [addDialogOpen, editDialogOpen, deleteDialogOpen, dispatch]);
 
+  // Generate year options for the last 5 years
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = 0; i < 5; i++) {
+      const year = currentYear - i;
+      years.push({ value: year.toString(), label: year.toString() });
+    }
+    return years;
+  };
+
   // Filter dialysis data
   const filteredDialysis = dialysis?.filter(item => {
     if (filters.patient && !item.patient_name.toLowerCase().includes(filters.patient.toLowerCase())) return false;
     if (filters.bed && !item.bed_name.toLowerCase().includes(filters.bed.toLowerCase())) return false;
     if (filters.machine && !item.machine_name.toLowerCase().includes(filters.machine.toLowerCase())) return false;
     if (filters.shift && !item.shift_no.toLowerCase().includes(filters.shift.toLowerCase())) return false;
+    
+    // Date filter
+    if (filters.date) {
+      const itemDate = new Date(item.created_at).toISOString().split('T')[0];
+      if (itemDate !== filters.date) return false;
+    }
+    
+    // Year filter
+    if (filters.year) {
+      const itemYear = new Date(item.created_at).getFullYear().toString();
+      if (itemYear !== filters.year) return false;
+    }
+    
     return true;
   }) || [];
 
@@ -133,6 +159,22 @@ const DialysisPageComponent = () => {
       options: [
         { value: '', label: 'All Shifts' },
         ...(shifts?.map(s => ({ value: s.shift_no, label: s.shift_no })) || [])
+      ],
+    },
+    {
+      key: 'date',
+      label: 'Date',
+      type: 'date',
+      placeholder: 'Select date...',
+    },
+    {
+      key: 'year',
+      label: 'Year',
+      type: 'select',
+      placeholder: 'Select year...',
+      options: [
+        { value: '', label: 'All Years' },
+        ...generateYearOptions()
       ],
     },
   ];
@@ -460,7 +502,7 @@ const DialysisPageComponent = () => {
         onFilterChange={(key, value) => 
           setFilters(prev => ({ ...prev, [key]: value }))
         }
-        onClearFilters={() => setFilters({ patient: '', bed: '', machine: '', shift: '' })}
+        onClearFilters={() => setFilters({ patient: '', bed: '', machine: '', shift: '', date: '', year: '' })}
       />
 
       {/* Error Display */}

@@ -142,7 +142,7 @@ const WarningPageComponent = () => {
       key: 'is_resolved',
       header: 'Status',
       render: (value) => (
-        <Badge variant={value ? 'secondary' : 'destructive'}>
+        <Badge variant={value ? 'secondary' : 'destructive'} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
           {value ? 'Resolved' : 'Active'}
         </Badge>
       ),

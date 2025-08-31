@@ -50,6 +50,22 @@ export class FormSchema {
           fieldSchema = z.string();
       }
 
+      // For optional fields, make the base schema nullable to accept null values
+      if (!field.required) {
+        if (field.type === 'number') {
+          fieldSchema = z.union([z.coerce.number(), z.null()]).transform(val => val === null ? undefined : val);
+        } else if (field.type === 'checkbox' || field.type === 'switch') {
+          fieldSchema = z.union([z.boolean(), z.null()]).transform(val => val === null ? false : val);
+        } else if (field.type === 'date' || field.type === 'datetime-local' || field.type === 'time') {
+          fieldSchema = z.union([z.string(), z.null()]).transform(val => val === null ? undefined : val);
+        } else if (field.type === 'file' || field.type === 'image') {
+          // File fields already handle null in their base schema
+        } else {
+          // For string fields (text, textarea, etc.)
+          fieldSchema = z.union([z.string(), z.null()]).transform(val => val === null || val === '' ? undefined : val);
+        }
+      }
+
       // Apply validation rules
       if (field.validation) {
         if (field.validation.minLength && fieldSchema instanceof z.ZodString) {
@@ -85,7 +101,10 @@ export class FormSchema {
             .refine((val) => val.trim().length > 0, `${field.label} cannot be empty`);
         } else if (field.type === 'number') {
           fieldSchema = fieldSchema
-            .refine((val) => val !== null && val !== undefined && val !== '', `${field.label} is required`);
+            .refine((val) => val !== null && val !== undefined, `${field.label} is required`);
+        } else if (field.type === 'checkbox' || field.type === 'switch') {
+          fieldSchema = fieldSchema
+            .refine((val) => val !== null && val !== undefined, `${field.label} is required`);
         } else if (field.type === 'file' || field.type === 'image') {
           fieldSchema = fieldSchema.refine(
             (val) => val !== null && val !== undefined && (val instanceof File || (typeof val === 'string' && val.length > 0)),
@@ -93,9 +112,8 @@ export class FormSchema {
           );
         }
       } else {
-        fieldSchema = fieldSchema.optional();
+          fieldSchema = fieldSchema.optional();
       }
-
       schemaObject[field.name] = fieldSchema;
     });
 
@@ -107,26 +125,43 @@ export class FormSchema {
     const defaultValues: Record<string, any> = {};
 
     this.config.fields.forEach((field) => {
-      switch (field.type) {
-        case 'checkbox':
-        case 'switch':
-          defaultValues[field.name] = false;
-          break;
-        case 'select':
-          defaultValues[field.name] = '';
-          break;
-        case 'number':
-          defaultValues[field.name] = '';
-          break;
-        case 'password':
-          defaultValues[field.name] = '';
-          break;
-        case 'file':
-        case 'image':
-          defaultValues[field.name] = null;
-          break;
-        default:
-          defaultValues[field.name] = '';
+      // For optional fields, use undefined as default
+      if (!field.required) {
+        switch (field.type) {
+          case 'checkbox':
+          case 'switch':
+            defaultValues[field.name] = false;
+            break;
+          case 'file':
+          case 'image':
+            defaultValues[field.name] = null;
+            break;
+          default:
+            defaultValues[field.name] = undefined;
+        }
+      } else {
+        // For required fields, use appropriate defaults
+        switch (field.type) {
+          case 'checkbox':
+          case 'switch':
+            defaultValues[field.name] = false;
+            break;
+          case 'select':
+            defaultValues[field.name] = '';
+            break;
+          case 'number':
+            defaultValues[field.name] = '';
+            break;
+          case 'password':
+            defaultValues[field.name] = '';
+            break;
+          case 'file':
+          case 'image':
+            defaultValues[field.name] = null;
+            break;
+          default:
+            defaultValues[field.name] = '';
+        }
       }
     });
 

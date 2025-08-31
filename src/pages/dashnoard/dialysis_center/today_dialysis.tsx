@@ -185,24 +185,6 @@ const TodayDialysis = () => {
     }
   ];
 
-  // Handle view session
-  const handleViewSession = (session: TodayDialysisSession) => {
-    // TODO: Implement view session functionality
-    console.log('View session:', session);
-  };
-
-  // Handle edit session
-  const handleEditSession = (session: TodayDialysisSession) => {
-    // TODO: Implement edit session functionality
-    console.log('Edit session:', session);
-  };
-
-  // Handle delete session
-  const handleDeleteSession = (session: TodayDialysisSession) => {
-    // TODO: Implement delete session functionality
-    console.log('Delete session:', session);
-  };
-
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -285,9 +267,6 @@ const TodayDialysis = () => {
         columns={columns}
         loading={isLoading}
         emptyMessage="No dialysis sessions found for today"
-        onView={handleViewSession}
-        onEdit={handleEditSession}
-        onDelete={handleDeleteSession}
         pagination={true}
         pageSize={10}
       />

@@ -48,6 +48,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     formState: { errors, isValid }
   } = methods;
 
+
+
   const handleFormSubmit = (data: any) => {
     // Check if there are any file fields in the form
     const hasFileFields = fields.some(field => field.type === 'file' || field.type === 'image');
@@ -124,7 +126,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
           )}
           <button
             type="submit"
-            disabled={disabled || loading || !isValid}
+            disabled={disabled || loading}
             className="px-4 py-2 text-sm font-medium cursor-pointer text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (

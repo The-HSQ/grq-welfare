@@ -1,15 +1,16 @@
-import { FormSchema } from '@/components/common/FormSchema';
-import type { FormFieldConfig } from '@/components/common/FormField';
-import type { Column } from '@/components/common/DataTable';
-import type { Bed } from '@/store/slices/dialysisSlice';
+import { FormSchema } from "@/components/common/FormSchema";
+import type { FormFieldConfig } from "@/components/common/FormField";
+import type { Column } from "@/components/common/DataTable";
+import type { Bed } from "@/store/slices/dialysisSlice";
+import { Badge } from "@/components/ui/badge";
 
 // Bed form field configurations
 export const bedFormFields: FormFieldConfig[] = [
   {
-    name: 'bed_name',
-    label: 'Bed Name',
-    type: 'text',
-    placeholder: 'Enter bed name',
+    name: "bed_name",
+    label: "Bed Name",
+    type: "text",
+    placeholder: "Enter bed name",
     required: true,
     validation: {
       minLength: 2,
@@ -17,10 +18,10 @@ export const bedFormFields: FormFieldConfig[] = [
     },
   },
   {
-    name: 'ward',
-    label: 'Ward',
-    type: 'select',
-    placeholder: 'Select a ward',
+    name: "ward",
+    label: "Ward",
+    type: "select",
+    placeholder: "Select a ward",
     required: true,
     options: [], // Will be populated dynamically with wards data
   },
@@ -29,48 +30,45 @@ export const bedFormFields: FormFieldConfig[] = [
 // Create bed schema
 export const createBedSchema = new FormSchema({
   fields: bedFormFields,
-  layout: 'single',
-  className: 'space-y-4',
+  layout: "single",
+  className: "space-y-4",
 });
 
 // Edit bed schema
 export const editBedSchema = new FormSchema({
   fields: bedFormFields,
-  layout: 'single',
-  className: 'space-y-4',
+  layout: "single",
+  className: "space-y-4",
 });
 
 // Data table columns configuration
 export const bedTableColumns: Column<Bed>[] = [
   {
-    key: 'bed_name',
-    header: 'Bed Name',
+    key: "bed_name",
+    header: "Bed Name",
     sortable: true,
   },
   {
-    key: 'ward_name',
-    header: 'Ward',
+    key: "ward_name",
+    header: "Ward",
     sortable: true,
   },
   {
-    key: 'is_available',
-    header: 'Status',
+    key: "is_available",
+    header: "Status",
     sortable: true,
     render: (value: boolean) => (
-      <span 
-        className={`px-2 py-1 text-xs font-medium rounded-full ${
-          value 
-            ? "bg-green-100 text-green-800"
-            : "bg-red-100 text-red-800"
-        }`}
+      <Badge
+        variant={value ? "default" : "secondary"}
+        className={value ? "bg-green-500 text-white" : "bg-red-500 text-white"}
       >
         {value ? "Available" : "Occupied"}
-      </span>
+      </Badge>
     ),
   },
   {
-    key: 'created_at',
-    header: 'Created At',
+    key: "created_at",
+    header: "Created At",
     sortable: true,
     render: (value: string) => new Date(value).toLocaleDateString(),
   },

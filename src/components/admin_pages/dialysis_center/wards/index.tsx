@@ -161,7 +161,7 @@ const WardsPageComponent = () => {
       header: "Status",
       sortable: true,
       render: (value: boolean) => (
-        <Badge variant={value ? "default" : "secondary"}>
+        <Badge variant={value ? "default" : "secondary"} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
           {value ? "Available" : "Not Available"}
         </Badge>
       ),

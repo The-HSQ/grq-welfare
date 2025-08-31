@@ -327,8 +327,8 @@ const MachinePageComponent = () => {
           status: selectedMachine.status,
           maintenance_date: selectedMachine.maintenance_date,
           next_maintenance_date: selectedMachine.next_maintenance_date,
-          disinfection_chemical_change: selectedMachine.disinfection_chemical_change,
-          dia_safe_filter_change: selectedMachine.dia_safe_filter_change,
+          disinfection_chemical_change: selectedMachine.disinfection_chemical_change || '',
+          dia_safe_filter_change: selectedMachine.dia_safe_filter_change || '',
         } : {}}
         onSubmit={handleEditMachine}
         loading={isUpdating}

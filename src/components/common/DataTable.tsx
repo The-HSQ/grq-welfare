@@ -203,7 +203,7 @@ export function DataTable<T extends Record<string, any>>({
                     column.sortable ? "cursor-pointer hover:bg-muted/50" : ""
                   }
                   onClick={() => column.sortable && handleSort(column.key)}
-                  style={{ width: column.width }}
+                  style={{ minWidth: column.width || "150px" }}
                 >
                   <div className="flex items-center gap-2">
                     {column.header}

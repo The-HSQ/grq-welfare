@@ -39,6 +39,7 @@
     "react-router-dom": "^7.8.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.12",
+    "websocket": "^1.0.35",
     "zod": "^4.1.1"
   },
   "devDependencies": {

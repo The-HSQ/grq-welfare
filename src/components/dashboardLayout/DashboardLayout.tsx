@@ -433,7 +433,7 @@ export default function DashboardLayout() {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu className="!p-1.5">
+          <SidebarMenu className="!p-1.5 overflow-y-auto sidebar-wrapper">
             {navigationItems.map((item) => renderNavigationItem(item))}
           </SidebarMenu>
         </SidebarContent>

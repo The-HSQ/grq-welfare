@@ -26,6 +26,7 @@ import { useAppDispatch } from '../../../../store/hooks';
 import { getMediaUrl, formatDate, formatDateTime } from '../../../../lib/utils';
 import { FormSchema } from '../../../common/FormSchema';
 import { EyeIcon, PlusIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export const PatientsComponent: React.FC = () => {
@@ -51,6 +52,8 @@ export const PatientsComponent: React.FC = () => {
     search: '',
     zakat_eligible: '',
     dialysis_per_week: '',
+    date: '',
+    year: '',
   });
 
   // Fetch patients on component mount
@@ -64,6 +67,17 @@ export const PatientsComponent: React.FC = () => {
       dispatch(clearError());
     };
   }, [dispatch]);
+
+  // Generate year options for the last 5 years
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = 0; i < 5; i++) {
+      const year = currentYear - i;
+      years.push({ value: year.toString(), label: year.toString() });
+    }
+    return years;
+  };
 
   // Handle add patient
   const handleAddPatient = async (formData: FormData) => {
@@ -162,6 +176,18 @@ export const PatientsComponent: React.FC = () => {
     const matchesDialysis = filters.dialysis_per_week === '' || 
                            patient.dialysis_per_week === parseInt(filters.dialysis_per_week);
     
+    // Date filter
+    if (filters.date) {
+      const itemDate = new Date(patient.created_at).toISOString().split('T')[0];
+      if (itemDate !== filters.date) return false;
+    }
+    
+    // Year filter
+    if (filters.year) {
+      const itemYear = new Date(patient.created_at).getFullYear().toString();
+      if (itemYear !== filters.year) return false;
+    }
+    
     return matchesSearch && matchesZakat && matchesDialysis;
   }) || [];
 
@@ -176,7 +202,7 @@ export const PatientsComponent: React.FC = () => {
       header: 'Image',
       render: (value, patient) => {      
         return (
-          <div className="flex items-center">
+          <div className="flex w-full items-center">
             {patient.image ? (
               <img 
                 src={getMediaUrl(patient.image) || undefined} 
@@ -228,7 +254,11 @@ export const PatientsComponent: React.FC = () => {
       header: 'Phone',
       sortable: true,
       render: (value, patient) => (
+        patient.phone ? (
         <div className="text-gray-600">{patient.phone}</div>
+        ) : (
+          <div className="text-gray-600">-</div>
+        )
       ),
     },
     {
@@ -236,8 +266,8 @@ export const PatientsComponent: React.FC = () => {
       header: 'Address',
       sortable: true,
       render: (value, patient) => (
-        <div className="text-gray-600 max-w-xs truncate" title={patient.address}>
-          {patient.address}
+        <div className="text-gray-600 max-w-xs" title={patient.address}>
+          {patient.address || "-"}
         </div>
       ),
     },
@@ -246,7 +276,11 @@ export const PatientsComponent: React.FC = () => {
       header: 'Dialysis/Week',
       sortable: true,
       render: (value, patient) => (
+        patient.dialysis_per_week ? (
         <div className="text-gray-600">{patient.dialysis_per_week}</div>
+        ) : (
+          <div className="text-gray-600">-</div>
+        )
       ),
     },
     {
@@ -255,7 +289,7 @@ export const PatientsComponent: React.FC = () => {
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">
-          {patient.next_dialysis_info?.formatted_date || formatDateTime(patient.next_dialysis_date)}
+          {patient.next_dialysis_info?.formatted_date || formatDateTime(patient.next_dialysis_date) || "-"}
         </div>
       ),
     },
@@ -264,13 +298,9 @@ export const PatientsComponent: React.FC = () => {
       header: 'Zakat Eligible',
       sortable: true,
       render: (value, patient) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          patient.zakat_eligible 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-red-100 text-red-800'
-        }`}>
-          {patient.zakat_eligible ? 'Yes' : 'No'}
-        </span>
+        <Badge variant={patient.zakat_eligible ? 'default' : 'secondary'} className={patient.zakat_eligible ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
+          {patient.zakat_eligible ? 'Eligible' : 'Not Eligible'}
+        </Badge>
       ),
     },
     {
@@ -340,6 +370,24 @@ export const PatientsComponent: React.FC = () => {
       ],
       value: filters.zakat_eligible,
     },
+    {
+      key: 'date',
+      label: 'Date',
+      type: 'date' as const,
+      placeholder: 'Select date...',
+      value: filters.date,
+    },
+    {
+      key: 'year',
+      label: 'Year',
+      type: 'select' as const,
+      placeholder: 'Select year...',
+      options: [
+        { value: '', label: 'All Years' },
+        ...generateYearOptions()
+      ],
+      value: filters.year,
+    },
   ];
 
   return (
@@ -362,7 +410,7 @@ export const PatientsComponent: React.FC = () => {
         onFilterChange={(key, value) => 
           setFilters(prev => ({ ...prev, [key]: value }))
         }
-        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '' })}
+        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '' })}
       />
 
       {/* Data Table */}

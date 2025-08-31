@@ -131,3 +131,7 @@
 .group\/sidebar-wrapper > * {
   min-height: 100vh;
 }
+
+.sidebar-wrapper::-webkit-scrollbar {
+  display: none;
+}

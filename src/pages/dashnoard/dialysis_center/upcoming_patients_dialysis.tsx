@@ -173,7 +173,7 @@ const UpcomingPatientsDialysis = () => {
       header: 'Dialysis/Week',
       sortable: true,
       render: (value) => (
-        <Badge variant="secondary">
+        <Badge variant="secondary" className={value > 1 ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'}>
           {value} time{value > 1 ? 's' : ''}
         </Badge>
       )
@@ -199,7 +199,7 @@ const UpcomingPatientsDialysis = () => {
         else if (value <= 2) variant = "secondary";
         
         return (
-          <Badge variant={variant}>
+          <Badge variant={variant} className={variant === 'destructive' ? 'bg-red-500 text-white' : variant === 'secondary' ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'}>
             {value === 0 ? 'Today' : value === 1 ? 'Tomorrow' : `In ${value} days`}
           </Badge>
         );
@@ -210,27 +210,12 @@ const UpcomingPatientsDialysis = () => {
       header: 'Zakat Eligible',
       sortable: true,
       render: (value) => (
-        <Badge variant={value ? "default" : "outline"}>
+        <Badge variant={value ? "secondary" : "destructive"} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
           {value ? 'Eligible' : 'Not Eligible'}
         </Badge>
       )
     }
   ];
-
-  const handleViewPatient = (patient: UpcomingPatient) => {
-    // Navigate to patient details page
-    console.log('View patient:', patient);
-  };
-
-  const handleEditPatient = (patient: UpcomingPatient) => {
-    // Navigate to edit patient page
-    console.log('Edit patient:', patient);
-  };
-
-  const handleDeletePatient = (patient: UpcomingPatient) => {
-    // Show delete confirmation dialog
-    console.log('Delete patient:', patient);
-  };
 
   if (error) {
     return (
@@ -284,9 +269,6 @@ const UpcomingPatientsDialysis = () => {
       <DataTable
         data={filteredPatients}
         columns={columns}
-        onView={handleViewPatient}
-        onEdit={handleEditPatient}
-        onDelete={handleDeletePatient}
         loading={isLoading}
         emptyMessage="No upcoming patients found"
         pagination={true}
