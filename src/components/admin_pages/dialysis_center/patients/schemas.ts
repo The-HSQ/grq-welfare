@@ -48,6 +48,13 @@ export const patientAddSchema: FormSchemaConfig = {
       max: 7,
     },
     {
+      name: 'manually_set_dialysis_date',
+      label: 'Next Dialysis Date',
+      type: 'datetime-local',
+      required: false,
+      placeholder: 'Set manual dialysis date (optional)',
+    },
+    {
       name: 'zakat_eligible',
       label: 'Zakat Eligible',
       type: 'checkbox',
@@ -141,10 +148,11 @@ export const patientEditSchema: FormSchemaConfig = {
       max: 7,
     },
     {
-      name: 'next_dialysis_date',
+      name: 'manually_set_dialysis_date',
       label: 'Next Dialysis Date',
       type: 'datetime-local',
-      required: true,
+      required: false,
+      placeholder: 'Set manual dialysis date (optional)',
     },
     {
       name: 'zakat_eligible',

@@ -251,6 +251,7 @@ export interface Patient {
   image: string;
   dialysis_per_week: number;
   next_dialysis_date: string;
+  manually_set_dialysis_date: string;
   next_dialysis_info?: {
     date: string;
     formatted_date: string;
@@ -282,6 +283,7 @@ export interface Dialysis {
   id: string;
   patient: string;
   patient_name: string;
+  patient_image: string;
   bed: string;
   bed_name: string;
   machine: string;
@@ -303,6 +305,7 @@ export interface Dialysis {
 // Today's dialysis session interface (from sessions_by_shift)
 export interface TodayDialysisSession {
   dialysis_id: string;
+  patient_image: string;
   patient_name: string;
   patient_nic: string;
   bed_name: string;
@@ -330,12 +333,14 @@ export interface TodayDialysisResponse {
 // Upcoming patient interface
 export interface UpcomingPatient {
   patient_id: string;
+  image: string;
   name: string;
   nic: string;
   phone: string;
   address: string;
   dialysis_per_week: number;
   next_dialysis_date: string;
+  manually_set_dialysis_date: string;
   zakat_eligible: boolean;
   created_at: string;
   updated_at: string;
@@ -403,6 +408,7 @@ export interface CreatePatientData {
   address: string;
   dialysis_per_week: number;
   next_dialysis_date: string;
+  manually_set_dialysis_date: string;
   zakat_eligible: boolean;
   relative_name: string;
   relative_nic: string;
@@ -420,6 +426,7 @@ export interface UpdatePatientData {
   address?: string;
   dialysis_per_week?: number;
   next_dialysis_date?: string;
+  manually_set_dialysis_date?: string;
   zakat_eligible?: boolean;
   relative_name?: string;
   relative_nic?: string;
@@ -448,6 +455,7 @@ export interface DashboardStats {
   ro_machines: number;
   todays_dialysis: number;
   upcoming_dialysis: number;
+  total_dialysis: number;
 }
 
 interface DialysisState {

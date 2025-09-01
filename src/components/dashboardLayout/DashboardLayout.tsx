@@ -406,6 +406,22 @@ export default function DashboardLayout() {
 
   const navigationItems = getNavigationItems();
 
+  const getUrl = () => {
+    if(isAdmin()) {
+      return `/`;
+    }
+    if(isMedicalAdmin()) {
+      return `/dialysis-center`;
+    }
+    if(isAccountantMedical()) {
+      return `/dialysis-center`;
+    }
+    if(isOfficeAdmin()) {
+      return `/office-management`;
+    }
+    return `/`;
+  }
+
   return (
     <SidebarProvider
       style={
@@ -423,11 +439,11 @@ export default function DashboardLayout() {
                 asChild
                 className="data-[slot=sidebar-menu-button]:!p-4 "
               >
-                <div className="">
+                <Link to={getUrl()} className="flex items-center gap-2">
                   <span className="text-base font-semibold">
                     Unified Management System
                   </span>
-                </div>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

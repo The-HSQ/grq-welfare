@@ -7,8 +7,8 @@ import { FilterBar, FilterOption } from '@/components/common/FilterBar';
 import { DataTable, Column } from '@/components/common/DataTable';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { AlertCircle, Calendar, Users, Clock } from 'lucide-react';
+import { getMediaUrl } from '@/lib/mediaUtils';
 
 // Simple date formatting function
 const formatDate = (dateString: string) => {
@@ -141,6 +141,44 @@ const UpcomingPatientsDialysis = () => {
 
   const columns: Column<UpcomingPatient>[] = [
     {
+      key: "image",
+      header: "Image",
+      render: (value: string, patient: UpcomingPatient) => {
+        return (
+          <div className="flex w-full items-center">
+            {patient.image ? (
+              <img
+                src={getMediaUrl(patient.image) || undefined}
+                alt={patient.name}
+                className="w-10 h-10 rounded-lg object-cover"
+                onError={(e) => {
+                  console.error("Image failed to load:", {
+                    src: e.currentTarget.src,
+                    patientId: patient.patient_id,
+                    imageField: patient.image,
+                  });
+                }}
+                onLoad={() => {
+                  console.log("Image loaded successfully:", {
+                    src: getMediaUrl(patient.image),
+                    patientId: patient.patient_id,
+                  });
+                }}
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-500 text-xs font-medium">
+                  {patient.name
+                    ? patient.name.charAt(0).toUpperCase()
+                    : "?"}
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       key: 'name',
       header: 'Patient Name',
       sortable: true,
@@ -162,11 +200,6 @@ const UpcomingPatientsDialysis = () => {
       key: 'address',
       header: 'Address',
       sortable: true,
-      render: (value) => (
-        <div className="max-w-[200px] truncate" title={value}>
-          {value}
-        </div>
-      )
     },
     {
       key: 'dialysis_per_week',
@@ -182,10 +215,10 @@ const UpcomingPatientsDialysis = () => {
       key: 'next_dialysis_date',
       header: 'Next Dialysis',
       sortable: true,
-      render: (value) => (
+      render: (value, row) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span>{formatDate(value)}</span>
+          <span>{row.manually_set_dialysis_date ? formatDate(row.manually_set_dialysis_date) : formatDate(value)}</span>
         </div>
       )
     },

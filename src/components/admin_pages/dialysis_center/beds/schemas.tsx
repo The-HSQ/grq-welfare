@@ -54,19 +54,6 @@ export const bedTableColumns: Column<Bed>[] = [
     sortable: true,
   },
   {
-    key: "is_available",
-    header: "Status",
-    sortable: true,
-    render: (value: boolean) => (
-      <Badge
-        variant={value ? "default" : "secondary"}
-        className={value ? "bg-green-500 text-white" : "bg-red-500 text-white"}
-      >
-        {value ? "Available" : "Occupied"}
-      </Badge>
-    ),
-  },
-  {
     key: "created_at",
     header: "Created At",
     sortable: true,

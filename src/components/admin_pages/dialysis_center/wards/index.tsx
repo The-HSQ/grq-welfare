@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/common/PageHeader";
 import { FilterBar } from "@/components/common/FilterBar";
-import type { FilterOption } from "@/components/common/FilterBar";
 import { DataTable } from "@/components/common/DataTable";
 import type { Column } from "@/components/common/DataTable";
 import { AddDialog } from "@/components/common/AddDialog";
@@ -45,7 +43,6 @@ const WardsPageComponent = () => {
 
   // Filter states
   const [filters, setFilters] = useState({
-    availability: "",
     search: "",
   });
 
@@ -74,7 +71,6 @@ const WardsPageComponent = () => {
   // Clear all filters
   const handleClearFilters = () => {
     setFilters({
-      availability: "",
       search: "",
     });
   };
@@ -113,20 +109,6 @@ const WardsPageComponent = () => {
     setDeleteDialogOpen(true);
   };
 
-  // Filter options
-  const filterOptions: FilterOption[] = [
-    {
-      key: "availability",
-      label: "Availability",
-      type: "select",
-      placeholder: "Filter by availability",
-      options: [
-        { value: "true", label: "Available" },
-        { value: "false", label: "Not Available" },
-      ],
-    },
-  ];
-
   // Filter data based on current filters
   const filteredData =
     wards?.filter((ward) => {
@@ -137,15 +119,6 @@ const WardsPageComponent = () => {
       ) {
         return false;
       }
-
-      // Availability filter
-      if (
-        filters.availability &&
-        ward.is_available.toString() !== filters.availability
-      ) {
-        return false;
-      }
-
       return true;
     }) || [];
 
@@ -155,16 +128,6 @@ const WardsPageComponent = () => {
       key: "ward_name",
       header: "Ward Name",
       sortable: true,
-    },
-    {
-      key: "is_available",
-      header: "Status",
-      sortable: true,
-      render: (value: boolean) => (
-        <Badge variant={value ? "default" : "secondary"} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
-          {value ? "Available" : "Not Available"}
-        </Badge>
-      ),
     },
     {
       key: "total_beds_count",
@@ -207,7 +170,7 @@ const WardsPageComponent = () => {
 
       {/* Filter Bar */}
       <FilterBar
-        filters={filterOptions}
+        filters={[]}
         values={filters}
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}

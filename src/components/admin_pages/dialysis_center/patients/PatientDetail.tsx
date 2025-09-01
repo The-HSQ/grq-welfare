@@ -176,7 +176,7 @@ export const PatientDetail = () => {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Next Dialysis Date</label>
-                <p className="text-lg font-semibold">{formatDateTime(currentPatient.next_dialysis_date)}</p>
+                <p className="text-lg font-semibold">{currentPatient.manually_set_dialysis_date ? formatDateTime(currentPatient.manually_set_dialysis_date) : formatDateTime(currentPatient.next_dialysis_date)}</p>
               </div>
             </div>
 

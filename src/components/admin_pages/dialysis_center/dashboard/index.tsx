@@ -102,6 +102,7 @@ const DialysisDashboardComponent = () => {
     ro_machines,
     todays_dialysis,
     upcoming_dialysis,
+    total_dialysis,
   } = dashboardStats;
 
   const bedUtilization =
@@ -132,76 +133,30 @@ const DialysisDashboardComponent = () => {
       </div>
 
       {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-        {/* Total Patients */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+        {/* Total Dialysis */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">
-              Total Patients
+              Total Dialysis
             </CardTitle>
-            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">
-              {total_patients}
+          <CardContent className="flex flex-row items-center justify-between">
+            <div className="flex flex-col justify-between">
+              <div className="text-xl sm:text-2xl font-bold">
+                {total_dialysis}
+              </div>
+              <div className="text-xs text-muted-foreground">All dialysis</div>
             </div>
-            <p className="text-xs text-muted-foreground">Registered patients</p>
+            <Link to="/dialysis-center/dialysis">
+              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                View All
+              </Button>
+            </Link>
           </CardContent>
         </Card>
 
-        {/* Active Machines */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Active Machines
-            </CardTitle>
-            <Activity className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">
-              {active_machines}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Currently operational
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Warning Machines */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Warning Machines
-            </CardTitle>
-            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold text-orange-600">
-              {warning_machines}
-            </div>
-            <p className="text-xs text-muted-foreground">Need attention</p>
-          </CardContent>
-        </Card>
-
-        {/* Active Warnings */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Active Warnings
-            </CardTitle>
-            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold text-destructive">
-              {active_warnings}
-            </div>
-            <p className="text-xs text-muted-foreground">Require attention</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Second Row - Dialysis Sessions & Products */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {/* Today's Dialysis */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -248,19 +203,19 @@ const DialysisDashboardComponent = () => {
           </CardContent>
         </Card>
 
-        {/* Total Products */}
+        {/* Total Patients */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">
-              Total Products
+              Total Patients
             </CardTitle>
-            <Package className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-xl sm:text-2xl font-bold">
-              {total_products}
+              {total_patients}
             </div>
-            <p className="text-xs text-muted-foreground">Available items</p>
+            <p className="text-xs text-muted-foreground">Registered patients</p>
           </CardContent>
         </Card>
 
@@ -279,10 +234,42 @@ const DialysisDashboardComponent = () => {
             <p className="text-xs text-muted-foreground">All warnings</p>
           </CardContent>
         </Card>
+
+        {/* Active Warnings */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium">
+              Active Warnings
+            </CardTitle>
+            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold text-destructive">
+              {active_warnings}
+            </div>
+            <p className="text-xs text-muted-foreground">Require attention</p>
+          </CardContent>
+        </Card>
+
+        {/* Total Items */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium">
+              Total Items
+            </CardTitle>
+            <Package className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold">
+              {total_products}
+            </div>
+            <p className="text-xs text-muted-foreground">Available items</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Machine Status Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -367,7 +354,7 @@ const DialysisDashboardComponent = () => {
           </CardContent>
         </Card>
 
-        {/* Bed & Ward Status */}
+        Bed & Ward Status
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -423,10 +410,10 @@ const DialysisDashboardComponent = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       {/* Additional Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Machine Types */}
         <Card>
           <CardHeader>
@@ -452,7 +439,7 @@ const DialysisDashboardComponent = () => {
         </Card>
 
         {/* Total Machines Summary */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -479,7 +466,7 @@ const DialysisDashboardComponent = () => {
               </Badge>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Warnings Overview */}
         <Card>

@@ -289,7 +289,7 @@ export const PatientsComponent: React.FC = () => {
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">
-          {patient.next_dialysis_info?.formatted_date || formatDateTime(patient.next_dialysis_date) || "-"}
+          {patient.manually_set_dialysis_date ? formatDateTime(patient.manually_set_dialysis_date) : formatDateTime(patient.next_dialysis_date)}
         </div>
       ),
     },

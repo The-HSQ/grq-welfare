@@ -1,23 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { 
-  PageHeader, 
-  DataTable, 
-  AddDialog, 
-  EditDialog, 
-  DeleteDialog, 
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  PageHeader,
+  DataTable,
+  AddDialog,
+  EditDialog,
+  DeleteDialog,
   FilterBar,
   createFormSchema,
-  type FilterOption
-} from '@/components/common';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { 
-  fetchDialysis, 
-  createDialysis, 
-  updateDialysis, 
-  deleteDialysis, 
+  type FilterOption,
+  type Column,
+} from "@/components/common";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import {
+  fetchDialysis,
+  createDialysis,
+  updateDialysis,
+  deleteDialysis,
   fetchPatients,
   fetchBeds,
   fetchMachines,
@@ -26,42 +27,47 @@ import {
   clearError,
   type Dialysis,
   type CreateDialysisData,
-  type UpdateDialysisData
-} from '@/store/slices/dialysisSlice';
-import { RootState, AppDispatch } from '@/store';
+  type UpdateDialysisData,
+} from "@/store/slices/dialysisSlice";
+import { RootState, AppDispatch } from "@/store";
+import { getMediaUrl } from "@/lib/utils";
 
 const DialysisPageComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  
+
   // Redux state
-  const { 
-    dialysis, 
-    patients, 
-    beds, 
-    machines, 
+  const {
+    dialysis,
+    patients,
+    beds,
+    machines,
     machinesArray,
     shifts,
-    isLoading, 
-    isCreating, 
-    isUpdating, 
-    isDeleting, 
-    error 
+    isLoading,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    error,
   } = useSelector((state: RootState) => state.dialysis);
 
   // Local state
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDialysis, setSelectedDialysis] = useState<Dialysis | null>(null);
+  const [selectedDialysis, setSelectedDialysis] = useState<Dialysis | null>(
+    null
+  );
   const [filters, setFilters] = useState({
-    patient: '',
-    bed: '',
-    machine: '',
-    shift: '',
-    date: '',
-    year: '',
+    patient: "",
+    bed: "",
+    machine: "",
+    shift: "",
+    date: "",
+    year: "",
+    month: "",
   });
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -76,6 +82,7 @@ const DialysisPageComponent = () => {
   useEffect(() => {
     if (!addDialogOpen && !editDialogOpen && !deleteDialogOpen) {
       dispatch(clearError());
+      setValidationError(null);
     }
   }, [addDialogOpen, editDialogOpen, deleteDialogOpen, dispatch]);
 
@@ -90,92 +97,183 @@ const DialysisPageComponent = () => {
     return years;
   };
 
-  // Filter dialysis data
-  const filteredDialysis = dialysis?.filter(item => {
-    if (filters.patient && !item.patient_name.toLowerCase().includes(filters.patient.toLowerCase())) return false;
-    if (filters.bed && !item.bed_name.toLowerCase().includes(filters.bed.toLowerCase())) return false;
-    if (filters.machine && !item.machine_name.toLowerCase().includes(filters.machine.toLowerCase())) return false;
-    if (filters.shift && !item.shift_no.toLowerCase().includes(filters.shift.toLowerCase())) return false;
-    
-    // Date filter
-    if (filters.date) {
-      const itemDate = new Date(item.created_at).toISOString().split('T')[0];
-      if (itemDate !== filters.date) return false;
-    }
-    
-    // Year filter
-    if (filters.year) {
-      const itemYear = new Date(item.created_at).getFullYear().toString();
-      if (itemYear !== filters.year) return false;
-    }
-    
-    return true;
-  }) || [];
+  // Generate month options
+  const generateMonthOptions = () => {
+    const months = [
+      { value: "", label: "All Months" },
+      { value: "1", label: "January" },
+      { value: "2", label: "February" },
+      { value: "3", label: "March" },
+      { value: "4", label: "April" },
+      { value: "5", label: "May" },
+      { value: "6", label: "June" },
+      { value: "7", label: "July" },
+      { value: "8", label: "August" },
+      { value: "9", label: "September" },
+      { value: "10", label: "October" },
+      { value: "11", label: "November" },
+      { value: "12", label: "December" },
+    ];
+    return months;
+  };
 
-  // Get machines array safely - filter only not working machines
+  // Filter dialysis data
+  const filteredDialysis =
+    dialysis?.filter((item) => {
+      if (
+        filters.patient &&
+        !item.patient_name.toLowerCase().includes(filters.patient.toLowerCase())
+      )
+        return false;
+      if (
+        filters.bed &&
+        !item.bed_name.toLowerCase().includes(filters.bed.toLowerCase())
+      )
+        return false;
+      if (
+        filters.machine &&
+        !item.machine_name.toLowerCase().includes(filters.machine.toLowerCase())
+      )
+        return false;
+      if (
+        filters.shift &&
+        !item.shift_no.toLowerCase().includes(filters.shift.toLowerCase())
+      )
+        return false;
+
+      // Date filter
+      if (filters.date) {
+        const itemDate = new Date(item.created_at).toISOString().split("T")[0];
+        if (itemDate !== filters.date) return false;
+      }
+
+      // Month filter
+      if (filters.month) {
+        const itemMonth = (new Date(item.created_at).getMonth() + 1).toString();
+        if (itemMonth !== filters.month) return false;
+      }
+
+      // Year filter
+      if (filters.year) {
+        const itemYear = new Date(item.created_at).getFullYear().toString();
+        if (itemYear !== filters.year) return false;
+      }
+
+      return true;
+    }) || [];
+
+  // Get machines array safely - filter only dialysis machines that are not working
   const getMachinesArray = () => {
     let allMachines: any[] = [];
     if (machinesArray) allMachines = machinesArray;
     else if (machines?.results) allMachines = machines.results;
     else if (Array.isArray(machines)) allMachines = machines;
-    
-    // Filter only not working machines
-    return allMachines.filter((m: any) => m.machine_status !== 'working');
+
+    // Filter only dialysis machines that are not working
+    return allMachines.filter((m: any) => 
+      m.machine_type === 'dialysis'
+    );
+  };
+
+  // Convert time string (HH:MM) to minutes since midnight
+  const convertTimeToMinutes = (timeString: string) => {
+    if (!timeString) return 0;
+    const [hours, minutes] = timeString.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  // Validate dialysis time against shift time
+  const validateDialysisTime = (data: any) => {
+    if (data.shift && data.start_time) {
+      const selectedShift = shifts?.find((s) => s.id === data.shift);
+      if (selectedShift) {
+        const shiftStartTime = selectedShift.start_time;
+        const shiftEndTime = selectedShift.end_time;
+        const dialysisStartTime = data.start_time;
+
+        // Convert times to comparable values (minutes since midnight)
+        const shiftStartMinutes = convertTimeToMinutes(shiftStartTime);
+        const shiftEndMinutes = convertTimeToMinutes(shiftEndTime);
+        const dialysisStartMinutes = convertTimeToMinutes(dialysisStartTime);
+
+        if (
+          dialysisStartMinutes < shiftStartMinutes ||
+          dialysisStartMinutes > shiftEndMinutes
+        ) {
+          return `Dialysis start time must be within shift time (${shiftStartTime} - ${shiftEndTime})`;
+        }
+      }
+    }
+    return null; // No validation error
   };
 
   // Filter options for the filter bar
   const filterOptions: FilterOption[] = [
     {
-      key: 'patient',
-      label: 'Patient',
-      type: 'text',
-      placeholder: 'Search by patient name...',
+      key: "patient",
+      label: "Patient",
+      type: "text",
+      placeholder: "Search by patient name...",
     },
     {
-      key: 'bed',
-      label: 'Bed',
-      type: 'select',
-      placeholder: 'Select bed...',
+      key: "bed",
+      label: "Bed",
+      type: "select",
+      placeholder: "Select bed...",
       options: [
-        { value: '', label: 'All Beds' },
-        ...(beds?.map(b => ({ value: b.bed_name, label: b.bed_name + ' - ' + b.ward_name })) || [])
+        { value: "", label: "All Beds" },
+        ...(beds?.map((b) => ({
+          value: b.bed_name,
+          label: b.bed_name + " - " + b.ward_name,
+        })) || []),
       ],
     },
     {
-      key: 'machine',
-      label: 'Machine',
-      type: 'select',
-      placeholder: 'Select machine...',
+      key: "machine",
+      label: "Machine",
+      type: "select",
+      placeholder: "Select machine...",
       options: [
-        { value: '', label: 'All Machines' },
-        ...(getMachinesArray().map((m: any) => ({ value: m.machine_name, label: m.machine_name })) || [])
+        { value: "", label: "All Machines" },
+        ...(getMachinesArray().map((m: any) => ({
+          value: m.machine_name,
+          label: m.machine_name,
+        })) || []),
       ],
     },
     {
-      key: 'shift',
-      label: 'Shift',
-      type: 'select',
-      placeholder: 'Select shift...',
+      key: "shift",
+      label: "Shift",
+      type: "select",
+      placeholder: "Select shift...",
       options: [
-        { value: '', label: 'All Shifts' },
-        ...(shifts?.map(s => ({ value: s.shift_no, label: s.shift_no })) || [])
+        { value: "", label: "All Shifts" },
+        ...(shifts?.map((s) => ({
+          value: s.shift_no,
+          label: s.shift_no + " (" + s.start_time + " - " + s.end_time + ")",
+        })) || []),
       ],
     },
     {
-      key: 'date',
-      label: 'Date',
-      type: 'date',
-      placeholder: 'Select date...',
+      key: "date",
+      label: "Date",
+      type: "date",
+      placeholder: "Select date...",
+    },
+
+    {
+      key: "month",
+      label: "Month",
+      type: "select",
+      placeholder: "Select month...",
+      options: generateMonthOptions(),
     },
     {
-      key: 'year',
-      label: 'Year',
-      type: 'select',
-      placeholder: 'Select year...',
-      options: [
-        { value: '', label: 'All Years' },
-        ...generateYearOptions()
-      ],
+      key: "year",
+      label: "Year",
+      type: "select",
+      placeholder: "Select year...",
+      options: [{ value: "", label: "All Years" }, ...generateYearOptions()],
     },
   ];
 
@@ -183,229 +281,295 @@ const DialysisPageComponent = () => {
   const createDialysisSchema = createFormSchema({
     fields: [
       {
-        name: 'patient',
-        label: 'Patient',
-        type: 'select',
+        name: "patient",
+        label: "Patient",
+        type: "select",
         required: true,
-        options: patients?.map(p => ({ value: p.id, label: p.name })) || [],
+        options: patients?.map((p) => ({ value: p.id, label: p.name })) || [],
       },
       {
-        name: 'bed',
-        label: 'Bed',
-        type: 'select',
+        name: "bed",
+        label: "Bed",
+        type: "select",
         required: true,
-        options: beds?.map(b => ({ value: b.id, label: b.bed_name + ' - ' + b.ward_name })) || [],
+        options:
+          beds?.map((b) => ({
+            value: b.id,
+            label: b.bed_name + " - " + b.ward_name,
+          })) || [],
       },
       {
-        name: 'machine',
-        label: 'Machine',
-        type: 'select',
+        name: "machine",
+        label: "Machine",
+        type: "select",
         required: true,
-        options: getMachinesArray().map((m: any) => ({ value: m.id, label: m.machine_name })) || [],
+        options:
+          getMachinesArray().map((m: any) => ({
+            value: m.id,
+            label: m.machine_name,
+          })) || [],
       },
       {
-        name: 'shift',
-        label: 'Shift',
-        type: 'select',
+        name: "shift",
+        label: "Shift",
+        type: "select",
         required: true,
-        options: shifts?.map(s => ({ value: s.id, label: s.shift_no })) || [],
+        options:
+          shifts?.map((s) => ({
+            value: s.id,
+            label: s.shift_no + " (" + s.start_time + " - " + s.end_time + ")",
+          })) || [],
       },
       {
-        name: 'start_time',
-        label: 'Start Time',
-        type: 'time',
-        required: true,
-      },
-      {
-        name: 'end_time',
-        label: 'End Time',
-        type: 'time',
+        name: "start_time",
+        label: "Start Time",
+        type: "time",
         required: true,
       },
       {
-        name: 'blood_pressure',
-        label: 'Blood Pressure',
-        type: 'text',
+        name: "end_time",
+        label: "End Time",
+        type: "time",
+        required: true,
+      },
+      {
+        name: "blood_pressure",
+        label: "Before Dialysis BP",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 120/80',
+        placeholder: "e.g., 120/80",
       },
       {
-        name: 'last_blood_pressure',
-        label: 'Last Blood Pressure',
-        type: 'text',
+        name: "last_blood_pressure",
+        label: "After Dialysis BP",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 118/78',
+        placeholder: "e.g., 118/78",
       },
       {
-        name: 'weight',
-        label: 'Weight',
-        type: 'text',
+        name: "weight",
+        label: "Before Dialysis Weight",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 70kg',
+        placeholder: "e.g., 70kg",
       },
       {
-        name: 'last_weight',
-        label: 'Last Weight',
-        type: 'text',
+        name: "last_weight",
+        label: "After Dialysis Weight",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 69.5kg',
+        placeholder: "e.g., 69.5kg",
       },
       {
-        name: 'technician_comment',
-        label: 'Technician Comment',
-        type: 'textarea',
+        name: "technician_comment",
+        label: "Technician Comment",
+        type: "textarea",
         required: false,
         rows: 3,
-        placeholder: 'Enter technician comments...',
+        placeholder: "Enter technician comments...",
       },
       {
-        name: 'doctor_comment',
-        label: 'Doctor Comment',
-        type: 'textarea',
+        name: "doctor_comment",
+        label: "Doctor Comment",
+        type: "textarea",
         required: false,
         rows: 3,
-        placeholder: 'Enter doctor comments...',
+        placeholder: "Enter doctor comments...",
       },
     ],
-    layout: 'two-column',
+    layout: "two-column",
   });
 
   // Create form schema for edit dialog
   const editDialysisSchema = createFormSchema({
     fields: [
       {
-        name: 'patient',
-        label: 'Patient',
-        type: 'select',
+        name: "patient",
+        label: "Patient",
+        type: "select",
         required: true,
-        options: patients?.map(p => ({ value: p.id, label: p.name })) || [],
+        options: patients?.map((p) => ({ value: p.id, label: p.name })) || [],
       },
       {
-        name: 'bed',
-        label: 'Bed',
-        type: 'select',
+        name: "bed",
+        label: "Bed",
+        type: "select",
         required: true,
-        options: beds?.map(b => ({ value: b.id, label: b.bed_name + ' - ' + b.ward_name })) || [],
+        options:
+          beds?.map((b) => ({
+            value: b.id,
+            label: b.bed_name + " - " + b.ward_name,
+          })) || [],
       },
       {
-        name: 'machine',
-        label: 'Machine',
-        type: 'select',
+        name: "machine",
+        label: "Machine",
+        type: "select",
         required: true,
-        options: getMachinesArray().map((m: any) => ({ value: m.id, label: m.machine_name })) || [],
+        options:
+          getMachinesArray().map((m: any) => ({
+            value: m.id,
+            label: m.machine_name,
+          })) || [],
       },
       {
-        name: 'shift',
-        label: 'Shift',
-        type: 'select',
+        name: "shift",
+        label: "Shift",
+        type: "select",
         required: true,
-        options: shifts?.map(s => ({ value: s.id, label: s.shift_no })) || [],
+        options:
+          shifts?.map((s) => ({
+            value: s.id,
+            label: s.shift_no + " (" + s.start_time + " - " + s.end_time + ")",
+          })) || [],
       },
       {
-        name: 'start_time',
-        label: 'Start Time',
-        type: 'time',
-        required: true,
-      },
-      {
-        name: 'end_time',
-        label: 'End Time',
-        type: 'time',
+        name: "start_time",
+        label: "Start Time",
+        type: "time",
         required: true,
       },
       {
-        name: 'blood_pressure',
-        label: 'Blood Pressure',
-        type: 'text',
+        name: "end_time",
+        label: "End Time",
+        type: "time",
+        required: true,
+      },
+      {
+        name: "blood_pressure",
+        label: "Before Dialysis BP",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 122/82',
+        placeholder: "e.g., 122/82",
       },
       {
-        name: 'last_blood_pressure',
-        label: 'Last Blood Pressure',
-        type: 'text',
+        name: "last_blood_pressure",
+        label: "After Dialysis BP",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 120/80',
+        placeholder: "e.g., 120/80",
       },
       {
-        name: 'weight',
-        label: 'Weight',
-        type: 'text',
+        name: "weight",
+        label: "Before Dialysis Weight",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 70.2kg',
+        placeholder: "e.g., 70.2kg",
       },
       {
-        name: 'last_weight',
-        label: 'Last Weight',
-        type: 'text',
+        name: "last_weight",
+        label: "After Dialysis Weight",
+        type: "text",
         required: false,
-        placeholder: 'e.g., 70kg',
+        placeholder: "e.g., 70kg",
       },
       {
-        name: 'technician_comment',
-        label: 'Technician Comment',
-        type: 'textarea',
+        name: "technician_comment",
+        label: "Technician Comment",
+        type: "textarea",
         required: false,
         rows: 3,
-        placeholder: 'Enter technician comments...',
+        placeholder: "Enter technician comments...",
       },
       {
-        name: 'doctor_comment',
-        label: 'Doctor Comment',
-        type: 'textarea',
+        name: "doctor_comment",
+        label: "Doctor Comment",
+        type: "textarea",
         required: false,
         rows: 3,
-        placeholder: 'Enter doctor comments...',
+        placeholder: "Enter doctor comments...",
       },
     ],
-    layout: 'two-column',
+    layout: "two-column",
   });
 
   // Data table columns
-  const columns = [
+  const columns: Column<Dialysis>[] = [
     {
-      key: 'patient_name' as keyof Dialysis,
-      header: 'Patient',
+      key: "patient_image",
+      header: "Image",
+      render: (value: string, patient: Dialysis) => {
+        return (
+          <div className="flex w-full items-center">
+            {patient.patient_image ? (
+              <img
+                src={getMediaUrl(patient.patient_image) || undefined}
+                alt={patient.patient_name}
+                className="w-10 h-10 rounded-lg object-cover"
+                onError={(e) => {
+                  console.error("Image failed to load:", {
+                    src: e.currentTarget.src,
+                    patientId: patient.id,
+                    imageField: patient.patient_image,
+                  });
+                }}
+                onLoad={() => {
+                  console.log("Image loaded successfully:", {
+                    src: getMediaUrl(patient.patient_image),
+                    patientId: patient.id,
+                  });
+                }}
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-500 text-xs font-medium">
+                  {patient.patient_name
+                    ? patient.patient_name.charAt(0).toUpperCase()
+                    : "?"}
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      key: "patient_name" as keyof Dialysis,
+      header: "Patient",
       sortable: true,
     },
     {
-      key: 'bed_name' as keyof Dialysis,
-      header: 'Bed',
+      key: "bed_name" as keyof Dialysis,
+      header: "Bed",
       sortable: true,
     },
     {
-      key: 'machine_name' as keyof Dialysis,
-      header: 'Machine',
+      key: "machine_name" as keyof Dialysis,
+      header: "Machine",
       sortable: true,
     },
     {
-      key: 'shift_no' as keyof Dialysis,
-      header: 'Shift',
+      key: "shift_no" as keyof Dialysis,
+      header: "Shift",
       sortable: true,
     },
     {
-      key: 'start_time' as keyof Dialysis,
-      header: 'Start Time',
+      key: "start_time" as keyof Dialysis,
+      header: "Start Time",
       sortable: true,
     },
     {
-      key: 'end_time' as keyof Dialysis,
-      header: 'End Time',
+      key: "end_time" as keyof Dialysis,
+      header: "End Time",
       sortable: true,
     },
     {
-      key: 'blood_pressure' as keyof Dialysis,
-      header: 'Blood Pressure',
+      key: "blood_pressure" as keyof Dialysis,
+      header: "Before - After Dialysis BP",
       sortable: true,
+      render: (value: string, patient: Dialysis) =>
+        value ? `${value} - ${patient.last_blood_pressure}` : "-",
     },
     {
-      key: 'weight' as keyof Dialysis,
-      header: 'Weight',
+      key: "weight" as keyof Dialysis,
+      header: "Before - After Dialysis Weight",
       sortable: true,
+      render: (value: string, patient: Dialysis) =>
+        value ? `${value} - ${patient.last_weight}` : "-",
     },
     {
-      key: 'created_at' as keyof Dialysis,
-      header: 'Created At',
+      key: "created_at" as keyof Dialysis,
+      header: "Created At",
       sortable: true,
       render: (value: string) => new Date(value).toLocaleDateString(),
     },
@@ -413,6 +577,16 @@ const DialysisPageComponent = () => {
 
   // Handle add dialysis
   const handleAddDialysis = (data: CreateDialysisData) => {
+    // Clear previous validation errors
+    setValidationError(null);
+
+    // Validate dialysis time against shift time
+    const validationError = validateDialysisTime(data);
+    if (validationError) {
+      setValidationError(validationError);
+      return;
+    }
+
     dispatch(createDialysis(data)).then((result) => {
       if (createDialysis.fulfilled.match(result)) {
         setAddDialogOpen(false);
@@ -423,7 +597,19 @@ const DialysisPageComponent = () => {
   // Handle edit dialysis
   const handleEditDialysis = (data: UpdateDialysisData) => {
     if (selectedDialysis) {
-      dispatch(updateDialysis({ id: selectedDialysis.id, dialysisData: data })).then((result) => {
+      // Clear previous validation errors
+      setValidationError(null);
+
+      // Validate dialysis time against shift time
+      const validationError = validateDialysisTime(data);
+      if (validationError) {
+        setValidationError(validationError);
+        return;
+      }
+
+      dispatch(
+        updateDialysis({ id: selectedDialysis.id, dialysisData: data })
+      ).then((result) => {
         if (updateDialysis.fulfilled.match(result)) {
           setEditDialogOpen(false);
           setSelectedDialysis(null);
@@ -465,8 +651,9 @@ const DialysisPageComponent = () => {
   // Get default values for edit dialog
   const getEditDefaultValues = () => {
     if (!selectedDialysis) return {};
-    
+
     return {
+      patient_image: selectedDialysis.patient_image,
       patient: selectedDialysis.patient,
       bed: selectedDialysis.bed,
       machine: selectedDialysis.machine,
@@ -499,10 +686,20 @@ const DialysisPageComponent = () => {
       <FilterBar
         filters={filterOptions}
         values={filters}
-        onFilterChange={(key, value) => 
-          setFilters(prev => ({ ...prev, [key]: value }))
+        onFilterChange={(key, value) =>
+          setFilters((prev) => ({ ...prev, [key]: value }))
         }
-        onClearFilters={() => setFilters({ patient: '', bed: '', machine: '', shift: '', date: '', year: '' })}
+        onClearFilters={() =>
+          setFilters({
+            patient: "",
+            bed: "",
+            machine: "",
+            shift: "",
+            date: "",
+            year: "",
+            month: "",
+          })
+        }
       />
 
       {/* Error Display */}
@@ -510,15 +707,23 @@ const DialysisPageComponent = () => {
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              <svg
+                className="h-5 w-5 text-red-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Error loading dialysis data</h3>
-              <div className="mt-2 text-sm text-red-700">
-                {error}
-              </div>
+              <h3 className="text-sm font-medium text-red-800">
+                Error loading dialysis data
+              </h3>
+              <div className="mt-2 text-sm text-red-700">{error}</div>
             </div>
           </div>
         </div>
@@ -535,6 +740,7 @@ const DialysisPageComponent = () => {
         emptyMessage="No dialysis sessions found"
         pagination={true}
         pageSize={10}
+        defaultSort={{ key: "created_at", direction: "desc" }}
       />
 
       {/* Add Dialog */}
@@ -546,7 +752,7 @@ const DialysisPageComponent = () => {
         schema={createDialysisSchema}
         onSubmit={handleAddDialysis}
         loading={isCreating}
-        error={error}
+        error={validationError || error}
       />
 
       {/* Edit Dialog */}
@@ -558,7 +764,7 @@ const DialysisPageComponent = () => {
         schema={editDialysisSchema}
         onSubmit={handleEditDialysis}
         loading={isUpdating}
-        error={error}
+        error={validationError || error}
         defaultValues={getEditDefaultValues()}
       />
 

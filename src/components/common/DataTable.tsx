@@ -45,6 +45,10 @@ export interface DataTableProps<T> {
   emptyMessage?: string;
   pagination?: boolean;
   pageSize?: number;
+  defaultSort?: {
+    key: keyof T;
+    direction: "asc" | "desc";
+  };
 }
 
 export function DataTable<T extends Record<string, any>>({
@@ -60,12 +64,13 @@ export function DataTable<T extends Record<string, any>>({
   emptyMessage = "No data available",
   pagination = false,
   pageSize = 10,
+  defaultSort,
 }: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: keyof T | null;
     direction: "asc" | "desc";
-  }>({ key: null, direction: "asc" });
+  }>(defaultSort || { key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredAndSortedData = useMemo(() => {

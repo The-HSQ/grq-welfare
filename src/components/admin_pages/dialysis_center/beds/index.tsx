@@ -44,7 +44,6 @@ const BedsPageComponent = () => {
   // Filter states
   const [filters, setFilters] = useState({
     ward: '',
-    status: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -56,16 +55,6 @@ const BedsPageComponent = () => {
       type: 'select',
       placeholder: 'Filter by ward',
       options: wards?.map((ward: any) => ({ value: ward.id, label: ward.ward_name })) || [],
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
-      placeholder: 'Filter by status',
-      options: [
-        { value: 'true', label: 'Available' },
-        { value: 'false', label: 'Occupied' },
-      ],
     },
   ];
 
@@ -107,14 +96,6 @@ const BedsPageComponent = () => {
       return false;
     }
 
-    // Status filter
-    if (filters.status !== '') {
-      const statusFilter = filters.status === 'true';
-      if (bed.is_available !== statusFilter) {
-        return false;
-      }
-    }
-
     return true;
   }) || [];
 
@@ -125,7 +106,7 @@ const BedsPageComponent = () => {
 
   // Handle clear filters
   const handleClearFilters = () => {
-    setFilters({ ward: '', status: '' });
+    setFilters({ ward: '' });
     setSearchTerm('');
   };
 

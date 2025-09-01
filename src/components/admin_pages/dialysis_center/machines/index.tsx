@@ -44,24 +44,12 @@ const MachinePageComponent = () => {
 
   // Filter states
   const [filters, setFilters] = useState({
-    status: '',
     machine_type: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filter options
   const filterOptions: FilterOption[] = [
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
-      placeholder: 'Filter by status',
-      options: [
-        { value: 'working', label: 'Working' },
-        { value: 'not_working', label: 'Not Working' },
-        { value: 'warning', label: 'Warning' },
-      ],
-    },
     {
       key: 'machine_type',
       label: 'Machine Type',
@@ -90,23 +78,6 @@ const MachinePageComponent = () => {
           {value}
         </Badge>
       ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      sortable: true,
-      render: (value) => {
-        const statusColors = {
-          working: 'bg-green-100 text-green-800',
-          not_working: 'bg-red-100 text-red-800',
-          warning: 'bg-red-100 text-red-800',
-        };
-        return (
-          <Badge className={statusColors[value as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
-            {value}
-          </Badge>
-        );
-      },
     },
     {
       key: 'maintenance_date',
@@ -169,7 +140,7 @@ const MachinePageComponent = () => {
 
   // Handle clear filters
   const handleClearFilters = () => {
-    setFilters({ status: '', machine_type: '' });
+    setFilters({ machine_type: '' });
     setSearchTerm('');
   };
 
@@ -203,7 +174,6 @@ const MachinePageComponent = () => {
     const machineData: UpdateMachineData = {
       machine_name: data.machine_name,
       machine_type: data.machine_type,
-      status: data.status,
       maintenance_date: data.maintenance_date,
       next_maintenance_date: data.next_maintenance_date,
       disinfection_chemical_change: data.disinfection_chemical_change || null,
@@ -249,11 +219,6 @@ const MachinePageComponent = () => {
       if (!machine.machine_name.toLowerCase().includes(searchLower)) {
         return false;
       }
-    }
-
-    // Status filter
-    if (filters.status && machine.status !== filters.status) {
-      return false;
     }
 
     // Machine type filter
@@ -324,7 +289,6 @@ const MachinePageComponent = () => {
         defaultValues={selectedMachine ? {
           machine_name: selectedMachine.machine_name,
           machine_type: selectedMachine.machine_type,
-          status: selectedMachine.status,
           maintenance_date: selectedMachine.maintenance_date,
           next_maintenance_date: selectedMachine.next_maintenance_date,
           disinfection_chemical_change: selectedMachine.disinfection_chemical_change || '',
