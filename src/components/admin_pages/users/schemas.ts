@@ -4,8 +4,8 @@ import { FormSchema } from '../../common/FormSchema';
 export const roleOptions = [
     { value: 'admin', label: 'Admin' },
     { value: 'office_admin', label: 'Office Admin' },
-    { value: 'medical_admin', label: 'Medical Admin' },
-    { value: 'accountant_medical', label: 'Accountant Medical' },
+    { value: 'medical_admin', label: 'Dialysis Admin' },
+    { value: 'accountant_medical', label: 'Dialysis Reception' },
 ];
 
 // Schema for adding a new user
