@@ -211,7 +211,7 @@ export default function DashboardLayout() {
           ],
         },
         {
-          title: "Dialysis Accountant",
+          title: "Dialysis Receptionist",
           icon: Users,
           items: [
             {
@@ -316,7 +316,7 @@ export default function DashboardLayout() {
       ],
     },
     {
-      title: "Dialysis Accountant",
+      title: "Dialysis Receptionist",
       icon: Users,
       items: [
         {
@@ -445,9 +445,6 @@ export default function DashboardLayout() {
                     alt="Logo"
                     className="object-cover w-full h-full"
                   />
-                  {/* <span className="text-base font-semibold">
-                    GRQ Welfare
-                  </span> */}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
