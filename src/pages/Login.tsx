@@ -68,11 +68,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center py-8 calc(100dvh - 32px)">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <img src="/logo.png" alt="GRQ Welfare" className="object-fill w-full h-full rounded-sm pb-4" />
           <CardTitle className="text-2xl font-bold text-center">
-            Welcome to Unified Management System
+            Welcome to GRQ Welfare
           </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access your account

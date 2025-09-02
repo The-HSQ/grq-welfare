@@ -133,10 +133,10 @@ export const PatientDetail = () => {
                 <img
                   src={getMediaUrl(currentPatient.image) || undefined}
                   alt={currentPatient.name}
-                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                  className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+                <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
                   <span className="text-gray-500 text-lg">No Image</span>
                 </div>
               )}

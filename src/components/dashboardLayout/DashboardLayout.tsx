@@ -433,16 +433,21 @@ export default function DashboardLayout() {
     >
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
+          <SidebarMenu className="h-full p-0">
+            <SidebarMenuItem className="h-full">
               <SidebarMenuButton
                 asChild
-                className="data-[slot=sidebar-menu-button]:!p-4 "
+                className="p-0 h-full"
               >
-                <Link to={getUrl()} className="flex items-center gap-2">
-                  <span className="text-base font-semibold">
-                    Unified Management System
-                  </span>
+                <Link to={getUrl()} className="flex items-center gap-2 p-0">
+                  <img
+                    src="/logo.png"
+                    alt="Logo"
+                    className="object-cover w-full h-full"
+                  />
+                  {/* <span className="text-base font-semibold">
+                    GRQ Welfare
+                  </span> */}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -490,8 +495,8 @@ function SiteHeader({ user }: { user: any }) {
           className="mx-1 h-4 sm:mx-2 sm:h-5 md:mx-3 md:h-6 data-[orientation=vertical]:h-4 sm:data-[orientation=vertical]:h-5 md:data-[orientation=vertical]:h-6"
         />
         <h1 className="text-sm font-medium sm:text-base md:text-lg lg:text-xl xl:text-2xl truncate">
-          <span className="hidden sm:inline">Unified Management System</span>
-          <span className="sm:hidden">UMS</span>
+          <span className="hidden sm:inline">GRQ Welfare</span>
+          <span className="sm:hidden">GRQ</span>
         </h1>
         <div className="ml-auto flex items-center gap-1 sm:gap-2 md:gap-3">
           <span className="text-xs text-muted-foreground sm:text-sm md:text-base truncate max-w-[120px] sm:max-w-[150px] md:max-w-[200px] lg:max-w-none">

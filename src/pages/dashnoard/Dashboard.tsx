@@ -32,7 +32,7 @@ export default function Dashboard() {
       </div>
 
       {/* Dashboard Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Dashboard Card */}
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader>
@@ -134,130 +134,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Reports Card */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="h-5 w-5 text-orange-600" />
-              <span>Office Reports</span>
-            </CardTitle>
-            <CardDescription>
-              Analytics and reporting tools
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Status</span>
-                <Badge variant="outline" className="text-orange-600 border-orange-600">
-                  Available
-                </Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Reports</span>
-                <span className="text-sm font-medium">Analytics ready</span>
-              </div>
-              <Link 
-                to="/office-reports" 
-                className="flex items-center justify-between text-sm text-orange-600 hover:text-orange-800 transition-colors"
-              >
-                <span>View Reports</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
       </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">Active users</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Patients</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">156</div>
-            <p className="text-xs text-muted-foreground">Under care</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sessions</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">42</div>
-            <p className="text-xs text-muted-foreground">Scheduled</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Alerts</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">Require attention</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>
-            Common administrative tasks and shortcuts
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link 
-              to="/users" 
-              className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <Users className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium">Manage Users</span>
-            </Link>
-            <Link 
-              to="/dialysis-center/patients" 
-              className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <Activity className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-medium">View Patients</span>
-            </Link>
-            <Link 
-              to="/staff" 
-              className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <Users className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium">Staff Management</span>
-            </Link>
-            <Link 
-              to="/office-reports" 
-              className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <BarChart3 className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-medium">View Reports</span>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

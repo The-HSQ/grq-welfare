@@ -13,7 +13,7 @@ import {
   type Column,
 } from "@/components/common";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 import {
   fetchDialysis,
   createDialysis,
@@ -568,6 +568,18 @@ const DialysisPageComponent = () => {
         value ? `${value} - ${patient.last_weight}` : "-",
     },
     {
+      key: "technician_comment" as keyof Dialysis,
+      header: "Technician Comment",
+      sortable: true,
+      render: (value: string) => value || "-",
+    },
+    {
+      key: "doctor_comment" as keyof Dialysis,
+      header: "Doctor Comment",
+      sortable: true,
+      render: (value: string) => value || "-",
+    },
+    {
       key: "created_at" as keyof Dialysis,
       header: "Created At",
       sortable: true,
@@ -679,6 +691,10 @@ const DialysisPageComponent = () => {
         <Button onClick={() => setAddDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           Add Dialysis
+        </Button>
+        <Button onClick={() => navigate("/dialysis-center/today-dialysis")}>
+          <Calendar className="h-4 w-4 mr-2" />
+          Today's Dialysis
         </Button>
       </PageHeader>
 

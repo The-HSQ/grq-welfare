@@ -314,7 +314,9 @@ export interface TodayDialysisSession {
   start_time: string;
   end_time: string;
   blood_pressure: string;
+  last_blood_pressure: string;
   weight: string;
+  last_weight: string;
   technician_comment: string;
   doctor_comment: string;
   created_at: string;

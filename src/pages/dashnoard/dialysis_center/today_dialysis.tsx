@@ -18,14 +18,17 @@ import {
 } from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 
-import { RefreshCw, Calendar, Users, Clock } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { getMediaUrl } from "@/lib/mediaUtils";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const TodayDialysis = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { todayDialysis, shifts, isLoading, error } = useSelector(
     (state: RootState) => state.dialysis
   );
+  const navigate = useNavigate();
 
   const [selectedShift, setSelectedShift] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -154,18 +157,20 @@ const TodayDialysis = () => {
 
   // Get all wards for filter
   const [availableWards, setAvailableWards] = useState<string[]>([]);
-  
+
   useEffect(() => {
     const fetchWards = async () => {
       try {
-        const response = await api.get('/medical/wards/');
-        const wardNames = response.data.map((ward: any) => ward.ward_name).filter(Boolean);
+        const response = await api.get("/medical/wards/");
+        const wardNames = response.data
+          .map((ward: any) => ward.ward_name)
+          .filter(Boolean);
         setAvailableWards(wardNames);
       } catch (error) {
         setAvailableWards([]);
       }
     };
-    
+
     fetchWards();
   }, []);
 
@@ -321,7 +326,7 @@ const TodayDialysis = () => {
       key: "end_time" as keyof (TodayDialysisSession & { shift_name?: string }),
       header: "End Time",
       sortable: true,
-      render: (value, row) => (
+      render: (value) => (
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-muted-foreground" />
           <span className="font-mono text-sm">{value}</span>
@@ -332,15 +337,15 @@ const TodayDialysis = () => {
       key: "blood_pressure" as keyof (TodayDialysisSession & {
         shift_name?: string;
       }),
-      header: "Blood Pressure",
+      header: "Before - After Dialysis BP",
       sortable: true,
-      render: (value) => <div className="text-sm">{value || "-"}</div>,
+      render: (value, row) => <div className="text-sm">{value ? `${value} - ${row.last_blood_pressure}` : "-"}</div>,
     },
     {
       key: "weight" as keyof (TodayDialysisSession & { shift_name?: string }),
-      header: "Weight",
+      header: "Before - After Dialysis Weight",
       sortable: true,
-      render: (value) => <div className="text-sm">{value || "-"}</div>,
+      render: (value, row) => <div className="text-sm">{value ? `${value} - ${row.last_weight}` : "-"}</div>,
     },
   ];
 
@@ -353,38 +358,45 @@ const TodayDialysis = () => {
           todayDialysis?.date || "today"
         }`}
       >
-        {/* Stats Cards */}
-        {todayDialysis && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="px-4 py-2 w-[200px] gap-0">
-              <CardHeader className="flex flex-row items-center justify-between p-0">
-                <CardTitle className="text-sm font-medium">
-                  Total Sessions
-                </CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">
-                  {todayDialysis.total_sessions}
-                </div>
-              </CardContent>
-            </Card>
+        <div className="flex flex-col xl:flex-row items-center gap-4">
+          <Button onClick={() => navigate("/dialysis-center/dialysis")}>
+            <Calendar className="h-4 w-4 mr-2" />
+            Total Dialysis
+          </Button>
 
-            <Card className="px-4 py-2 w-[200px] gap-0">
-              <CardHeader className="flex flex-row items-center justify-between p-0">
-                <CardTitle className="text-sm font-medium">
-                  Active Shifts
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-2xl font-bold">
-                  {availableShifts.length}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+          {/* Stats Cards */}
+          {todayDialysis && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="px-4 py-2 w-[200px] gap-0">
+                <CardHeader className="flex flex-row items-center justify-between p-0">
+                  <CardTitle className="text-sm font-medium">
+                    Total Sessions
+                  </CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="text-2xl font-bold">
+                    {todayDialysis.total_sessions}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="px-4 py-2 w-[200px] gap-0">
+                <CardHeader className="flex flex-row items-center justify-between p-0">
+                  <CardTitle className="text-sm font-medium">
+                    Active Shifts
+                  </CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="text-2xl font-bold">
+                    {availableShifts.length}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
       </PageHeader>
 
       {/* Error Alert */}
