@@ -376,6 +376,12 @@ const DialysisPageComponent = () => {
         rows: 3,
         placeholder: "Enter doctor comments...",
       },
+      {
+        name: "created_at",
+        label: "Created At",
+        type: "datetime-local",
+        required: false,
+      },
     ],
     layout: "two-column",
   });
@@ -478,6 +484,12 @@ const DialysisPageComponent = () => {
         required: false,
         rows: 3,
         placeholder: "Enter doctor comments...",
+      },
+      {
+        name: "created_at",
+        label: "Created At",
+        type: "datetime-local",
+        required: false,
       },
     ],
     layout: "two-column",
@@ -678,6 +690,7 @@ const DialysisPageComponent = () => {
       last_weight: selectedDialysis.last_weight,
       technician_comment: selectedDialysis.technician_comment,
       doctor_comment: selectedDialysis.doctor_comment,
+      created_at: selectedDialysis.created_at,
     };
   };
 

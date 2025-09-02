@@ -384,6 +384,7 @@ export interface CreateDialysisData {
   last_weight: string;
   technician_comment: string;
   doctor_comment: string;
+  created_at: string;
 }
 
 // Update dialysis interface
@@ -400,6 +401,7 @@ export interface UpdateDialysisData {
   last_weight?: string;
   technician_comment?: string;
   doctor_comment?: string;
+  created_at?: string;
 }
 
 // Create patient interface
@@ -418,6 +420,7 @@ export interface CreatePatientData {
   relative_address: string;
   image?: File;
   document_path?: File;
+  created_at?: string;
 }
 
 // Update patient interface
@@ -436,6 +439,7 @@ export interface UpdatePatientData {
   relative_address?: string;
   image?: File;
   document_path?: File;
+  created_at?: string;
 }
 
 // Dashboard stats interface

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Plus, Package, Minus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Plus, Package, Minus, OctagonMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -32,6 +33,7 @@ import type { RootState, AppDispatch } from "@/store";
 
 const ItemsPageComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const {
     products,
     productsArray,
@@ -154,6 +156,11 @@ const ItemsPageComponent = () => {
   const handleDelete = (product: Product) => {
     setSelectedProduct(product);
     setDeleteDialogOpen(true);
+  };
+
+  // Handle view button click
+  const handleView = (product: Product) => {
+    navigate(`/dialysis-center/items/${product.id}`);
   };
 
   // Handle add quantity
@@ -329,6 +336,7 @@ const ItemsPageComponent = () => {
       <DataTable
         data={filteredData}
         columns={columns}
+        onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
         actions={(row) => (
@@ -349,7 +357,7 @@ const ItemsPageComponent = () => {
               className="h-8 w-8 p-0"
               title="Use Items"
             >
-              <Minus className="h-4 w-4" />
+              <OctagonMinus className="h-4 w-4" />
             </Button>
           </>
         )}

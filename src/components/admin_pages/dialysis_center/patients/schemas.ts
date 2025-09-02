@@ -44,7 +44,7 @@ export const patientAddSchema: FormSchemaConfig = {
       type: 'number',
       required: true,
       placeholder: 'Enter number of dialysis sessions per week',
-      min: 1,
+      min: 0,
       max: 7,
     },
     {
@@ -95,6 +95,13 @@ export const patientAddSchema: FormSchemaConfig = {
       required: false,
       accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
       maxSize: 10, // 10MB max
+    },
+    {
+      name: 'created_at',
+      label: 'Created Date',
+      type: 'datetime-local',
+      required: false,
+      placeholder: 'Select created date',
     },
   ],
   layout: 'two-column',
@@ -144,7 +151,7 @@ export const patientEditSchema: FormSchemaConfig = {
       type: 'number',
       required: true,
       placeholder: 'Enter number of dialysis sessions per week',
-      min: 1,
+      min: 0,
       max: 7,
     },
     {
@@ -195,6 +202,13 @@ export const patientEditSchema: FormSchemaConfig = {
       required: false,
       accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
       maxSize: 10, // 10MB max
+    },
+    {
+      name: 'created_at',
+      label: 'Created Date',
+      type: 'datetime-local',
+      required: false,
+      placeholder: 'Select created date',
     },
   ],
   layout: 'two-column',

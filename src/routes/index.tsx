@@ -10,6 +10,7 @@ import Users from '../pages/dashnoard/users/Users';
 import { Patients } from '../pages/dashnoard/dialysis_center/patients/page';
 import DialysisDashboard from '../pages/dashnoard/dialysis_center/dashboard/page';
 import ItemsPage from '../pages/dashnoard/dialysis_center/items/page';
+import ItemDetail from '../components/admin_pages/dialysis_center/items/ItemDetail';
 import MachinePage from '../pages/dashnoard/dialysis_center/machines/page';
 import WardsPage from '../pages/dashnoard/dialysis_center/wards/page';
 import BedsPage from '../pages/dashnoard/dialysis_center/beds/page';
@@ -185,6 +186,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole={['admin', 'medical_admin']}>
             <ItemsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dialysis-center/items/:id',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'medical_admin']}>
+            <ItemDetail />
           </ProtectedRoute>
         ),
       },
