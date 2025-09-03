@@ -763,7 +763,6 @@ const DialysisPageComponent = () => {
         data={filteredDialysis}
         columns={columns}
         onEdit={handleEditClick}
-        onDelete={handleDeleteClick}
         onView={handleViewDialysis}
         loading={isLoading}
         emptyMessage="No dialysis sessions found"

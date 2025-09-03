@@ -170,7 +170,6 @@ const ShiftsPageComponent = () => {
         pagination={true}
         pageSize={10}
         onEdit={handleEditClick}
-        onDelete={handleDeleteClick}
       />
 
       <AddDialog
@@ -198,7 +197,7 @@ const ShiftsPageComponent = () => {
         loading={isUpdating}
       />
 
-      <DeleteDialog
+      {/* <DeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);
@@ -210,7 +209,7 @@ const ShiftsPageComponent = () => {
         description={`Are you sure you want to delete the shift "${selectedShift?.shift_no}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

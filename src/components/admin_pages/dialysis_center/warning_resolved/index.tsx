@@ -294,7 +294,6 @@ const WarningResolvedPageComponent = () => {
         columns={columns}
         loading={isLoading}
         onEdit={openEditDialog}
-        onDelete={openDeleteDialog}
         emptyMessage="No warning fixes found"
         pagination={true}
       />
@@ -325,7 +324,7 @@ const WarningResolvedPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Warning Fix"
@@ -333,7 +332,7 @@ const WarningResolvedPageComponent = () => {
         itemName={selectedWarningFix?.fix_warning_description}
         onConfirm={handleDelete}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

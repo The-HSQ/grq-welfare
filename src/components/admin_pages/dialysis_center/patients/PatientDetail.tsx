@@ -114,10 +114,10 @@ export const PatientDetail = () => {
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-          <Button onClick={handleDelete} variant="destructive">
+          {/* <Button onClick={handleDelete} variant="destructive">
             <Trash2 className="h-4 w-4 mr-2" />
             Delete
-          </Button>
+          </Button> */}
         </div>
       </div>
 

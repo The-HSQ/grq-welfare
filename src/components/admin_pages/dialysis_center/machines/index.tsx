@@ -259,7 +259,6 @@ const MachinePageComponent = () => {
         data={filteredData}
         columns={columns}
         onEdit={handleEdit}
-        onDelete={handleDelete}
         loading={isLoading}
         emptyMessage="No machines found"
         pagination={true}
@@ -300,7 +299,7 @@ const MachinePageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Machine"
@@ -308,7 +307,7 @@ const MachinePageComponent = () => {
         itemName={selectedMachine?.machine_name}
         onConfirm={handleDeleteMachine}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

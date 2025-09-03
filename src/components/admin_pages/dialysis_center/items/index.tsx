@@ -338,7 +338,6 @@ const ItemsPageComponent = () => {
         columns={columns}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
         actions={(row) => (
           <>
             <Button
@@ -398,7 +397,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Item"
@@ -407,7 +406,7 @@ const ItemsPageComponent = () => {
         onConfirm={handleDeleteProduct}
         loading={isDeleting}
         confirmText={isDeleting ? "Deleting..." : "Delete Item"}
-      />
+      /> */}
 
       {/* Update Quantity Dialog */}
       <AddDialog

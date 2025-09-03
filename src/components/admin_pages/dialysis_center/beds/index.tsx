@@ -198,7 +198,6 @@ const BedsPageComponent = () => {
           data={filteredData}
           columns={bedTableColumns}
           onEdit={handleEditClick}
-          onDelete={handleDeleteClick}
           loading={isLoading}
           emptyMessage="No beds found"
           pagination={true}
@@ -231,7 +230,7 @@ const BedsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Bed"
@@ -239,7 +238,7 @@ const BedsPageComponent = () => {
         itemName={selectedBed?.bed_name}
         onConfirm={handleDeleteBed}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

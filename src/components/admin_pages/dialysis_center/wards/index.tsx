@@ -186,7 +186,6 @@ const WardsPageComponent = () => {
         data={filteredData}
         columns={columns}
         onEdit={handleEdit}
-        onDelete={handleDelete}
         loading={isLoading}
         emptyMessage="No wards found"
         pagination={false}
@@ -218,7 +217,7 @@ const WardsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Ward"
@@ -227,7 +226,7 @@ const WardsPageComponent = () => {
         onConfirm={handleDeleteWard}
         loading={isDeleting}
         confirmText="Delete Ward"
-      />
+      /> */}
     </div>
   );
 };

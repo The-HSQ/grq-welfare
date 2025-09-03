@@ -272,7 +272,6 @@ const WarningPageComponent = () => {
         data={filteredData}
         columns={columns}
         onEdit={handleEdit}
-        onDelete={handleDelete}
         loading={isLoading}
         emptyMessage="No warnings found"
         pagination={true}
@@ -308,7 +307,7 @@ const WarningPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Warning"
@@ -316,7 +315,7 @@ const WarningPageComponent = () => {
         itemName={selectedWarning?.warning_description}
         onConfirm={handleDeleteWarning}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };
