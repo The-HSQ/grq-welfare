@@ -127,7 +127,7 @@ const WarningResolvedPageComponent = () => {
       render: (value) => {
         const warning = warnings?.find((w) => w.id === value);
         const machine = warning
-          ? machinesArray?.find((m) => m.id === warning.machine)
+          ? machinesArray?.find((m) => String(m.id) === String(warning.machine))
           : null;
         return machine ? (
           <div className="max-w-xs">
@@ -192,7 +192,7 @@ const WarningResolvedPageComponent = () => {
 
       const warning = warnings?.find((w) => w.id === item.warning);
       const matchesMachineFilter =
-        !filters.machine || warning?.machine === filters.machine;
+        !filters.machine || String(warning?.machine) === String(filters.machine);
 
       const matchesDateFilter =
         !filters.date ||

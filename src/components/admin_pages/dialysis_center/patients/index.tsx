@@ -421,7 +421,6 @@ export const PatientsComponent: React.FC = () => {
         emptyMessage="No patients found"
         onView={handleViewPatient}
         onEdit={handleEditClick}
-        onDelete={handleDeleteClick}
       />
 
       {/* Add Dialog */}
@@ -461,7 +460,7 @@ export const PatientsComponent: React.FC = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);
@@ -471,7 +470,7 @@ export const PatientsComponent: React.FC = () => {
         title="Delete Patient"
         itemName={selectedPatient?.name || undefined}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

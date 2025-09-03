@@ -46,6 +46,10 @@ export class FormSchema {
             'Please select a valid file'
           );
           break;
+        case 'select':
+          // Select fields can accept both string and number values, convert to string
+          fieldSchema = z.union([z.string(), z.number()]).transform(val => String(val));
+          break;
         default:
           fieldSchema = z.string();
       }

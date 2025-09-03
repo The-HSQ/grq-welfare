@@ -798,14 +798,14 @@ const DialysisPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Dialysis Session"
         description={`Are you sure you want to delete the dialysis session for ${selectedDialysis?.patient_name}? This action cannot be undone.`}
         onConfirm={handleDeleteDialysis}
         loading={isDeleting}
-      />
+      /> */}
     </div>
   );
 };

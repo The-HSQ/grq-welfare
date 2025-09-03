@@ -134,7 +134,7 @@ const WarningPageComponent = () => {
       key: 'machine',
       header: 'Machine',
       render: (value) => {
-        const machine = machinesArray?.find(m => m.id === value);
+        const machine = machinesArray?.find(m => String(m.id) === String(value));
         return machine ? machine.machine_name : 'Unknown Machine';
       },
     },
@@ -299,7 +299,7 @@ const WarningPageComponent = () => {
         description="Update warning information"
         schema={getEditSchema()}
         defaultValues={selectedWarning ? {
-          machine: selectedWarning.machine,
+          machine: String(selectedWarning.machine),
           warning_description: selectedWarning.warning_description,
         } : {}}
         onSubmit={handleEditWarning}

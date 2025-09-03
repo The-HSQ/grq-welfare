@@ -205,7 +205,10 @@ export const FormField: React.FC<FormFieldProps> = ({
         return (
           <Select value={value || ''} onValueChange={onChange}>
             <SelectTrigger {...commonProps}>
-              <SelectValue placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`} />
+              <SelectValue placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
+              >
+                {field.options?.find(option => option.value == value)?.label}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {field.options?.map((option) => (
