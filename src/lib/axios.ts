@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken, clearAuthCookies } from './cookies';
+import { toast } from 'react-hot-toast';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -121,6 +122,7 @@ api.interceptors.response.use(
     
     if (error.response?.status >= 500) {
       // Server error
+      toast.error('Server error occurred');
       console.error('Server error occurred');
     }
     

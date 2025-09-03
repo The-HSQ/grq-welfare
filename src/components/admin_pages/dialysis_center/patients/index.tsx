@@ -421,6 +421,8 @@ export const PatientsComponent: React.FC = () => {
         emptyMessage="No patients found"
         onView={handleViewPatient}
         onEdit={handleEditClick}
+        pagination={true}
+        pageSize={10}
       />
 
       {/* Add Dialog */}

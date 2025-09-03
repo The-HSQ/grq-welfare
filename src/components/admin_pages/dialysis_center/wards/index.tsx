@@ -188,7 +188,8 @@ const WardsPageComponent = () => {
         onEdit={handleEdit}
         loading={isLoading}
         emptyMessage="No wards found"
-        pagination={false}
+        pagination={true}
+        pageSize={10}
       />
 
       {/* Add Dialog */}
