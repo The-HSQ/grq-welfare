@@ -28,6 +28,8 @@ import { FormSchema } from '../../../common/FormSchema';
 import { EyeIcon, PlusIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { fetchImageData } from '@/lib/axios';
+import { useImageData } from '@/hooks/useImageData';
 
 export const PatientsComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -195,43 +197,37 @@ export const PatientsComponent: React.FC = () => {
   const addSchema = new FormSchema(patientAddSchema);
   const editSchema = new FormSchema(patientEditSchema);
 
+  // Separate component for image cell that can use hooks
+  const ImageCell = ({ patient }: { patient: Patient }) => {
+    const image = getMediaUrl(patient.image);
+    const { imageData, isLoading } = useImageData(image);
+
+    return (
+      <div className="flex w-full items-center">
+        {patient.image ? (
+          <img
+            src={imageData || image || ''}
+            alt="image"
+            loading={isLoading ? 'eager' : 'lazy'}
+            className="w-10 h-10 rounded-lg object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500 text-xs font-medium">
+              {patient.name ? patient.name.charAt(0).toUpperCase() : '?'}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Table columns configuration
   const columns: Column<Patient>[] = [
     {
       key: 'image' as keyof Patient,
       header: 'Image',
-      render: (value, patient) => {      
-        return (
-          <div className="flex w-full items-center">
-            {patient.image ? (
-              <img 
-                src={getMediaUrl(patient.image) || undefined} 
-                alt={patient.name}
-                className="w-10 h-10 rounded-lg object-cover"
-                onError={(e) => {
-                  console.error('Image failed to load:', {
-                    src: e.currentTarget.src,
-                    patientId: patient.id,
-                    imageField: patient.image
-                  });
-                }}
-                onLoad={() => {
-                  console.log('Image loaded successfully:', {
-                    src: getMediaUrl(patient.image),
-                    patientId: patient.id
-                  });
-                }}
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500 text-xs font-medium">
-                  {patient.name ? patient.name.charAt(0).toUpperCase() : '?'}
-                </span>
-              </div>
-            )}
-          </div>
-        );
-      },
+      render: (value, patient) => <ImageCell patient={patient} />,
     },
     {
       key: 'name',

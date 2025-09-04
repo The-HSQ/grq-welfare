@@ -31,6 +31,7 @@ import {
 } from "@/store/slices/dialysisSlice";
 import { RootState, AppDispatch } from "@/store";
 import { getMediaUrl } from "@/lib/utils";
+import { useImageData } from "@/hooks/useImageData";
 
 const DialysisPageComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -495,29 +496,22 @@ const DialysisPageComponent = () => {
     layout: "two-column",
   });
 
-  // Data table columns
-  const columns: Column<Dialysis>[] = [
-    {
-      key: "patient_image",
-      header: "Image",
-      render: (value: string, patient: Dialysis) => {
-        return (
-          <div className="flex w-full items-center">
+  // Separate component for image cell that can use hooks
+  const ImageCell = ({ patient }: { patient: Dialysis }) => {
+    const image = getMediaUrl(patient.patient_image);
+    const { imageData, isLoading } = useImageData(image);
+
+    return (
+      <div className="flex w-full items-center">
             {patient.patient_image ? (
               <img
-                src={getMediaUrl(patient.patient_image) || undefined}
-                alt={patient.patient_name}
+                src={imageData || image || ''}
+                alt="image"
                 className="w-10 h-10 rounded-lg object-cover"
-                onError={(e) => {
-                  console.error("Image failed to load:", {
-                    src: e.currentTarget.src,
-                    patientId: patient.id,
-                    imageField: patient.patient_image,
-                  });
-                }}
+                loading={isLoading ? 'eager' : 'lazy'}
                 onLoad={() => {
                   console.log("Image loaded successfully:", {
-                    src: getMediaUrl(patient.patient_image),
+                    src: imageData || image || '',
                     patientId: patient.id,
                   });
                 }}
@@ -532,6 +526,17 @@ const DialysisPageComponent = () => {
               </div>
             )}
           </div>
+    );
+  };
+
+  // Data table columns
+  const columns: Column<Dialysis>[] = [
+    {
+      key: "patient_image",
+      header: "Image",
+      render: (value: string, patient: Dialysis) => {
+        return (
+          <ImageCell patient={patient} />
         );
       },
     },

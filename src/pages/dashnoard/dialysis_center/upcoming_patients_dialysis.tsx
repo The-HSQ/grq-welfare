@@ -149,7 +149,7 @@ const UpcomingPatientsDialysis = () => {
             {patient.image ? (
               <img
                 src={getMediaUrl(patient.image) || undefined}
-                alt={patient.name}
+                alt="image"
                 className="w-10 h-10 rounded-lg object-cover"
                 onError={(e) => {
                   console.error("Image failed to load:", {

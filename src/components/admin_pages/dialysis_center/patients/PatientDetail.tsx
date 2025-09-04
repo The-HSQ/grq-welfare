@@ -1,28 +1,37 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Edit, Trash2, Download } from 'lucide-react';
-import { getPatientById, deletePatient, clearError, type Dialysis } from '../../../../store/slices/dialysisSlice';
-import { useAppDispatch } from '../../../../store/hooks';
-import type { RootState } from '../../../../store';
-import { getMediaUrl, formatDateTime } from '../../../../lib/utils';
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, Edit, Trash2, Download } from "lucide-react";
+import {
+  getPatientById,
+  deletePatient,
+  clearError,
+  type Dialysis,
+  Patient,
+} from "../../../../store/slices/dialysisSlice";
+import { useAppDispatch } from "../../../../store/hooks";
+import type { RootState } from "../../../../store";
+import { getMediaUrl, formatDateTime } from "../../../../lib/utils";
+import { useImageData } from "@/hooks/useImageData";
 
 export const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  
-  const { currentPatient, dialysis, isLoading, error } = useSelector((state: RootState) => state.dialysis);
+
+  const { currentPatient, dialysis, isLoading, error } = useSelector(
+    (state: RootState) => state.dialysis
+  );
 
   useEffect(() => {
     if (id) {
       dispatch(getPatientById(id));
     }
-    
+
     return () => {
       dispatch(clearError());
     };
@@ -38,7 +47,7 @@ export const PatientDetail = () => {
     if (currentPatient && id) {
       try {
         await dispatch(deletePatient(id)).unwrap();
-        navigate('/dialysis-center/patients');
+        navigate("/dialysis-center/patients");
       } catch (error) {
         // Error is handled by the slice
       }
@@ -47,7 +56,7 @@ export const PatientDetail = () => {
 
   const handleDownloadDocument = () => {
     if (currentPatient?.document_path) {
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       const documentUrl = getMediaUrl(currentPatient.document_path);
       if (documentUrl) {
         link.href = documentUrl;
@@ -76,7 +85,7 @@ export const PatientDetail = () => {
     return (
       <div className="text-center py-12">
         <div className="text-red-600 mb-4">{error}</div>
-        <Button onClick={() => navigate('/dialysis-center/patients')}>
+        <Button onClick={() => navigate("/dialysis-center/patients")}>
           Back to Patients
         </Button>
       </div>
@@ -87,12 +96,35 @@ export const PatientDetail = () => {
     return (
       <div className="text-center py-12">
         <div className="text-gray-600 mb-4">Patient not found</div>
-        <Button onClick={() => navigate('/dialysis-center/patients')}>
+        <Button onClick={() => navigate("/dialysis-center/patients")}>
           Back to Patients
         </Button>
       </div>
     );
   }
+
+  // Separate component for image cell that can use hooks
+  const ImageCell = ({ patient }: { patient: Patient }) => {
+    const image = getMediaUrl(patient.image);
+    const { imageData, isLoading } = useImageData(image);
+
+    return (
+      <div className="flex justify-center">
+        {patient.image ? (
+          <img
+            src={imageData || image || ''}
+            alt="image"
+            loading={isLoading ? 'eager' : 'lazy'}
+            className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
+          />
+        ) : (
+          <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+            <span className="text-gray-500 text-lg">No Image</span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -102,7 +134,7 @@ export const PatientDetail = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/dialysis-center/patients')}
+            onClick={() => navigate("/dialysis-center/patients")}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
@@ -128,35 +160,34 @@ export const PatientDetail = () => {
             <CardTitle>Patient Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-center">
-              {currentPatient.image ? (
-                <img
-                  src={getMediaUrl(currentPatient.image) || undefined}
-                  alt={currentPatient.name}
-                  className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
-                />
-              ) : (
-                <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
-                  <span className="text-gray-500 text-lg">No Image</span>
-                </div>
-              )}
-            </div>
-            
+            <ImageCell patient={currentPatient} />
+
             <div className="text-center">
               <h2 className="text-xl font-semibold">{currentPatient.name}</h2>
               <p className="text-gray-600">{currentPatient.nic}</p>
-              <Badge variant={currentPatient.zakat_eligible ? "default" : "secondary"} className="mt-2">
-                {currentPatient.zakat_eligible ? 'Zakat Eligible' : 'Not Zakat Eligible'}
+              <Badge
+                variant={
+                  currentPatient.zakat_eligible ? "default" : "secondary"
+                }
+                className="mt-2"
+              >
+                {currentPatient.zakat_eligible
+                  ? "Zakat Eligible"
+                  : "Not Zakat Eligible"}
               </Badge>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-500">Phone</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Phone
+                </label>
                 <p className="text-gray-900">{currentPatient.phone}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Address</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Address
+                </label>
                 <p className="text-gray-900">{currentPatient.address}</p>
               </div>
             </div>
@@ -171,19 +202,31 @@ export const PatientDetail = () => {
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-500">Dialysis Per Week</label>
-                <p className="text-lg font-semibold">{currentPatient.dialysis_per_week} sessions</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Dialysis Per Week
+                </label>
+                <p className="text-lg font-semibold">
+                  {currentPatient.dialysis_per_week} sessions
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Next Dialysis Date</label>
-                <p className="text-lg font-semibold">{currentPatient.manually_set_dialysis_date ? formatDateTime(currentPatient.manually_set_dialysis_date) : formatDateTime(currentPatient.next_dialysis_date)}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Next Dialysis Date
+                </label>
+                <p className="text-lg font-semibold">
+                  {currentPatient.manually_set_dialysis_date
+                    ? formatDateTime(currentPatient.manually_set_dialysis_date)
+                    : formatDateTime(currentPatient.next_dialysis_date)}
+                </p>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-500">Zakat Eligibility</label>
+              <label className="text-sm font-medium text-gray-500">
+                Zakat Eligibility
+              </label>
               <p className="text-lg font-semibold">
-                {currentPatient.zakat_eligible ? 'Yes' : 'No'}
+                {currentPatient.zakat_eligible ? "Yes" : "No"}
               </p>
             </div>
           </CardContent>
@@ -197,20 +240,30 @@ export const PatientDetail = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-500">Relative Name</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Relative Name
+                </label>
                 <p className="text-gray-900">{currentPatient.relative_name}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Relative NIC</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Relative NIC
+                </label>
                 <p className="text-gray-900">{currentPatient.relative_nic}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Relative Phone</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Relative Phone
+                </label>
                 <p className="text-gray-900">{currentPatient.relative_phone}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Relative Address</label>
-                <p className="text-gray-900">{currentPatient.relative_address}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Relative Address
+                </label>
+                <p className="text-gray-900">
+                  {currentPatient.relative_address}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -224,33 +277,55 @@ export const PatientDetail = () => {
           <CardContent className="space-y-4">
             {currentPatient.document_path && (
               <div>
-                <label className="text-sm font-medium text-gray-500">Patient Document</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Patient Document
+                </label>
                 <div className="mt-2">
-                  <Button onClick={handleDownloadDocument} variant="outline" size="sm">
+                  <Button
+                    onClick={handleDownloadDocument}
+                    variant="outline"
+                    size="sm"
+                  >
                     <Download className="h-4 w-4 mr-2" />
                     Download Document
                   </Button>
                 </div>
               </div>
             )}
-            
+
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-500">Created By</label>
-                <p className="text-gray-900">{currentPatient.created_by_name}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Created By
+                </label>
+                <p className="text-gray-900">
+                  {currentPatient.created_by_name}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Created At</label>
-                <p className="text-gray-900">{formatDateTime(currentPatient.created_at)}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Created At
+                </label>
+                <p className="text-gray-900">
+                  {formatDateTime(currentPatient.created_at)}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                <p className="text-gray-900">{formatDateTime(currentPatient.updated_at)}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Last Updated
+                </label>
+                <p className="text-gray-900">
+                  {formatDateTime(currentPatient.updated_at)}
+                </p>
               </div>
               {currentPatient.uploaded_at && (
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Document Uploaded</label>
-                  <p className="text-gray-900">{formatDateTime(currentPatient.uploaded_at)}</p>
+                  <label className="text-sm font-medium text-gray-500">
+                    Document Uploaded
+                  </label>
+                  <p className="text-gray-900">
+                    {formatDateTime(currentPatient.uploaded_at)}
+                  </p>
                 </div>
               )}
             </div>
@@ -266,21 +341,25 @@ export const PatientDetail = () => {
             {dialysis && dialysis.length > 0 ? (
               <div className="space-y-4">
                 {dialysis.map((session) => (
-                  <div key={session.id} className="border rounded-lg p-4 space-y-3">
+                  <div
+                    key={session.id}
+                    className="border rounded-lg p-4 space-y-3"
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-semibold text-lg">
                           {session.shift_no} - {session.bed_name}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Machine: {session.machine_name} ({session.machine_status})
+                          Machine: {session.machine_name} (
+                          {session.machine_status})
                         </p>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         {formatDateTime(session.created_at)}
                       </Badge>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <label className="text-gray-500">Start Time</label>
@@ -292,11 +371,13 @@ export const PatientDetail = () => {
                       </div>
                       <div>
                         <label className="text-gray-500">Blood Pressure</label>
-                        <p className="font-medium">{session.blood_pressure || 'N/A'}</p>
+                        <p className="font-medium">
+                          {session.blood_pressure || "N/A"}
+                        </p>
                       </div>
                       <div>
                         <label className="text-gray-500">Weight</label>
-                        <p className="font-medium">{session.weight || 'N/A'}</p>
+                        <p className="font-medium">{session.weight || "N/A"}</p>
                       </div>
                     </div>
 
@@ -304,14 +385,22 @@ export const PatientDetail = () => {
                       <div className="space-y-2">
                         {session.technician_comment && (
                           <div>
-                            <label className="text-sm font-medium text-gray-500">Technician Comment</label>
-                            <p className="text-sm bg-gray-50 p-2 rounded">{session.technician_comment}</p>
+                            <label className="text-sm font-medium text-gray-500">
+                              Technician Comment
+                            </label>
+                            <p className="text-sm bg-gray-50 p-2 rounded">
+                              {session.technician_comment}
+                            </p>
                           </div>
                         )}
                         {session.doctor_comment && (
                           <div>
-                            <label className="text-sm font-medium text-gray-500">Doctor Comment</label>
-                            <p className="text-sm bg-blue-50 p-2 rounded">{session.doctor_comment}</p>
+                            <label className="text-sm font-medium text-gray-500">
+                              Doctor Comment
+                            </label>
+                            <p className="text-sm bg-blue-50 p-2 rounded">
+                              {session.doctor_comment}
+                            </p>
                           </div>
                         )}
                       </div>

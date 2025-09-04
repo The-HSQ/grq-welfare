@@ -63,7 +63,8 @@ export function isRelativePath(path: string | null | undefined): boolean {
 export function getApiBaseUrl(): string {
   // In development, this will be http://localhost:8000
   // In production, this will be the actual domain
-  return import.meta.env.VITE_API_URL || window.location.origin;
+  const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+  return apiUrl;
 }
 
 /**
@@ -82,5 +83,7 @@ export function getServerBaseUrl(): string {
  * @returns Full URL to the media file
  */
 export function getMediaUrl(relativePath: string | null | undefined): string | null {
-  return getFullMediaUrl(relativePath, getServerBaseUrl());
+  const serverBaseUrl = getServerBaseUrl();
+  const fullUrl = getFullMediaUrl(relativePath, serverBaseUrl);
+  return fullUrl;
 }

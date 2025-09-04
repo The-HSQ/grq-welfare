@@ -23,6 +23,7 @@ import {
 } from "@/store/slices/dialysisSlice";
 import { RootState, AppDispatch } from "@/store";
 import { getMediaUrl } from "@/lib/mediaUtils";
+import { useImageData } from "@/hooks/useImageData";
 
 const DialysisDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,6 +78,29 @@ const DialysisDetail = () => {
 
   const dialysis = currentDialysis;
 
+  // Separate component for image cell that can use hooks
+  const ImageCell = ({ patient }: { patient: Dialysis }) => {
+    const image = getMediaUrl(patient.patient_image);
+    const { imageData, isLoading } = useImageData(image);
+
+    return (
+      <>
+      {patient.patient_image ? (
+        <img
+        src={imageData || image || ''}
+        alt="image"
+        loading={isLoading ? 'eager' : 'lazy'}
+          className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
+        />
+      ) : (
+        <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+          <span className="text-gray-500 text-lg">No Image</span>
+        </div>
+      )}
+      </>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -110,17 +134,7 @@ const DialysisDetail = () => {
                 <p className="text-lg font-semibold">{dialysis.patient_name}</p>
               </div>
             </div>
-            {dialysis.patient_image ? (
-              <img
-                src={getMediaUrl(dialysis.patient_image) || undefined}
-                alt={dialysis.patient_name}
-                className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
-              />
-            ) : (
-              <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
-                <span className="text-gray-500 text-lg">No Image</span>
-              </div>
-            )}
+            <ImageCell patient={dialysis} />
           </CardContent>
         </Card>
 
