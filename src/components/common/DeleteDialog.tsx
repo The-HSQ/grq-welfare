@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -9,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
 interface DeleteDialogProps {
@@ -22,6 +22,7 @@ interface DeleteDialogProps {
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
+  error?: string | null;
 }
 
 export const DeleteDialog: React.FC<DeleteDialogProps> = ({
@@ -34,18 +35,24 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   onCancel,
   confirmText = "Delete",
   cancelText = "Cancel",
-  loading = false
+  loading = false,
+  error = null
 }) => {
   const handleCancel = () => {
+    if (loading) {
+      return; // Don't allow canceling while loading
+    }
     if (onCancel) {
       onCancel();
     }
     onOpenChange(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     onConfirm();
-    onOpenChange(false);
+    // Don't close dialog immediately - let the parent component handle it based on the response
   };
 
   const defaultDescription = itemName 
@@ -53,21 +60,36 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
     : "This action cannot be undone.";
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog 
+      open={open} 
+      onOpenChange={(open) => {
+        // Don't allow closing while loading
+        if (!open && loading) {
+          return;
+        }
+        onOpenChange(open);
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>
             {description || defaultDescription}
           </AlertDialogDescription>
+          {error && (
+            <div className="mt-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+              {error}
+            </div>
+          )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={loading}>
             {cancelText}
           </AlertDialogCancel>
-          <AlertDialogAction 
+          <Button 
             onClick={handleConfirm}
             disabled={loading}
+            variant="destructive"
             className="bg-destructive text-white hover:bg-destructive/90"
           >
             {loading ? (
@@ -78,7 +100,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
             ) : (
               confirmText
             )}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

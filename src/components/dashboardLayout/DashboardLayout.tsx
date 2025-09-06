@@ -237,27 +237,7 @@ export default function DashboardLayout() {
           url: "/office-management",
           icon: Home,
         },
-        {
-          title: "Staff Management",
-          url: "/staff",
-          icon: Users,
-        },
-        {
-          title: "Office Reports",
-          url: "/office-reports",
-          icon: BarChart3,
-        },
       ],
-    },
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: User,
-    },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
     },
   ];
 
@@ -368,16 +348,6 @@ export default function DashboardLayout() {
       title: "Office Management",
       url: "/office-management",
       icon: Building2,
-    },
-    {
-      title: "Staff Management",
-      url: "/staff",
-      icon: Users,
-    },
-    {
-      title: "Office Reports",
-      url: "/office-reports",
-      icon: BarChart3,
     },
   ];
 

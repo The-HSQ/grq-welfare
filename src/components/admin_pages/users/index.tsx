@@ -19,11 +19,13 @@ import type { Column } from '../../common/DataTable';
 import { AddDialog } from '../../common/AddDialog';
 import { EditDialog } from '../../common/EditDialog';
 import { DeleteDialog } from '../../common/DeleteDialog';
+import { ViewDialog } from '../../common/ViewDialog';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { PlusIcon } from 'lucide-react';
 import { addUserSchema, editUserSchema, roleOptions } from './schemas';
 import type { User, CreateUserData, UpdateUserData } from '../../../store/slices/usersSlice';
+import { userAPI } from '../../../services/api';
 
 const UsersPageComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,7 +46,11 @@ const UsersPageComponent: React.FC = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToView, setUserToView] = useState<User | null>(null);
+  const [fetchingUserDetails, setFetchingUserDetails] = useState(false);
+  const [detailedUserData, setDetailedUserData] = useState<any>(null);
 
   // Filter states
   const [filters, setFilters] = useState<{ role: string; status: string }>({
@@ -138,6 +144,7 @@ const UsersPageComponent: React.FC = () => {
     dispatch(createUser(cleanData)).then((result) => {
       if (createUser.fulfilled.match(result)) {
         setAddDialogOpen(false);
+        dispatch(fetchUsers());
       }
     });
   };
@@ -145,7 +152,7 @@ const UsersPageComponent: React.FC = () => {
   // Handle edit user
   const handleEditUser = (data: UpdateUserData) => {
     // Validate password confirmation
-    if (data.password && data.password !== data.confirm_password) {
+    if (data.password && data.password !== data.password_confirm) {
       // This will be handled by the form validation, but we can add additional logic here
       return;
     }
@@ -154,12 +161,12 @@ const UsersPageComponent: React.FC = () => {
     const userData = { ...data };
     if (!userData.password || userData.password.trim() === '') {
       delete userData.password;
-      delete userData.confirm_password;
+      delete userData.password_confirm;
     } else {
       // Clean the password data
       userData.password = userData.password.trim();
-      if (userData.confirm_password) {
-        userData.confirm_password = userData.confirm_password.trim();
+      if (userData.password_confirm) {
+        userData.password_confirm = userData.password_confirm.trim();
       }
     }
     
@@ -201,6 +208,40 @@ const UsersPageComponent: React.FC = () => {
   const handleDelete = (user: User) => {
     setUserToDelete(user);
     setDeleteDialogOpen(true);
+    // Clear any previous delete error
+    dispatch(clearDeleteError());
+  };
+
+  // Handle delete dialog cancel
+  const handleDeleteCancel = () => {
+    setUserToDelete(null);
+    dispatch(clearDeleteError());
+  };
+
+  // Async function to fetch detailed user data
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      setFetchingUserDetails(true);
+      const response = await userAPI.getUserById(userId);
+      setDetailedUserData(response.data);
+      return response.data;
+    } catch (error) {
+      return null;
+    } finally {
+      setFetchingUserDetails(false);
+    }
+  };
+
+  // Handle view button click
+  const handleView = async (user: User) => {
+    console.log('user id', user.id);
+    setViewDialogOpen(true);
+    
+    // Fetch detailed user data
+    const detailedData = await fetchUserDetails(user.id);
+    if (detailedData) {
+      setDetailedUserData(detailedData);
+    }
   };
 
   // Table columns
@@ -292,6 +333,12 @@ const UsersPageComponent: React.FC = () => {
           {error}
         </div>
       )}
+      {/* Delete Error Display */}
+      {deleteError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {deleteError}
+        </div>
+      )}
 
       {/* Filter Bar */}
       <FilterBar
@@ -311,6 +358,7 @@ const UsersPageComponent: React.FC = () => {
           columns={columns}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onView={handleView}
           loading={loading}
           emptyMessage="No users found"
           pagination={true}
@@ -347,21 +395,96 @@ const UsersPageComponent: React.FC = () => {
       {/* Delete User Dialog */}
       <DeleteDialog
         open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
+        onOpenChange={(open) => {
+          // Don't allow closing the dialog while loading
+          if (!open && deleteLoading) {
+            return;
+          }
+          setDeleteDialogOpen(open);
+          if (!open) {
+            handleDeleteCancel();
+          }
+        }}
         title="Delete User"
         description="Are you sure you want to delete this user? This action cannot be undone."
         itemName={userToDelete?.name}
         onConfirm={handleDeleteUser}
+        onCancel={handleDeleteCancel}
         loading={deleteLoading}
+        error={deleteError}
         confirmText="Delete User"
       />
 
-      {/* Delete Error Display */}
-      {deleteError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-          {deleteError}
-        </div>
-      )}
+      {/* View User Dialog */}
+      <ViewDialog
+        open={viewDialogOpen}
+        onOpenChange={(open) => {
+          setViewDialogOpen(open);
+          if (!open) {
+            setUserToView(null);
+            setDetailedUserData(null);
+          }
+        }}
+        title="User Details"
+        description="View complete user information"
+        data={detailedUserData || userToView || {}}
+        loading={fetchingUserDetails}
+        fields={[
+          {
+            key: 'id',
+            label: 'User ID',
+            type: 'text',
+          },
+          {
+            key: 'name',
+            label: 'Full Name',
+            type: 'text',
+          },
+          {
+            key: 'email',
+            label: 'Email Address',
+            type: 'email',
+          },
+          {
+            key: 'plain_password',
+            label: 'Password',
+            type: 'text',
+            format: (value) => value || 'Not available',
+          },
+          {
+            key: 'role',
+            label: 'Role',
+            type: 'badge',
+            badgeVariant: 'secondary',
+            format: (value) => {
+              const roleOption = roleOptions.find(option => option.value === value);
+              return roleOption?.label || value;
+            },
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            type: 'status',
+          },
+          {
+            key: 'is_active',
+            label: 'Active',
+            type: 'badge',
+            badgeVariant: 'outline',
+            format: (value) => value ? 'Yes' : 'No',
+          },
+          {
+            key: 'created_at',
+            label: 'Created At',
+            type: 'date',
+          },
+          {
+            key: 'updated_at',
+            label: 'Last Updated',
+            type: 'date',
+          },
+        ]}
+      />
     </div>
   );
 };

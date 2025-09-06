@@ -57,6 +57,9 @@ export const PatientsComponent: React.FC = () => {
     status: 'active', // Default to active status
     handicapped: 'all',
     access_type: 'all',
+    hbsag: 'all',
+    hcv: 'all',
+    hiv: 'all',
   });
 
   // Fetch patients on component mount
@@ -184,6 +187,11 @@ export const PatientsComponent: React.FC = () => {
     const matchesHandicapped = filters.handicapped === 'all' || filters.handicapped === '' || patient.handicapped === (filters.handicapped === 'true');
 
     const matchesAccessType = filters.access_type === 'all' || filters.access_type === '' || patient.access_type === filters.access_type;
+
+    // Medical test filters
+    const matchesHbsag = filters.hbsag === 'all' || filters.hbsag === '' || patient.hbsag === filters.hbsag;
+    const matchesHcv = filters.hcv === 'all' || filters.hcv === '' || patient.hcv === filters.hcv;
+    const matchesHiv = filters.hiv === 'all' || filters.hiv === '' || patient.hiv === filters.hiv;
     
     // Date filter
     if (filters.date) {
@@ -197,7 +205,7 @@ export const PatientsComponent: React.FC = () => {
       if (itemYear !== filters.year) return false;
     }
     
-    return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType;
+    return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType && matchesHbsag && matchesHcv && matchesHiv;
   }) || [];
 
   // Create FormSchema instances
@@ -450,6 +458,39 @@ export const PatientsComponent: React.FC = () => {
       ],
       value: filters.access_type,
     },
+    {
+      key: 'hbsag',
+      label: 'HBSAG',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
+      value: filters.hbsag,
+    },
+    {
+      key: 'hcv',
+      label: 'HCV',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
+      value: filters.hcv,
+    },
+    {
+      key: 'hiv',
+      label: 'HIV',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
+      value: filters.hiv,
+    },
   ];
 
   return (
@@ -472,7 +513,7 @@ export const PatientsComponent: React.FC = () => {
         onFilterChange={(key, value) => 
           setFilters(prev => ({ ...prev, [key]: value }))
         }
-        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '', status: 'active', handicapped: 'all', access_type: 'all' })}
+        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '', status: 'active', handicapped: 'all', access_type: 'all', hbsag: 'all', hcv: 'all', hiv: 'all' })}
       />
 
       {/* Data Table */}

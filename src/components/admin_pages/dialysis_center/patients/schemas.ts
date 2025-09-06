@@ -79,23 +79,32 @@ export const patientAddSchema: FormSchemaConfig = {
     {
       name: 'hbsag',
       label: 'HBSAG',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HBSAG',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'hcv',
       label: 'HCV',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HCV',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'hiv',
       label: 'HIV',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HIV',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'blood_test_cbc',
@@ -227,23 +236,32 @@ export const patientEditSchema: FormSchemaConfig = {
     {
       name: 'hbsag',
       label: 'HBSAG',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HBSAG',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'hcv',
       label: 'HCV',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HCV',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'hiv',
       label: 'HIV',
-      type: 'text',
+      type: 'select',
       required: false,
-      placeholder: 'Enter HIV',
+      options: [
+        { value: '+ve', label: '+ve' },
+        { value: '-ve', label: '-ve' },
+      ],
     },
     {
       name: 'blood_test_cbc',

@@ -92,10 +92,14 @@ export const editUserSchema = new FormSchema({
       label: 'New Password (Optional)',
       type: 'password',
       required: false,
+      validation: {
+        minLength: 8,
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      },
       placeholder: 'Enter new password (optional)',
     },
     {
-      name: 'confirm_password',
+      name: 'password_confirm',
       label: 'Confirm New Password',
       type: 'password',
       required: false,

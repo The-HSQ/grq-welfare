@@ -59,7 +59,7 @@ export interface UpdateUserData {
   email?: string;
   role?: string;
   password?: string;
-  confirm_password?: string;
+  password_confirm?: string;
 }
 
 // Users response interface

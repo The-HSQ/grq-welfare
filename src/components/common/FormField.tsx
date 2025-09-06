@@ -8,7 +8,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Controller, type FieldError } from 'react-hook-form';
-import { Upload, X, FileText, Image as ImageIcon, Download, Eye, EyeOff } from 'lucide-react';
+import { X, FileText, Image as ImageIcon, Download } from 'lucide-react';
+import { PasswordField } from './PasswordField';
 
 export interface FormFieldOption {
   value: string;
@@ -57,7 +58,6 @@ export const FormField: React.FC<FormFieldProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [existingFile, setExistingFile] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
 
   const renderField = (value: any, onChange: (value: any) => void) => {
     const commonProps = {
@@ -252,26 +252,18 @@ export const FormField: React.FC<FormFieldProps> = ({
 
       case 'password':
         return (
-          <div className="relative">
-            <Input
-              {...commonProps}
-              type={showPassword ? "text" : "password"}
-              value={value || ''}
-              onChange={(e) => onChange(e.target.value)}
-              className={`${commonProps.className} pr-10`}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-              {showPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
-          </div>
+          <PasswordField
+            name={field.name}
+            label={field.label}
+            placeholder={field.placeholder}
+            value={value || ''}
+            onChange={onChange}
+            required={field.required}
+            disabled={field.disabled}
+            className={field.className}
+            showValidation={true}
+            showLabel={false}
+          />
         );
 
       default:
@@ -305,12 +297,6 @@ export const FormField: React.FC<FormFieldProps> = ({
             }
           }, [value]);
 
-          // Reset password visibility when field value changes
-          useEffect(() => {
-            if (field.type === 'password') {
-              setShowPassword(false);
-            }
-          }, [field.type, value]);
 
           return renderField(value, onChange);
         }}
