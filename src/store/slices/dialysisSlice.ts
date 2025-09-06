@@ -262,14 +262,21 @@ export interface Patient {
   created_at: string;
   updated_at: string;
   relative_name: string;
-  relative_nic: string;
   relative_phone: string;
-  relative_address: string;
   document_path: string;
   uploaded_at: string;
   dialysis_sessions?: any[];
   dialysis_count?: number;
   last_dialysis_date?: string | null;
+  status?: string;
+  access_type?: string;
+  handicapped?: boolean;
+  hbsag?: string;
+  hcv?: string;
+  hiv?: string;
+  blood_test_cbc?: boolean;
+  rft_creatinine?: boolean;
+  rft_urea?: boolean;
 }
 
 // Patient with dialysis history response interface
@@ -415,12 +422,18 @@ export interface CreatePatientData {
   manually_set_dialysis_date: string;
   zakat_eligible: boolean;
   relative_name: string;
-  relative_nic: string;
   relative_phone: string;
-  relative_address: string;
   image?: File;
   document_path?: File;
   created_at?: string;
+  access_type?: string;
+  handicapped?: boolean;
+  hbsag?: string;
+  hcv?: string;
+  hiv?: string;
+  blood_test_cbc?: boolean;
+  rft_creatinine?: boolean;
+  rft_urea?: boolean;
 }
 
 // Update patient interface
@@ -434,12 +447,19 @@ export interface UpdatePatientData {
   manually_set_dialysis_date?: string;
   zakat_eligible?: boolean;
   relative_name?: string;
-  relative_nic?: string;
   relative_phone?: string;
-  relative_address?: string;
   image?: File;
   document_path?: File;
   created_at?: string;
+  status?: string;
+  access_type?: string;
+  handicapped?: boolean;
+  hbsag?: string;
+  hcv?: string;
+  hiv?: string;
+  blood_test_cbc?: boolean;
+  rft_creatinine?: boolean;
+  rft_urea?: boolean;
 }
 
 // Dashboard stats interface

@@ -23,7 +23,6 @@ import {
 } from "@/store/slices/dialysisSlice";
 import { RootState, AppDispatch } from "@/store";
 import { getMediaUrl } from "@/lib/mediaUtils";
-import { useImageData } from "@/hooks/useImageData";
 
 const DialysisDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -81,16 +80,14 @@ const DialysisDetail = () => {
   // Separate component for image cell that can use hooks
   const ImageCell = ({ patient }: { patient: Dialysis }) => {
     const image = getMediaUrl(patient.patient_image);
-    const { imageData, isLoading } = useImageData(image);
 
     return (
       <>
       {patient.patient_image ? (
         <img
-        src={imageData || image || ''}
+        src={image || ''}
         alt="image"
-        loading={isLoading ? 'eager' : 'lazy'}
-          className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
+        className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
         />
       ) : (
         <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">

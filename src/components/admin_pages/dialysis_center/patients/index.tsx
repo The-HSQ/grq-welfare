@@ -28,8 +28,6 @@ import { FormSchema } from '../../../common/FormSchema';
 import { EyeIcon, PlusIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { fetchImageData } from '@/lib/axios';
-import { useImageData } from '@/hooks/useImageData';
 
 export const PatientsComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -56,6 +54,9 @@ export const PatientsComponent: React.FC = () => {
     dialysis_per_week: '',
     date: '',
     year: '',
+    status: 'active', // Default to active status
+    handicapped: 'all',
+    access_type: 'all',
   });
 
   // Fetch patients on component mount
@@ -164,12 +165,12 @@ export const PatientsComponent: React.FC = () => {
 
   // Filter patients based on search and filters
   const filteredPatients = patients?.filter(patient => {
-    const matchesSearch = patient.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-                         patient.nic.toLowerCase().includes(filters.search.toLowerCase()) ||
-                         patient.phone.toLowerCase().includes(filters.search.toLowerCase()) ||
-                         patient.address.toLowerCase().includes(filters.search.toLowerCase()) ||
-                         patient.relative_name.toLowerCase().includes(filters.search.toLowerCase()) ||
-                         patient.relative_phone.toLowerCase().includes(filters.search.toLowerCase());
+    const matchesSearch = (patient.name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                         (patient.nic?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                         (patient.phone?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                         (patient.address?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                         (patient.relative_name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                         (patient.relative_phone?.toLowerCase().includes(filters.search.toLowerCase()) || false);
     
     const matchesZakat = filters.zakat_eligible === '' || 
                         (filters.zakat_eligible === 'true' && patient.zakat_eligible) ||
@@ -177,6 +178,12 @@ export const PatientsComponent: React.FC = () => {
     
     const matchesDialysis = filters.dialysis_per_week === '' || 
                            patient.dialysis_per_week === parseInt(filters.dialysis_per_week);
+    
+    const matchesStatus = filters.status === 'all' || filters.status === '' || patient.status === filters.status;
+
+    const matchesHandicapped = filters.handicapped === 'all' || filters.handicapped === '' || patient.handicapped === (filters.handicapped === 'true');
+
+    const matchesAccessType = filters.access_type === 'all' || filters.access_type === '' || patient.access_type === filters.access_type;
     
     // Date filter
     if (filters.date) {
@@ -190,7 +197,7 @@ export const PatientsComponent: React.FC = () => {
       if (itemYear !== filters.year) return false;
     }
     
-    return matchesSearch && matchesZakat && matchesDialysis;
+    return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType;
   }) || [];
 
   // Create FormSchema instances
@@ -200,15 +207,14 @@ export const PatientsComponent: React.FC = () => {
   // Separate component for image cell that can use hooks
   const ImageCell = ({ patient }: { patient: Patient }) => {
     const image = getMediaUrl(patient.image);
-    const { imageData, isLoading } = useImageData(image);
+    console.log(image);
 
     return (
       <div className="flex w-full items-center">
         {patient.image ? (
           <img
-            src={imageData || image || ''}
+            src={image || ''}
             alt="image"
-            loading={isLoading ? 'eager' : 'lazy'}
             className="w-10 h-10 rounded-lg object-cover"
           />
         ) : (
@@ -234,15 +240,12 @@ export const PatientsComponent: React.FC = () => {
       header: 'Name',
       sortable: true,
       render: (value, patient) => (
-        <div className="font-medium text-gray-900">{patient.name}</div>
-      ),
-    },
-    {
-      key: 'nic',
-      header: 'NIC',
-      sortable: true,
-      render: (value, patient) => (
-        <div className="text-gray-600">{patient.nic}</div>
+        <div className="font-medium text-gray-900 flex flex-col">
+          {patient.name}
+          {patient.nic && (
+            <span className="text-gray-600 text-xs">{patient.nic}</span>
+          )}
+        </div>
       ),
     },
     {
@@ -290,12 +293,42 @@ export const PatientsComponent: React.FC = () => {
       ),
     },
     {
+      key: 'access_type',
+      header: 'Access Type',
+      sortable: true,
+      render: (value, patient) => (
+        <Badge variant={patient.access_type === 'av_fistula' ? 'default' : 'secondary'} className={patient.access_type === 'av_fistula' ? 'bg-gray-500 text-white' : 'bg-gray-300 text-white'}>
+          {patient.access_type === 'av_fistula' ? 'Av Fistula' : patient.access_type === 'catheter' ? 'Catheter' : 'Unknown'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'handicapped',
+      header: 'Handicapped',
+      sortable: true,
+      render: (value, patient) => (
+        <Badge variant={patient.handicapped ? 'default' : 'secondary'} className={patient.handicapped ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
+          {patient.handicapped ? 'Yes' : 'No'}
+        </Badge>
+      ),
+    },
+    {
       key: 'zakat_eligible',
       header: 'Zakat Eligible',
       sortable: true,
       render: (value, patient) => (
         <Badge variant={patient.zakat_eligible ? 'default' : 'secondary'} className={patient.zakat_eligible ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
           {patient.zakat_eligible ? 'Eligible' : 'Not Eligible'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      sortable: true,
+      render: (value, patient) => (
+        <Badge variant={patient.status === 'active' ? 'default' : 'secondary'} className={patient.status === 'active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
+          {patient.status === 'active' ? 'Active' : patient.status === 'inactive' ? 'Inactive' : 'Unknown'}
         </Badge>
       ),
     },
@@ -384,6 +417,39 @@ export const PatientsComponent: React.FC = () => {
       ],
       value: filters.year,
     },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: 'active', label: 'Active' },
+        { value: 'inactive', label: 'Inactive' },
+      ],
+      value: filters.status,
+    },
+    {
+      key: 'handicapped',
+      label: 'Handicapped',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: 'true', label: 'Yes' },
+        { value: 'false', label: 'No' },
+      ],
+      value: filters.handicapped,
+    },
+    {
+      key: 'access_type',
+      label: 'Access Type',
+      type: 'select' as const,
+      options: [
+        { value: 'all', label: 'All' },
+        { value: 'av_fistula', label: 'Av Fistula' },
+        { value: 'catheter', label: 'Catheter' },
+      ],
+      value: filters.access_type,
+    },
   ];
 
   return (
@@ -406,7 +472,7 @@ export const PatientsComponent: React.FC = () => {
         onFilterChange={(key, value) => 
           setFilters(prev => ({ ...prev, [key]: value }))
         }
-        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '' })}
+        onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '', status: 'active', handicapped: 'all', access_type: 'all' })}
       />
 
       {/* Data Table */}

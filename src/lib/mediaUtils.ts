@@ -17,7 +17,7 @@ export function getFullMediaUrl(relativePath: string | null | undefined, baseUrl
   const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
 
   // Use provided base URL or current origin
-  const base = baseUrl || window.location.origin;
+  const base = baseUrl || "https://mzas.site";
 
   // Remove trailing slash from base URL if present
   const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
@@ -63,7 +63,7 @@ export function isRelativePath(path: string | null | undefined): boolean {
 export function getApiBaseUrl(): string {
   // In development, this will be http://localhost:8000
   // In production, this will be the actual domain
-  const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+  const apiUrl = import.meta.env.VITE_API_URL || "https://mzas.site";
   return apiUrl;
 }
 

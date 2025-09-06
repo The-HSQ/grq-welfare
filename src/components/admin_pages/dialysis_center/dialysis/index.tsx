@@ -31,7 +31,6 @@ import {
 } from "@/store/slices/dialysisSlice";
 import { RootState, AppDispatch } from "@/store";
 import { getMediaUrl } from "@/lib/utils";
-import { useImageData } from "@/hooks/useImageData";
 
 const DialysisPageComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -286,7 +285,7 @@ const DialysisPageComponent = () => {
         label: "Patient",
         type: "select",
         required: true,
-        options: patients?.map((p) => ({ value: p.id, label: p.name })) || [],
+        options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
       },
       {
         name: "bed",
@@ -395,7 +394,7 @@ const DialysisPageComponent = () => {
         label: "Patient",
         type: "select",
         required: true,
-        options: patients?.map((p) => ({ value: p.id, label: p.name })) || [],
+        options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
       },
       {
         name: "bed",
@@ -499,22 +498,14 @@ const DialysisPageComponent = () => {
   // Separate component for image cell that can use hooks
   const ImageCell = ({ patient }: { patient: Dialysis }) => {
     const image = getMediaUrl(patient.patient_image);
-    const { imageData, isLoading } = useImageData(image);
 
     return (
       <div className="flex w-full items-center">
             {patient.patient_image ? (
               <img
-                src={imageData || image || ''}
+                src={image || ""}
                 alt="image"
                 className="w-10 h-10 rounded-lg object-cover"
-                loading={isLoading ? 'eager' : 'lazy'}
-                onLoad={() => {
-                  console.log("Image loaded successfully:", {
-                    src: imageData || image || '',
-                    patientId: patient.id,
-                  });
-                }}
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">

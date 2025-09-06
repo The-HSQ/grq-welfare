@@ -158,12 +158,6 @@ const UpcomingPatientsDialysis = () => {
                     imageField: patient.image,
                   });
                 }}
-                onLoad={() => {
-                  console.log("Image loaded successfully:", {
-                    src: getMediaUrl(patient.image),
-                    patientId: patient.patient_id,
-                  });
-                }}
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">

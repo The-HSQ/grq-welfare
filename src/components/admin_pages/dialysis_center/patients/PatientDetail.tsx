@@ -16,7 +16,6 @@ import {
 import { useAppDispatch } from "../../../../store/hooks";
 import type { RootState } from "../../../../store";
 import { getMediaUrl, formatDateTime } from "../../../../lib/utils";
-import { useImageData } from "@/hooks/useImageData";
 
 export const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -106,15 +105,13 @@ export const PatientDetail = () => {
   // Separate component for image cell that can use hooks
   const ImageCell = ({ patient }: { patient: Patient }) => {
     const image = getMediaUrl(patient.image);
-    const { imageData, isLoading } = useImageData(image);
 
     return (
       <div className="flex justify-center">
         {patient.image ? (
           <img
-            src={imageData || image || ''}
+            src={image || ""}
             alt="image"
-            loading={isLoading ? 'eager' : 'lazy'}
             className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
           />
         ) : (
@@ -165,16 +162,27 @@ export const PatientDetail = () => {
             <div className="text-center">
               <h2 className="text-xl font-semibold">{currentPatient.name}</h2>
               <p className="text-gray-600">{currentPatient.nic}</p>
-              <Badge
-                variant={
-                  currentPatient.zakat_eligible ? "default" : "secondary"
-                }
-                className="mt-2"
-              >
-                {currentPatient.zakat_eligible
-                  ? "Zakat Eligible"
-                  : "Not Zakat Eligible"}
-              </Badge>
+              <div className="flex flex-col gap-2 mt-2">
+                <Badge
+                  variant={
+                    currentPatient.status === "active" ? "default" : "secondary"
+                  }
+                >
+                  {currentPatient.status === "active" ? "Active" : "Inactive"}
+                </Badge>
+                <Badge
+                  variant={
+                    currentPatient.zakat_eligible ? "default" : "secondary"
+                  }
+                >
+                  {currentPatient.zakat_eligible
+                    ? "Zakat Eligible"
+                    : "Not Zakat Eligible"}
+                </Badge>
+                {currentPatient.handicapped && (
+                  <Badge variant="destructive">Handicapped</Badge>
+                )}
+              </div>
             </div>
 
             <div className="space-y-3">
@@ -182,54 +190,154 @@ export const PatientDetail = () => {
                 <label className="text-sm font-medium text-gray-500">
                   Phone
                 </label>
-                <p className="text-gray-900">{currentPatient.phone}</p>
+                <p className="text-gray-900">
+                  {currentPatient.phone || "Not provided"}
+                </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">
                   Address
                 </label>
-                <p className="text-gray-900">{currentPatient.address}</p>
+                <p className="text-gray-900">
+                  {currentPatient.address || "Not provided"}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-500">
+                  Access Type
+                </label>
+                <p className="text-gray-900 capitalize">
+                  {currentPatient.access_type?.replace("_", " ") ||
+                    "Not specified"}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Medical Information */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Medical Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Dialysis Per Week
-                </label>
-                <p className="text-lg font-semibold">
-                  {currentPatient.dialysis_per_week} sessions
-                </p>
+        <Card className="lg:col-span-2 pl-4 pr-4">
+          {/* Medical Information */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Medical Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Dialysis Per Week
+                  </label>
+                  <p className="text-lg font-semibold">
+                    {currentPatient.dialysis_per_week} sessions
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Next Dialysis Date
+                  </label>
+                  <p className="text-lg font-semibold">
+                    {currentPatient.manually_set_dialysis_date
+                      ? formatDateTime(
+                          currentPatient.manually_set_dialysis_date
+                        )
+                      : currentPatient.next_dialysis_date
+                      ? formatDateTime(currentPatient.next_dialysis_date)
+                      : "Not scheduled"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Next Dialysis Date
-                </label>
-                <p className="text-lg font-semibold">
-                  {currentPatient.manually_set_dialysis_date
-                    ? formatDateTime(currentPatient.manually_set_dialysis_date)
-                    : formatDateTime(currentPatient.next_dialysis_date)}
-                </p>
-              </div>
-            </div>
 
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Zakat Eligibility
-              </label>
-              <p className="text-lg font-semibold">
-                {currentPatient.zakat_eligible ? "Yes" : "No"}
-              </p>
-            </div>
-          </CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Zakat Eligibility
+                  </label>
+                  <p className="text-lg font-semibold">
+                    {currentPatient.zakat_eligible ? "Yes" : "No"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Handicapped
+                  </label>
+                  <p className="text-lg font-semibold">
+                    {currentPatient.handicapped ? "Yes" : "No"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Blood Test Results */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Blood Test Results</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    HBSAG
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.hbsag !== null
+                      ? currentPatient.hbsag
+                        ? "Positive"
+                        : "Negative"
+                      : "Not tested"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    HCV
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.hcv !== null
+                      ? currentPatient.hcv
+                        ? "Positive"
+                        : "Negative"
+                      : "Not tested"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    HIV
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.hiv !== null
+                      ? currentPatient.hiv
+                        ? "Positive"
+                        : "Negative"
+                      : "Not tested"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Blood Test CBC
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.blood_test_cbc ? "Done" : "Not done"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    RFT Creatinine
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.rft_creatinine ? "Done" : "Not done"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    RFT Urea
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.rft_urea ? "Done" : "Not done"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </Card>
 
         {/* Relative Information */}
@@ -243,26 +351,16 @@ export const PatientDetail = () => {
                 <label className="text-sm font-medium text-gray-500">
                   Relative Name
                 </label>
-                <p className="text-gray-900">{currentPatient.relative_name}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Relative NIC
-                </label>
-                <p className="text-gray-900">{currentPatient.relative_nic}</p>
+                <p className="text-gray-900">
+                  {currentPatient.relative_name || "Not provided"}
+                </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">
                   Relative Phone
                 </label>
-                <p className="text-gray-900">{currentPatient.relative_phone}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Relative Address
-                </label>
                 <p className="text-gray-900">
-                  {currentPatient.relative_address}
+                  {currentPatient.relative_phone || "Not provided"}
                 </p>
               </div>
             </div>
@@ -292,43 +390,6 @@ export const PatientDetail = () => {
                 </div>
               </div>
             )}
-
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Created By
-                </label>
-                <p className="text-gray-900">
-                  {currentPatient.created_by_name}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Created At
-                </label>
-                <p className="text-gray-900">
-                  {formatDateTime(currentPatient.created_at)}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Last Updated
-                </label>
-                <p className="text-gray-900">
-                  {formatDateTime(currentPatient.updated_at)}
-                </p>
-              </div>
-              {currentPatient.uploaded_at && (
-                <div>
-                  <label className="text-sm font-medium text-gray-500">
-                    Document Uploaded
-                  </label>
-                  <p className="text-gray-900">
-                    {formatDateTime(currentPatient.uploaded_at)}
-                  </p>
-                </div>
-              )}
-            </div>
           </CardContent>
         </Card>
 
