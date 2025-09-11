@@ -141,7 +141,7 @@ const DoctorAppointmentPageComponent = () => {
         }
       }
     ],
-    layout: 'single'
+    layout: 'two-column'
   });
 
   // Table columns configuration
@@ -317,7 +317,7 @@ const DoctorAppointmentPageComponent = () => {
       date: selectedAppointment.date.slice(0, 16), // Convert to datetime-local format
       purpose_of_visit: selectedAppointment.purpose_of_visit,
       doctor_name: selectedAppointment.doctor_name,
-      doctor_comment: selectedAppointment.doctor_comment || ''
+      doctor_comment: selectedAppointment.doctor_comment || '',
     };
   };
 
