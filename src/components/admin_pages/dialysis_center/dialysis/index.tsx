@@ -512,6 +512,7 @@ const DialysisPageComponent = () => {
                 src={image || ""}
                 alt="image"
                 className="w-10 h-10 rounded-lg object-cover"
+                loading="lazy"
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">

@@ -88,6 +88,7 @@ const DialysisDetail = () => {
         src={image || ''}
         alt="image"
         className="w-42 h-42 rounded-full object-contain border-4 border-gray-200"
+        loading="lazy"
         />
       ) : (
         <div className="w-42 h-42 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
