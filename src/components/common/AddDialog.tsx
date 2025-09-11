@@ -24,6 +24,7 @@ interface AddDialogProps {
   defaultValues?: Record<string, any>;
   error?: string | null;
   getMediaUrl?: (path: string | null | undefined) => string | null; // Function to get media URL for existing files
+  showCancelButton?: boolean;
 }
 
 export const AddDialog: React.FC<AddDialogProps> = ({
@@ -40,7 +41,8 @@ export const AddDialog: React.FC<AddDialogProps> = ({
   disabled = false,
   defaultValues,
   error,
-  getMediaUrl
+  getMediaUrl,
+  showCancelButton = true
 }) => {
   const handleCancel = () => {
     if (onCancel) {
@@ -80,7 +82,7 @@ export const AddDialog: React.FC<AddDialogProps> = ({
             disabled={disabled}
             submitText={submitText}
             cancelText={cancelText}
-            showCancelButton={false}
+            showCancelButton={showCancelButton}
             getMediaUrl={getMediaUrl}
           />
         </div>

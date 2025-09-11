@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Edit, Trash2, Download } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Download, FileText, Image as ImageIcon } from "lucide-react";
 import {
   getPatientById,
   deletePatient,
@@ -53,17 +53,16 @@ export const PatientDetail = () => {
     }
   };
 
-  const handleDownloadDocument = () => {
-    if (currentPatient?.document_path) {
-      const link = document.createElement("a");
-      const documentUrl = getMediaUrl(currentPatient.document_path);
-      if (documentUrl) {
-        link.href = documentUrl;
-        link.download = `patient_document_${currentPatient.name}.pdf`;
-        link.click();
-      }
+  const handleDownloadDocument = (documentPath: string, documentName: string) => {
+    const link = document.createElement("a");
+    const documentUrl = getMediaUrl(documentPath);
+    if (documentUrl) {
+      link.href = documentUrl;
+      link.download = documentName;
+      link.click();
     }
   };
+
 
   if (isLoading) {
     return (
@@ -126,8 +125,8 @@ export const PatientDetail = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="flex sm:justify-start w-full gap-4">
           <Button
             variant="outline"
             size="sm"
@@ -138,7 +137,7 @@ export const PatientDetail = () => {
           </Button>
           <h1 className="text-2xl font-semibold">Patient Details</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex justify-end w-full items-center gap-2">
           <Button onClick={handleEdit} variant="outline">
             <Edit className="h-4 w-4 mr-2" />
             Edit
@@ -149,6 +148,13 @@ export const PatientDetail = () => {
           </Button> */}
         </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Patient Image and Basic Info */}
@@ -185,31 +191,51 @@ export const PatientDetail = () => {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Phone
-                </label>
-                <p className="text-gray-900">
-                  {currentPatient.phone || "Not provided"}
-                </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-14 gap-3">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Phone
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.phone || "Not provided"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Address
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.address || "Not provided"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Access Type
+                  </label>
+                  <p className="text-gray-900 capitalize">
+                    {currentPatient.access_type?.replace("_", " ") ||
+                      "Not specified"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Address
-                </label>
-                <p className="text-gray-900">
-                  {currentPatient.address || "Not provided"}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Access Type
-                </label>
-                <p className="text-gray-900 capitalize">
-                  {currentPatient.access_type?.replace("_", " ") ||
-                    "Not specified"}
-                </p>
+              <div className="grid grid-cols-1 gap-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Relative Name
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.relative_name || "Not provided"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Relative Phone
+                  </label>
+                  <p className="text-gray-900">
+                    {currentPatient.relative_phone || "Not provided"}
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -340,47 +366,91 @@ export const PatientDetail = () => {
           </Card>
         </Card>
 
-        {/* Relative Information */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Relative Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Relative Name
-                </label>
-                <p className="text-gray-900">
-                  {currentPatient.relative_name || "Not provided"}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">
-                  Relative Phone
-                </label>
-                <p className="text-gray-900">
-                  {currentPatient.relative_phone || "Not provided"}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Documents and Timestamps */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-3 flex-1">
           <CardHeader>
             <CardTitle>Documents & Timestamps</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {currentPatient.document_path && (
+            {currentPatient.documents && currentPatient.documents.length > 0 ? (
+              <div className="space-y-3">
+                {currentPatient.documents.map((document) => (
+                  <div
+                    key={document.id}
+                    className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                  >
+                    <div className="flex items-center justify-between flex-wrap mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                          {document.is_pdf ? (
+                            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-red-600" />
+                            </div>
+                          ) : document.is_image ? (
+                            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <ImageIcon className="h-5 w-5 text-blue-600" />
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-gray-600" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm text-gray-900 truncate">
+                            {document.document_name}
+                          </h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                              {document.file_extension?.toUpperCase()}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {(document.file_size / 1024).toFixed(1)} KB
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => handleDownloadDocument(document.document_path, document.document_name)}
+                        variant="outline"
+                        size="sm"
+                        className="flex-shrink-0"
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        Download
+                      </Button>
+                    </div>
+
+                    {document.description && (
+                      <div className="mb-3">
+                        <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md border-l-4 border-gray-300">
+                          {document.description}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+                      <span>Uploaded by <span className="font-medium text-gray-700">{document.uploaded_by_name}</span></span>
+                      <span>{formatDateTime(document.uploaded_at)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No documents available for this patient.
+              </div>
+            )}
+
+            {/* Legacy single document support */}
+            {currentPatient.document_path && (!currentPatient.documents || currentPatient.documents.length === 0) && (
               <div>
                 <label className="text-sm font-medium text-gray-500">
                   Patient Document
                 </label>
                 <div className="mt-2">
                   <Button
-                    onClick={handleDownloadDocument}
+                    onClick={() => handleDownloadDocument(currentPatient.document_path, `patient_document_${currentPatient.name}.pdf`)}
                     variant="outline"
                     size="sm"
                   >

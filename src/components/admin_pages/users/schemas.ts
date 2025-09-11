@@ -6,6 +6,8 @@ export const roleOptions = [
     { value: 'office_admin', label: 'Office Admin' },
     { value: 'medical_admin', label: 'Dialysis Admin' },
     { value: 'accountant_medical', label: 'Dialysis Reception' },
+    { value: 'vehicle_user', label: 'Vehicle User' },
+    { value: 'lab_accountant', label: 'Lab Reception' },
 ];
 
 // Schema for adding a new user

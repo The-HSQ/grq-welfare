@@ -47,6 +47,7 @@ export class FormSchema {
           );
           break;
         case 'select':
+        case 'searchable-select':
           // Select fields can accept both string and number values, convert to string
           fieldSchema = z.union([z.string(), z.number()]).transform(val => String(val));
           break;
@@ -114,6 +115,24 @@ export class FormSchema {
             (val) => val !== null && val !== undefined && (val instanceof File || (typeof val === 'string' && val.length > 0)),
             `${field.label} is required`
           );
+        } else if (field.type === 'select') {
+          // Special validation for select fields with "OTHER" option
+          const hasOtherOption = field.options?.some(option => option.value === 'OTHER');
+          if (hasOtherOption) {
+            fieldSchema = fieldSchema.refine(
+              (val) => {
+                if (!val || val === '') return false;
+                if (val === 'OTHER') return false; // "OTHER" alone is not valid, need custom value
+                return true;
+              },
+              `${field.label} is required. If you select "Other", please provide a custom value.`
+            );
+          } else {
+            fieldSchema = fieldSchema.refine(
+              (val) => val !== null && val !== undefined && val !== '',
+              `${field.label} is required`
+            );
+          }
         }
       } else {
           fieldSchema = fieldSchema.optional();

@@ -3,8 +3,6 @@ import DashboardLayout from '../components/dashboardLayout/DashboardLayout';
 import ProtectedRoute from './ProtectedRoute';
 import Login from '../pages/Login';
 import Dashboard from '../pages/dashnoard/Dashboard';
-import Profile from '../pages/dashnoard/Profile';
-import Settings from '../pages/dashnoard/Settings';
 import NotFound from '../pages/NotFound';
 import Users from '../pages/dashnoard/users/Users';
 import { Patients } from '../pages/dashnoard/dialysis_center/patients/page';
@@ -22,19 +20,19 @@ import DialysisPage from '../pages/dashnoard/dialysis_center/dialysis/page';
 import DialysisDetail from '../components/admin_pages/dialysis_center/dialysis/DialysisDetail';
 import TodayDialysis from '@/pages/dashnoard/dialysis_center/today_dialysis';
 import UpcomingPatientsDialysis from '@/pages/dashnoard/dialysis_center/upcoming_patients_dialysis';
-
-// Placeholder components for missing dashboards
-const OfficeManagementDashboard = () => (
-  <div className="flex flex-col gap-4 sm:gap-6">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-      <div>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-          Office Management Dashboard
-        </h1>
-      </div>
-    </div>
-  </div>
-);
+import DonorPage from '@/pages/dashnoard/donor_donation/donor/page';
+import DonorDetail from '../pages/dashnoard/donor_donation/donor/DonorDetail';
+import DonationPage from '@/pages/dashnoard/donor_donation/donation/page';
+import VendorPage from '@/pages/dashnoard/vendor_expense/vendor/page';
+import VendorDetailPage from '@/pages/dashnoard/vendor_expense/vendor/detail';
+import ExpenseCategoryPage from '@/pages/dashnoard/vendor_expense/expense_category/page';
+import ExpensePage from '@/pages/dashnoard/vendor_expense/expense/page';
+import VehiclesPage from '@/pages/dashnoard/vehicles/vehicles/page';
+import VehiclesUsagePage from '@/pages/dashnoard/vehicles/vehicles_usage/page';
+import DoctorAppointmentPage from '@/pages/dashnoard/dialysis_center/doctor_appointment/page';
+import InventoryPage from '@/pages/dashnoard/inventory/page';
+import InventoryDetail from '../components/admin_pages/inventory/InventoryDetail';
+import OfficeManagementDashboard from '@/pages/dashnoard/office/page';
 
 const router = createBrowserRouter([
   {
@@ -53,7 +51,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole={['admin']}>
             <Dashboard />
           </ProtectedRoute>
         ),
@@ -75,6 +73,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole={['admin', 'medical_admin', 'accountant_medical']}>
             <DialysisDashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dialysis-center/doctor-appointment',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'medical_admin', 'accountant_medical']}>
+            <DoctorAppointmentPage />
           </ProtectedRoute>
         ),
       },
@@ -197,6 +203,94 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole={['admin', 'office_admin']}>
             <OfficeManagementDashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/inventory',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin', 'lab_accountant']}>
+            <InventoryPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/inventory/:id',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin', 'lab_accountant']}>
+            <InventoryDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/donors',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <DonorPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/donors/:id',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <DonorDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/donations',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <DonationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/vendor',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <VendorPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/vendor/:id',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <VendorDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/expense-category',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <ExpenseCategoryPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/expense',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <ExpensePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/vehicles',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <VehiclesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/vehicles-usage',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin', 'vehicle_user']}>
+            <VehiclesUsagePage />
           </ProtectedRoute>
         ),
       },

@@ -291,6 +291,8 @@ const UpcomingPatientsDialysis = () => {
         searchPlaceholder="Search patients..."
         onSearchChange={handleSearchChange}
         searchValue={searchTerm}
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       <DataTable

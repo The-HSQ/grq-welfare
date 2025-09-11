@@ -225,6 +225,11 @@ const TodayDialysis = () => {
     setSearchTerm("");
   };
 
+  // Handle view dialysis
+  const handleViewDialysis = (session: TodayDialysisSession) => {
+    navigate(`/dialysis-center/dialysis/${session.dialysis_id}`);
+  };
+
   // Refresh data
   const handleRefresh = () => {
     dispatch(fetchTodayDialysis());
@@ -410,6 +415,8 @@ const TodayDialysis = () => {
         searchPlaceholder="Search patients, NIC, bed, or machine..."
         onSearchChange={setSearchTerm}
         searchValue={searchTerm}
+        showToggleButton={true}
+        defaultFiltersVisible={false}
       />
 
       {/* Data Table */}
@@ -420,6 +427,7 @@ const TodayDialysis = () => {
         emptyMessage="No dialysis sessions found for today"
         pagination={true}
         pageSize={15}
+        onView={handleViewDialysis}
       />
     </div>
   );

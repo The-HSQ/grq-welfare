@@ -18,6 +18,7 @@ import {
   deletePatient, 
   setCurrentPatient,
   clearError,
+  getPatientWithDocuments,
   type Patient 
 } from '../../../../store/slices/dialysisSlice';
 import { patientAddSchema, patientEditSchema } from './schemas';
@@ -25,9 +26,10 @@ import type { RootState } from '../../../../store';
 import { useAppDispatch } from '../../../../store/hooks';
 import { getMediaUrl, formatDate, formatDateTime } from '../../../../lib/utils';
 import { FormSchema } from '../../../common/FormSchema';
-import { EyeIcon, PlusIcon } from 'lucide-react';
+import { PlusIcon, FileTextIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DocumentsModal } from './DocumentsModal';
 
 export const PatientsComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +43,7 @@ export const PatientsComponent: React.FC = () => {
     isUpdating, 
     isDeleting, 
     error,
+    currentPatient,
   } = useSelector((state: RootState) => state.dialysis);
 
   // Local state
@@ -48,6 +51,8 @@ export const PatientsComponent: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [isDocumentsModalOpen, setIsDocumentsModalOpen] = useState(false);
+  const [selectedPatientForDocuments, setSelectedPatientForDocuments] = useState<Patient | null>(null);
   const [filters, setFilters] = useState({
     search: '',
     zakat_eligible: '',
@@ -164,6 +169,25 @@ export const PatientsComponent: React.FC = () => {
   const handleDeleteClick = (patient: Patient) => {
     setSelectedPatient(patient);
     setIsDeleteDialogOpen(true);
+  };
+
+  // Handle view documents
+  const handleViewDocuments = async (patient: Patient) => {
+    setSelectedPatientForDocuments(patient);
+    setIsDocumentsModalOpen(true);
+    
+    // Fetch patient with documents
+    try {
+      await dispatch(getPatientWithDocuments(patient.id)).unwrap();
+    } catch (error) {
+      // Error is handled by the slice
+    }
+  };
+
+  // Handle document changes (upload/delete)
+  const handleDocumentChange = () => {
+    // Refresh the patient list to update document counts
+    dispatch(fetchPatients(undefined));
   };
 
   // Filter patients based on search and filters
@@ -341,22 +365,27 @@ export const PatientsComponent: React.FC = () => {
       ),
     },
     {
-      key: 'document_path',
-      header: 'Document',
+      key: 'documents_count',
+      header: 'Documents',
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">
-          {patient.document_path ? (
-            <a 
-              href={getMediaUrl(patient.document_path) || '#'} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2"
+          {patient.documents_count && patient.documents_count > 0 ? (
+            <button
+              onClick={() => handleViewDocuments(patient)}
+              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-50 transition-colors"
             >
-              <EyeIcon className="w-4 h-4" /> View
-            </a>
+              <FileTextIcon className="w-4 h-4" />
+              {patient.documents_count}
+            </button>
           ) : (
-            <span className="text-gray-400">No Document</span>
+            <button
+              onClick={() => handleViewDocuments(patient)}
+              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-50 transition-colors"
+            >
+              <FileTextIcon className="w-4 h-4" />
+              {patient.documents_count}
+            </button>
           )}
         </div>
       ),
@@ -506,6 +535,13 @@ export const PatientsComponent: React.FC = () => {
         </Button>
       </PageHeader>
 
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
+
       {/* Filter Bar */}
       <FilterBar
         filters={filterOptions}
@@ -514,6 +550,8 @@ export const PatientsComponent: React.FC = () => {
           setFilters(prev => ({ ...prev, [key]: value }))
         }
         onClearFilters={() => setFilters({ search: '', zakat_eligible: '', dialysis_per_week: '', date: '', year: '', status: 'active', handicapped: 'all', access_type: 'all', hbsag: 'all', hcv: 'all', hiv: 'all' })}
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       {/* Data Table */}
@@ -576,6 +614,25 @@ export const PatientsComponent: React.FC = () => {
         itemName={selectedPatient?.name || undefined}
         loading={isDeleting}
       /> */}
+
+      {/* Documents Modal */}
+      <DocumentsModal
+        open={isDocumentsModalOpen}
+        onOpenChange={(open) => {
+          setIsDocumentsModalOpen(open);
+          if (!open) {
+            setSelectedPatientForDocuments(null);
+          }
+        }}
+        documents={currentPatient?.documents || []}
+        patientName={selectedPatientForDocuments?.name || ''}
+        patientId={selectedPatientForDocuments?.id || ''}
+        isLoading={isLoading}
+        isUploading={isCreating}
+        isDeleting={isDeleting}
+        uploadError={error}
+        onDocumentChange={handleDocumentChange}
+      />
     </div>
   );
 };

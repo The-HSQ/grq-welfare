@@ -17,6 +17,7 @@ interface DynamicFormProps {
   cancelText?: string;
   showCancelButton?: boolean;
   getMediaUrl?: (path: string | null | undefined) => string | null; // Function to get media URL for existing files
+  existingFiles?: Record<string, string | null>; // Existing file paths for display purposes
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
@@ -30,7 +31,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   submitText = 'Submit',
   cancelText = 'Cancel',
   showCancelButton = true,
-  getMediaUrl
+  getMediaUrl,
+  existingFiles = {}
 }) => {
   const zodSchema = schema.buildZodSchema();
   const formDefaultValues = defaultValues || schema.getDefaultValues();
@@ -109,6 +111,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
               control={methods.control}
               error={errors[field.name] as FieldError}
               getMediaUrl={getMediaUrl}
+              existingFile={existingFiles[field.name]}
             />
           ))}
         </div>
@@ -119,7 +122,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
               type="button"
               onClick={handleFormCancel}
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium cursor-pointer text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelText}
             </button>

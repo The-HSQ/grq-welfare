@@ -126,6 +126,10 @@ export const dialysisAPI = {
   getPatientById: (id: string) => 
     api.get(`/medical/patients/${id}/dialysis-history/`),
   
+  // Get single patient by ID with documents
+  getPatientWithDocuments: (id: string) => 
+    api.get(`/medical/patients/${id}/`),
+  
   // Create new patient
   createPatient: (patientData: FormData) => 
     api.post('/medical/patients/', patientData, {
@@ -321,6 +325,305 @@ export const dialysisAPI = {
   // Get upcoming patients for dialysis
   getUpcomingPatients: () => 
     api.get('/medical/dialysis/upcoming/patients/'),
+  
+  // Upload patient document
+  uploadPatientDocument: (documentData: FormData) => 
+    api.post('/medical/patient-documents/', documentData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+
+  // Delete patient document
+  deletePatientDocument: (documentId: number) => 
+    api.delete(`/medical/patient-documents/${documentId}/`),
+
+  // Get appointments
+  getAppointments: () => 
+    api.get('/medical/appointments/'),
+  
+  // Get single appointment by ID
+  getAppointmentById: (id: number) => 
+    api.get(`/medical/appointments/${id}/`),
+  
+  // Create new appointment
+  createAppointment: (appointmentData: {
+    patient_name: string;
+    date: string;
+    purpose_of_visit: string;
+    doctor_name: string;
+    doctor_comment: string;
+  }) => api.post('/medical/appointments/', appointmentData),
+  
+  // Update appointment
+  updateAppointment: (id: number, appointmentData: {
+    patient_name?: string;
+    date?: string;
+    purpose_of_visit?: string;
+    doctor_name?: string;
+    doctor_comment?: string;
+  }) => api.patch(`/medical/appointments/${id}/`, appointmentData),
+  
+  // Delete appointment
+  deleteAppointment: (id: number) => 
+    api.delete(`/medical/appointments/${id}/`),
+};
+
+export const donorAPI = {
+  // Get all donors
+  getDonors: () => 
+    api.get('/financial/donners/'),
+  
+  // Get single donor by ID
+  getDonorById: (id: number) => 
+    api.get(`/financial/donners/${id}/`),
+  
+  // Create new donor
+  createDonor: (donorData: FormData) => 
+    api.post('/financial/donners/', donorData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+  
+  // Update donor
+  updateDonor: (id: number, donorData: FormData) => 
+    api.patch(`/financial/donners/${id}/`, donorData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+  
+  // Delete donor
+  deleteDonor: (id: number) => 
+    api.delete(`/financial/donners/${id}/`),
+};
+
+export const donationAPI = {
+  // Get all donations
+  getDonations: () => 
+    api.get('/financial/donations/'),
+  
+  // Get single donation by ID
+  getDonationById: (id: number) => 
+    api.get(`/financial/donations/${id}/`),
+  
+  // Create new donation
+  createDonation: (donationData: {
+    donner: number;
+    date: string;
+    amount: number;
+    purpose: string;
+    donation_type: string;
+    currency: string;
+    in_rupees?: number;
+  }) => api.post('/financial/donations/', donationData),
+  
+  // Update donation
+  updateDonation: (id: number, donationData: {
+    donner?: number;
+    date?: string;
+    amount?: number;
+    purpose?: string;
+    donation_type?: string;
+    currency?: string;
+    in_rupees?: number;
+  }) => api.patch(`/financial/donations/${id}/`, donationData),
+  
+  // Delete donation
+  deleteDonation: (id: number) => 
+    api.delete(`/financial/donations/${id}/`),
+};
+
+export const vendorAPI = {
+  // Get all vendors
+  getVendors: () => 
+    api.get('/financial/vendors/'),
+  
+  // Get single vendor by ID
+  getVendorById: (id: number) => 
+    api.get(`/financial/vendors/${id}/`),
+  
+  // Create new vendor
+  createVendor: (vendorData: {
+    name: string;
+    contact_person: string;
+    email: string;
+    phone: string;
+    address: string;
+    vendor_type: string;
+    tax_id: string;
+    payment_terms: string;
+    is_active: boolean;
+  }) => api.post('/financial/vendors/', vendorData),
+  
+  // Update vendor
+  updateVendor: (id: number, vendorData: {
+    name?: string;
+    contact_person?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    vendor_type?: string;
+    tax_id?: string;
+    payment_terms?: string;
+    is_active?: boolean;
+  }) => api.patch(`/financial/vendors/${id}/`, vendorData),
+  
+  // Delete vendor
+  deleteVendor: (id: number) => 
+    api.delete(`/financial/vendors/${id}/`),
+};
+
+export const expenseCategoryAPI = {
+  // Get all expense categories
+  getExpenseCategories: () => 
+    api.get('/financial/expense-categories/'),
+  
+  // Get single expense category by ID
+  getExpenseCategoryById: (id: number) => 
+    api.get(`/financial/expense-categories/${id}/`),
+  
+  // Create new expense category
+  createExpenseCategory: (expenseCategoryData: {
+    name: string;
+    description: string;
+    category_type: string;
+  }) => api.post('/financial/expense-categories/', expenseCategoryData),
+  
+  // Update expense category
+  updateExpenseCategory: (id: number, expenseCategoryData: {
+    name: string;
+    description: string;
+    category_type: string;
+  }) => api.patch(`/financial/expense-categories/${id}/`, expenseCategoryData),
+  
+  // Delete expense category
+  deleteExpenseCategory: (id: number) => 
+    api.delete(`/financial/expense-categories/${id}/`),
+};
+
+export const expenseAPI = {
+  // Get all expenses
+  getExpenses: () => 
+    api.get('/financial/expenses/'),
+  
+  // Get single expense by ID
+  getExpenseById: (id: number) => 
+    api.get(`/financial/expenses/${id}/`),
+  
+  // Create new expense
+  createExpense: (expenseData: {
+    title: string;
+    description: string;
+    amount: string;
+    category: number;
+    vendor: number;
+    expense_date: string;
+    payment_method: string;
+    due_balance_to_vendor: string;
+    notes: string;
+  }) => api.post('/financial/expenses/', expenseData),
+  
+  // Update expense
+  updateExpense: (id: number, expenseData: {
+    title?: string;
+    description?: string;
+    amount?: string;
+    category?: number;
+    vendor?: number;
+    expense_date?: string;
+    payment_method?: string;
+    due_balance_to_vendor?: string;
+    notes?: string;
+  }) => api.patch(`/financial/expenses/${id}/`, expenseData),
+  
+  // Delete expense
+  deleteExpense: (id: number) => 
+    api.delete(`/financial/expenses/${id}/`),
+};
+
+export const inventoryAPI = {
+  // Get all inventory items
+  getInventoryItems: (params?: { 
+    page?: number; 
+    page_size?: number;
+    item_type?: string;
+    quantity_type?: string;
+    inventory_type?: string;
+    date?: string;
+    search?: string;
+    ordering?: string;
+  }) => 
+    api.get('/inventory/items/', { params }),
+  
+  // Get single inventory item by ID
+  getInventoryItemById: (id: string) => 
+    api.get(`/inventory/items/${id}/`),
+  
+  // Create new inventory item
+  createInventoryItem: (itemData: {
+    item_name: string;
+    item_type?: string;
+    quantity: number;
+    new_quantity?: number;
+    quantity_type?: string;
+    used_items?: number;
+    inventory_type: string;
+    date: string;
+  }) => api.post('/inventory/items/', itemData),
+  
+  // Update inventory item
+  updateInventoryItem: (id: string, itemData: {
+    item_name?: string;
+    item_type?: string;
+    quantity?: number;
+    new_quantity?: number;
+    quantity_type?: string;
+    used_items?: number;
+    inventory_type?: string;
+    date?: string;
+  }) => api.patch(`/inventory/items/${id}/`, itemData),
+  
+  // Delete inventory item
+  deleteInventoryItem: (id: string) => 
+    api.delete(`/inventory/items/${id}/`),
+  
+  // Add quantity to inventory item
+  addQuantity: (id: string, data: { additional_quantity: number }) => 
+    api.post(`/inventory/items/${id}/add-quantity/`, data),
+  
+  // Use items from inventory
+  useItems: (id: string, data: { items_to_use: number }) => 
+    api.post(`/inventory/items/${id}/use-items/`, data),
+  
+  // Get items by inventory type
+  getItemsByInventoryType: (inventoryType: string) => 
+    api.get(`/inventory/items/inventory-type/${inventoryType}/`),
+  
+  // Get low stock items
+  getLowStockItems: () => 
+    api.get('/inventory/items/low-stock/'),
+  
+  // Get out of stock items
+  getOutOfStockItems: () => 
+    api.get('/inventory/items/out-of-stock/'),
+  
+  // Get items by date range
+  getItemsByDateRange: (startDate: string, endDate: string) => 
+    api.get('/inventory/items/date-range/', { 
+      params: { start_date: startDate, end_date: endDate } 
+    }),
+  
+  // Get inventory summary
+  getInventorySummary: () => 
+    api.get('/inventory/items/summary/'),
+};
+
+export const dashboardAPI = {
+  // Get dashboard statistics
+  getDashboardData: () => 
+    api.get('/dashboard/'),
 };
 
 // Generic API functions

@@ -241,6 +241,23 @@ export interface UpdateProductData {
   used_items?: number;
 }
 
+// Patient Document interface
+export interface PatientDocument {
+  id: number;
+  patient: number;
+  document_name: string;
+  document_path: string;
+  description: string;
+  uploaded_by: number;
+  uploaded_by_name: string;
+  uploaded_at: string;
+  updated_at: string;
+  file_extension: string;
+  file_size: number;
+  is_image: boolean;
+  is_pdf: boolean;
+}
+
 // Patient interface
 export interface Patient {
   id: string;
@@ -265,6 +282,8 @@ export interface Patient {
   relative_phone: string;
   document_path: string;
   uploaded_at: string;
+  documents?: PatientDocument[];
+  documents_count?: number;
   dialysis_sessions?: any[];
   dialysis_count?: number;
   last_dialysis_date?: string | null;
@@ -411,6 +430,36 @@ export interface UpdateDialysisData {
   created_at?: string;
 }
 
+// Appointment interface
+export interface Appointment {
+  id: number;
+  patient_name: string;
+  date: string;
+  purpose_of_visit: string;
+  doctor_name: string;
+  doctor_comment: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Create appointment interface
+export interface CreateAppointmentData {
+  patient_name: string;
+  date: string;
+  purpose_of_visit: string;
+  doctor_name: string;
+  doctor_comment: string;
+}
+
+// Update appointment interface
+export interface UpdateAppointmentData {
+  patient_name?: string;
+  date?: string;
+  purpose_of_visit?: string;
+  doctor_name?: string;
+  doctor_comment?: string;
+}
+
 // Create patient interface
 export interface CreatePatientData {
   name: string;
@@ -497,6 +546,7 @@ interface DialysisState {
   shifts: Shift[] | null;
   patients: Patient[] | null;
   dialysis: Dialysis[] | null;
+  appointments: Appointment[] | null;
   todayDialysis: TodayDialysisResponse | null;
   upcomingPatients: UpcomingPatientsResponse | null;
   currentProduct: Product | null;
@@ -508,6 +558,7 @@ interface DialysisState {
   currentShift: Shift | null;
   currentPatient: Patient | null;
   currentDialysis: Dialysis | null;
+  currentAppointment: Appointment | null;
   isLoading: boolean;
   isCreating: boolean;
   isUpdating: boolean;
@@ -530,6 +581,7 @@ const initialState: DialysisState = {
   shifts: null,
   patients: null,
   dialysis: null,
+  appointments: null,
   todayDialysis: null,
   upcomingPatients: null,
   currentProduct: null,
@@ -541,6 +593,7 @@ const initialState: DialysisState = {
   currentShift: null,
   currentPatient: null,
   currentDialysis: null,
+  currentAppointment: null,
   isLoading: false,
   isCreating: false,
   isUpdating: false,
@@ -1041,6 +1094,45 @@ export const getPatientById = createAsyncThunk(
   }
 );
 
+// Async thunk to get patient by ID with documents
+export const getPatientWithDocuments = createAsyncThunk(
+  'dialysis/getPatientWithDocuments',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.getPatientWithDocuments(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to get patient with documents'));
+    }
+  }
+);
+
+// Async thunk to upload patient document
+export const uploadPatientDocument = createAsyncThunk(
+  'dialysis/uploadPatientDocument',
+  async (documentData: FormData, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.uploadPatientDocument(documentData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to upload patient document'));
+    }
+  }
+);
+
+// Async thunk to delete patient document
+export const deletePatientDocument = createAsyncThunk(
+  'dialysis/deletePatientDocument',
+  async (documentId: number, { rejectWithValue }) => {
+    try {
+      await dialysisAPI.deletePatientDocument(documentId);
+      return documentId;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to delete patient document'));
+    }
+  }
+);
+
 // Async thunk to fetch dialysis sessions
 export const fetchDialysis = createAsyncThunk(
   'dialysis/fetchDialysis',
@@ -1132,6 +1224,58 @@ export const fetchUpcomingPatients = createAsyncThunk(
   }
 );
 
+// Async thunk to fetch appointments
+export const fetchAppointments = createAsyncThunk(
+  'dialysis/fetchAppointments',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.getAppointments();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to fetch appointments'));
+    }
+  }
+);
+
+// Async thunk to create appointment
+export const createAppointment = createAsyncThunk(
+  'dialysis/createAppointment',
+  async (appointmentData: CreateAppointmentData, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.createAppointment(appointmentData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to create appointment'));
+    }
+  }
+);
+
+// Async thunk to update appointment
+export const updateAppointment = createAsyncThunk(
+  'dialysis/updateAppointment',
+  async ({ id, appointmentData }: { id: number; appointmentData: UpdateAppointmentData }, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.updateAppointment(id, appointmentData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to update appointment'));
+    }
+  }
+);
+
+// Async thunk to delete appointment
+export const deleteAppointment = createAsyncThunk(
+  'dialysis/deleteAppointment',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await dialysisAPI.deleteAppointment(id);
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to delete appointment'));
+    }
+  }
+);
+
 const dialysisSlice = createSlice({
   name: 'dialysis',
   initialState,
@@ -1174,6 +1318,9 @@ const dialysisSlice = createSlice({
     },
     setCurrentDialysis: (state, action: PayloadAction<Dialysis | null>) => {
       state.currentDialysis = action.payload;
+    },
+    setCurrentAppointment: (state, action: PayloadAction<Appointment | null>) => {
+      state.currentAppointment = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1849,6 +1996,58 @@ const dialysisSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string || 'Failed to get patient';
       })
+      // Get patient with documents
+      .addCase(getPatientWithDocuments.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getPatientWithDocuments.fulfilled, (state, action: PayloadAction<Patient>) => {
+        state.isLoading = false;
+        state.currentPatient = action.payload;
+        state.error = null;
+      })
+      .addCase(getPatientWithDocuments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string || 'Failed to get patient with documents';
+      })
+      // Upload patient document
+      .addCase(uploadPatientDocument.pending, (state) => {
+        state.isCreating = true;
+        state.error = null;
+      })
+      .addCase(uploadPatientDocument.fulfilled, (state, action: PayloadAction<PatientDocument>) => {
+        state.isCreating = false;
+        // Add the new document to the current patient's documents
+        if (state.currentPatient && state.currentPatient.documents) {
+          state.currentPatient.documents.unshift(action.payload);
+          state.currentPatient.documents_count = (state.currentPatient.documents_count || 0) + 1;
+        }
+        state.error = null;
+      })
+      .addCase(uploadPatientDocument.rejected, (state, action) => {
+        state.isCreating = false;
+        state.error = action.payload as string || 'Failed to upload patient document';
+      })
+      // Delete patient document
+      .addCase(deletePatientDocument.pending, (state) => {
+        state.isDeleting = true;
+        state.error = null;
+      })
+      .addCase(deletePatientDocument.fulfilled, (state, action: PayloadAction<number>) => {
+        state.isDeleting = false;
+        // Remove the document from the current patient's documents
+        if (state.currentPatient && state.currentPatient.documents) {
+          state.currentPatient.documents = state.currentPatient.documents.filter(
+            doc => doc.id !== action.payload
+          );
+          state.currentPatient.documents_count = Math.max((state.currentPatient.documents_count || 0) - 1, 0);
+        }
+        state.error = null;
+      })
+      .addCase(deletePatientDocument.rejected, (state, action) => {
+        state.isDeleting = false;
+        state.error = action.payload as string || 'Failed to delete patient document';
+      })
       // Fetch dialysis
       .addCase(fetchDialysis.pending, (state) => {
         state.isLoading = true;
@@ -1958,9 +2157,77 @@ const dialysisSlice = createSlice({
       .addCase(fetchUpcomingPatients.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string || 'Failed to fetch upcoming patients';
+      })
+      // Fetch appointments
+      .addCase(fetchAppointments.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAppointments.fulfilled, (state, action: PayloadAction<Appointment[]>) => {
+        state.isLoading = false;
+        state.appointments = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchAppointments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string || 'Failed to fetch appointments';
+      })
+      // Create appointment
+      .addCase(createAppointment.pending, (state) => {
+        state.isCreating = true;
+        state.error = null;
+      })
+      .addCase(createAppointment.fulfilled, (state, action: PayloadAction<Appointment>) => {
+        state.isCreating = false;
+        if (state.appointments) {
+          state.appointments.unshift(action.payload);
+        } else {
+          state.appointments = [action.payload];
+        }
+        state.error = null;
+      })
+      .addCase(createAppointment.rejected, (state, action) => {
+        state.isCreating = false;
+        state.error = action.payload as string || 'Failed to create appointment';
+      })
+      // Update appointment
+      .addCase(updateAppointment.pending, (state) => {
+        state.isUpdating = true;
+        state.error = null;
+      })
+      .addCase(updateAppointment.fulfilled, (state, action: PayloadAction<Appointment>) => {
+        state.isUpdating = false;
+        if (state.appointments) {
+          const index = state.appointments.findIndex(a => a.id === action.payload.id);
+          if (index !== -1) {
+            state.appointments[index] = action.payload;
+          }
+        }
+        state.currentAppointment = action.payload;
+        state.error = null;
+      })
+      .addCase(updateAppointment.rejected, (state, action) => {
+        state.isUpdating = false;
+        state.error = action.payload as string || 'Failed to update appointment';
+      })
+      // Delete appointment
+      .addCase(deleteAppointment.pending, (state) => {
+        state.isDeleting = true;
+        state.error = null;
+      })
+      .addCase(deleteAppointment.fulfilled, (state, action: PayloadAction<number>) => {
+        state.isDeleting = false;
+        if (state.appointments) {
+          state.appointments = state.appointments.filter(a => a.id !== action.payload);
+        }
+        state.error = null;
+      })
+      .addCase(deleteAppointment.rejected, (state, action) => {
+        state.isDeleting = false;
+        state.error = action.payload as string || 'Failed to delete appointment';
       });
   },
 });
 
-export const { clearError, clearDashboardStats, clearProducts, clearProductsArray, setCurrentProduct, setCurrentMachine, setCurrentWarning, setCurrentWarningFix, setCurrentWard, setCurrentBed, setCurrentShift, setCurrentPatient, setCurrentDialysis } = dialysisSlice.actions;
+export const { clearError, clearDashboardStats, clearProducts, clearProductsArray, setCurrentProduct, setCurrentMachine, setCurrentWarning, setCurrentWarningFix, setCurrentWard, setCurrentBed, setCurrentShift, setCurrentPatient, setCurrentDialysis, setCurrentAppointment } = dialysisSlice.actions;
 export default dialysisSlice.reducer;

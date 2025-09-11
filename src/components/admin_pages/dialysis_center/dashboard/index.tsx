@@ -111,7 +111,9 @@ const DialysisDashboardComponent = () => {
     total_wards > 0 ? ((total_wards - available_wards) / total_wards) * 100 : 0;
   const machineUtilization =
     working_machines + not_working_machines + warning_machines > 0
-      ? (working_machines / (working_machines + not_working_machines + warning_machines)) * 100
+      ? (working_machines /
+          (working_machines + not_working_machines + warning_machines)) *
+        100
       : 0;
 
   return (
@@ -150,7 +152,11 @@ const DialysisDashboardComponent = () => {
               <div className="text-xs text-muted-foreground">All dialysis</div>
             </div>
             <Link to="/dialysis-center/dialysis">
-              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
                 View All
               </Button>
             </Link>
@@ -170,10 +176,16 @@ const DialysisDashboardComponent = () => {
               <div className="text-xl sm:text-2xl font-bold">
                 {todays_dialysis}
               </div>
-              <div className="text-xs text-muted-foreground">Scheduled sessions</div>
+              <div className="text-xs text-muted-foreground">
+                Scheduled sessions
+              </div>
             </div>
             <Link to="/dialysis-center/today-dialysis">
-              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
                 View All
               </Button>
             </Link>
@@ -193,10 +205,16 @@ const DialysisDashboardComponent = () => {
               <div className="text-xl sm:text-2xl font-bold text-blue-600">
                 {upcoming_dialysis}
               </div>
-              <div className="text-xs text-muted-foreground">Future sessions</div>
+              <div className="text-xs text-muted-foreground">
+                Future sessions
+              </div>
             </div>
             <Link to="/dialysis-center/upcoming-patients-dialysis">
-              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
                 View All
               </Button>
             </Link>
@@ -211,11 +229,25 @@ const DialysisDashboardComponent = () => {
             </CardTitle>
             <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">
-              {total_patients}
+          <CardContent className="flex flex-row items-center justify-between">
+            <div className="flex flex-col justify-between">
+              <div className="text-xl sm:text-2xl font-bold">
+                {total_patients}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Registered patients
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">Registered patients</p>
+
+            <Link to="/dialysis-center/patients">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                View All
+              </Button>
+            </Link>
           </CardContent>
         </Card>
 
@@ -227,11 +259,23 @@ const DialysisDashboardComponent = () => {
             </CardTitle>
             <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">
-              {total_warnings}
+          <CardContent className="flex flex-row items-center justify-between">
+            <div className="flex flex-col justify-between">
+              <div className="text-xl sm:text-2xl font-bold">
+                {total_warnings}
+              </div>
+              <p className="text-xs text-muted-foreground">All warnings</p>
             </div>
-            <p className="text-xs text-muted-foreground">All warnings</p>
+
+            <Link to="/dialysis-center/warning">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                View All
+              </Button>
+            </Link>
           </CardContent>
         </Card>
 

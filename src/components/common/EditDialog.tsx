@@ -24,6 +24,8 @@ interface EditDialogProps {
   disabled?: boolean;
   error?: string | null;
   getMediaUrl?: (path: string | null | undefined) => string | null; // Function to get media URL for existing files
+  existingFiles?: Record<string, string | null>; // Existing file paths for display purposes
+  showCancelButton?: boolean;
 }
 
 export const EditDialog: React.FC<EditDialogProps> = ({
@@ -40,7 +42,9 @@ export const EditDialog: React.FC<EditDialogProps> = ({
   loading = false,
   disabled = false,
   error,
-  getMediaUrl
+  getMediaUrl,
+  existingFiles = {},
+  showCancelButton = true
 }) => {
   const handleCancel = () => {
     if (onCancel) {
@@ -80,8 +84,9 @@ export const EditDialog: React.FC<EditDialogProps> = ({
             disabled={disabled}
             submitText={submitText}
             cancelText={cancelText}
-            showCancelButton={false}
+            showCancelButton={showCancelButton}
             getMediaUrl={getMediaUrl}
+            existingFiles={existingFiles}
           />
         </div>
       </DialogContent>

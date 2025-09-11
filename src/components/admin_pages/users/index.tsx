@@ -350,6 +350,8 @@ const UsersPageComponent: React.FC = () => {
         searchPlaceholder="Search users by name or email..."
         onSearchChange={setSearchTerm}
         searchValue={searchTerm}
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       {/* Data Table */}

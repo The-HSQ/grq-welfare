@@ -276,6 +276,13 @@ const WarningResolvedPageComponent = () => {
         </Button>
       </PageHeader>
 
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
+
       {/* Filter Bar */}
       <FilterBar
         filters={filterOptions}
@@ -286,6 +293,8 @@ const WarningResolvedPageComponent = () => {
         searchPlaceholder="Search by fix description..."
         onSearchChange={setSearchTerm}
         searchValue={searchTerm}
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       {/* Data Table */}

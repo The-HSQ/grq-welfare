@@ -23,6 +23,10 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
         return '/dialysis-center'; // Dialysis Center Dashboard (accountant view)
       case 'office_admin':
         return '/office-management'; // Office Management Dashboard
+      case 'lab_accountant':
+        return '/office-management/inventory'; // Lab Accountant Dashboard
+      case 'vehicle_user':
+        return '/office-management/vehicles-usage'; // Vehicles Usage
       default:
         return '/'; // Default to main dashboard
     }

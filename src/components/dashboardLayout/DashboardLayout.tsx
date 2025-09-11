@@ -7,12 +7,10 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { logoutUser } from "../../store/slices/authSlice";
 import { useAuth } from "../../hooks/useAuth";
 import {
-  Settings,
   LogOut,
   Home,
   Building2,
   Users,
-  BarChart3,
   User,
   ChevronDown,
   Package,
@@ -22,6 +20,8 @@ import {
   Bed,
   Calendar,
   AlertCircle,
+  Euro,
+  Car,
 } from "lucide-react";
 
 import { Separator } from "../ui/separator";
@@ -43,7 +43,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { isAdmin, isMedicalAdmin, isAccountantMedical, isOfficeAdmin } =
+  const { isAdmin, isMedicalAdmin, isAccountantMedical, isOfficeAdmin, isDriver, isLabAccountant } =
     useAuth();
 
   // State for tracking expanded/collapsed sub-menus (supports multiple levels)
@@ -155,7 +155,7 @@ export default function DashboardLayout() {
       icon: Users,
     },
     {
-      title: "Dialysis Center",
+      title: "Welfare Dialysis Center",
       icon: Building2,
       items: [
         {
@@ -164,11 +164,16 @@ export default function DashboardLayout() {
           icon: Home,
         },
         {
-          title: "Admin",
+          title: "Doctor Appointment",
+          url: "/dialysis-center/doctor-appointment",
+          icon: Calendar,
+        },
+        {
+          title: "Administrative Control",
           icon: Users,
           items: [
             {
-              title: "Inventory",
+              title: "Dialysis Center Inventory",
               icon: SquaresExclude,
               items: [
                 {
@@ -211,7 +216,7 @@ export default function DashboardLayout() {
           ],
         },
         {
-          title: "Dialysis Receptionist",
+          title: "Welfare Dialysis System",
           icon: Users,
           items: [
             {
@@ -229,13 +234,71 @@ export default function DashboardLayout() {
       ],
     },
     {
-      title: "Office Management",
+      title: "Welfare Office Management",
       icon: Building2,
       items: [
         {
           title: "Dashboard",
           url: "/office-management",
           icon: Home,
+        },
+        {
+          title: "Welfare Inventory",
+          url: "/office-management/inventory",
+          icon: SquaresExclude,
+        },
+        {
+          title: "Welfare Donation",
+          icon: Euro,
+          items: [
+            {
+              title: "Donors",
+              url: "/office-management/donors",
+              icon: Users,
+            },
+            {
+              title: "Donations",
+              url: "/office-management/donations",
+              icon: Euro,
+            },
+          ],
+        },
+        {
+          title: "Welfare Expense",
+          icon: Users,
+          items: [
+            {
+              title: "Vendor",
+              url: "/office-management/vendor",
+              icon: Users,
+            },
+            {
+              title: "Expense Category",
+              url: "/office-management/expense-category",
+              icon: Users,
+            },
+            {
+              title: "Expense",
+              url: "/office-management/expense",
+              icon: Users,
+            },
+          ],
+        },
+        {
+          title: "Welfare Vehicles",
+          icon: Car,
+          items: [
+            {
+              title: "Vehicles",
+              url: "/office-management/vehicles",
+              icon: Car,
+            },
+            {
+              title: "Vehicles Usage",
+              url: "/office-management/vehicles-usage",
+              icon: Car,
+            },
+          ],
         },
       ],
     },
@@ -249,11 +312,16 @@ export default function DashboardLayout() {
       icon: Home,
     },
     {
-      title: "Admin",
+      title: "Doctor Appointment",
+      url: "/dialysis-center/doctor-appointment",
+      icon: Calendar,
+    },
+    {
+      title: "Administrative Control",
       icon: Users,
       items: [
         {
-          title: "Inventory",
+          title: "Dialysis Center Inventory",
           icon: SquaresExclude,
           items: [
             {
@@ -296,7 +364,7 @@ export default function DashboardLayout() {
       ],
     },
     {
-      title: "Dialysis Receptionist",
+      title: "Welfare Dialysis System",
       icon: Users,
       items: [
         {
@@ -319,6 +387,11 @@ export default function DashboardLayout() {
       title: "Dashboard",
       url: "/dialysis-center",
       icon: Home,
+    },
+    {
+      title: "Doctor Appointment",
+      url: "/dialysis-center/doctor-appointment",
+      icon: Calendar,
     },
     {
       title: "Warning",
@@ -345,9 +418,85 @@ export default function DashboardLayout() {
   // Office Admin-specific navigation items
   const officeAdminNavigationItems: NavigationItem[] = [
     {
-      title: "Office Management",
+      title: "Welfare Office Management",
       url: "/office-management",
       icon: Building2,
+    },
+    {
+      title: "Welfare Inventory",
+      url: "/office-management/inventory",
+      icon: SquaresExclude,
+    },
+    {
+      title: "Welfare Donation",
+      icon: Euro,
+      items: [
+        {
+          title: "Donors",
+          url: "/office-management/donors",
+          icon: Users,
+        },
+        {
+          title: "Donations",
+          url: "/office-management/donations",
+          icon: Euro,
+        },
+      ],
+    },
+    {
+      title: "Welfare Expense",
+      icon: Users,
+      items: [
+        {
+          title: "Vendor",
+          url: "/office-management/vendor",
+          icon: Users,
+        },
+        {
+          title: "Expense Category",
+          url: "/office-management/expense-category",
+          icon: Users,
+        },
+        {
+          title: "Expense",
+          url: "/office-management/expense",
+          icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Welfare Vehicles",
+      icon: Car,
+      items: [
+        {
+          title: "Vehicles",
+          url: "/office-management/vehicles",
+          icon: Car,
+        },
+        {
+          title: "Vehicles Usage",
+          url: "/office-management/vehicles-usage",
+          icon: Car,
+        },
+      ],
+    },
+  ];
+
+  // Driver-specific navigation items
+  const driverNavigationItems: NavigationItem[] = [
+    {
+      title: "Vehicles Usage",
+      url: "/office-management/vehicles-usage",
+      icon: Car,
+    },
+  ];
+
+  // Lab Accountant-specific navigation items
+  const labAccountantNavigationItems: NavigationItem[] = [
+    {
+      title: "Welfare Inventory",
+      url: "/office-management/inventory",
+      icon: SquaresExclude,
     },
   ];
 
@@ -371,26 +520,40 @@ export default function DashboardLayout() {
       items.push(...officeAdminNavigationItems);
     }
 
+    if (isDriver()) {
+      items.push(...driverNavigationItems);
+    }
+
+    if (isLabAccountant()) {
+      items.push(...labAccountantNavigationItems);
+    }
+
     return items;
   };
 
   const navigationItems = getNavigationItems();
 
   const getUrl = () => {
-    if(isAdmin()) {
+    if (isAdmin()) {
       return `/`;
     }
-    if(isMedicalAdmin()) {
+    if (isMedicalAdmin()) {
       return `/dialysis-center`;
     }
-    if(isAccountantMedical()) {
+    if (isAccountantMedical()) {
       return `/dialysis-center`;
     }
-    if(isOfficeAdmin()) {
+    if (isOfficeAdmin()) {
       return `/office-management`;
     }
+    if (isDriver()) {
+      return `/office-management/vehicles-usage`;
+    }
+    if (isLabAccountant()) {
+      return `/office-management/inventory`;
+    }
     return `/`;
-  }
+  };
 
   return (
     <SidebarProvider
@@ -405,10 +568,7 @@ export default function DashboardLayout() {
         <SidebarHeader>
           <SidebarMenu className="h-full p-0">
             <SidebarMenuItem className="h-full">
-              <SidebarMenuButton
-                asChild
-                className="p-0 h-full"
-              >
+              <SidebarMenuButton asChild className="p-0 h-full">
                 <Link to={getUrl()} className="flex items-center gap-2 p-0">
                   <img
                     src="/logo.png"

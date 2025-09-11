@@ -283,9 +283,12 @@ const DialysisPageComponent = () => {
       {
         name: "patient",
         label: "Patient",
-        type: "select",
+        type: "searchable-select",
         required: true,
-        options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
+        // options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
+        options: patients?.map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" })
+          .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        placeholder: "Search and select a patient...",
       },
       {
         name: "bed",
@@ -392,9 +395,12 @@ const DialysisPageComponent = () => {
       {
         name: "patient",
         label: "Patient",
-        type: "select",
+        type: "searchable-select",
         required: true,
-        options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
+        // options: patients?.filter(p => p.status === "active").map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" }) || [],
+        options: patients?.map((p) => p.id ? ({ value: p.id, label: p.name }) : { value: "", label: "Patient not found" })
+          .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        placeholder: "Search and select a patient...",
       },
       {
         name: "bed",
@@ -725,6 +731,8 @@ const DialysisPageComponent = () => {
             month: "",
           })
         }
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       {/* Error Display */}

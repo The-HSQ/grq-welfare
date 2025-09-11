@@ -1,15 +1,18 @@
 import React from 'react';
 
+// PageHeader component with action support
 interface PageHeaderProps {
   title: string;
   description?: string;
   children?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ 
   title, 
   description, 
-  children 
+  children,
+  action
 }) => {
   return (
     <div className="flex flex-col gap-4 sm:pb-6">
@@ -20,8 +23,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <p className="text-muted-foreground">{description}</p>
           )}
         </div>
-        {children && (
+        {(action || children) && (
           <div className="flex items-center gap-2">
+            {action}
             {children}
           </div>
         )}

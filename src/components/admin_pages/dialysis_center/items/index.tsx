@@ -330,6 +330,8 @@ const ItemsPageComponent = () => {
         onSearchChange={setSearchTerm}
         searchValue={searchTerm}
         showClearButton={true}
+        defaultFiltersVisible={false}
+        showToggleButton={true}
       />
 
       {/* Data Table */}

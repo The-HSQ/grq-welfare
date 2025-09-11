@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -19,7 +20,7 @@ export interface FormFieldOption {
 export interface FormFieldConfig {
   name: string;
   label: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'switch' | 'date' | 'datetime-local' | 'time' | 'file' | 'image';
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'textarea' | 'select' | 'searchable-select' | 'checkbox' | 'radio' | 'switch' | 'date' | 'datetime-local' | 'time' | 'file' | 'image';
   placeholder?: string;
   options?: FormFieldOption[];
   required?: boolean;
@@ -46,6 +47,7 @@ interface FormFieldProps {
   error?: FieldError;
   className?: string;
   getMediaUrl?: (path: string | null | undefined) => string | null; // Function to get media URL for existing files
+  existingFile?: string | null; // Existing file path for display purposes
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -53,11 +55,13 @@ export const FormField: React.FC<FormFieldProps> = ({
   control,
   error,
   className = '',
-  getMediaUrl
+  getMediaUrl,
+  existingFile: propExistingFile
 }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [existingFile, setExistingFile] = useState<string | null>(null);
+  const [customCurrency, setCustomCurrency] = useState<string>('');
 
   const renderField = (value: any, onChange: (value: any) => void) => {
     const commonProps = {
@@ -202,22 +206,94 @@ export const FormField: React.FC<FormFieldProps> = ({
         );
 
       case 'select':
+        // Check if this is a field with "Other" option and if we're in "other" mode
+        const hasOtherOption = field.options?.some(option => option.value === 'OTHER');
+        const isOtherField = hasOtherOption && 
+                           (value === 'OTHER' || (value && !field.options?.find(option => option.value === value)));
+        const selectValue = isOtherField ? 'OTHER' : (value || '');
+        
         return (
-          <Select value={value || ''} onValueChange={onChange}>
-            <SelectTrigger {...commonProps}>
-              <SelectValue placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
-              >
-                {field.options?.find(option => option.value == value)?.label}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {field.options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Select 
+              value={selectValue} 
+              onValueChange={(selectedValue) => {
+                if (hasOtherOption && selectedValue === 'OTHER') {
+                  // When "Other" is selected, set to OTHER and show input
+                  onChange('OTHER');
+                } else {
+                  // For other selections, clear custom value and set the selected value
+                  setCustomCurrency('');
+                  onChange(selectedValue);
+                }
+              }}
+            >
+              <SelectTrigger {...commonProps}>
+                <SelectValue placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
+                >
+                  {isOtherField 
+                    ? (value === 'OTHER' ? 'Other' : value) // Show "Other" or custom value
+                    : field.options?.find(option => option.value == value)?.label
+                  }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {field.options?.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Show text input when "Other" is selected */}
+            {isOtherField && (
+              <div className="space-y-1">
+                <Input
+                  placeholder={
+                    field.name === 'currency' 
+                      ? "Enter currency (e.g., CAD, JPY, AUD, etc.)"
+                      : field.name === 'vehicle_type'
+                      ? "Enter vehicle type (e.g., Bus, SUV, etc.)"
+                      : field.name === 'quantity_type'
+                      ? "Enter quantity type (e.g., liters, grams, etc.)"
+                      : field.name === 'inventory_type'
+                      ? "Enter inventory type (e.g., emergency, storage, etc.)"
+                      : "Enter custom value"
+                  }
+                  value={value === 'OTHER' ? customCurrency : value}
+                  onChange={(e) => {
+                    let newValue = e.target.value;
+                    // Apply specific formatting based on field type
+                    if (field.name === 'currency') {
+                      newValue = e.target.value.toUpperCase();
+                    } else if (field.name === 'quantity_type' || field.name === 'inventory_type') {
+                      // Keep as entered for these fields
+                      newValue = e.target.value;
+                    }
+                    setCustomCurrency(newValue);
+                    onChange(newValue);
+                  }}
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Custom {field.label.toLowerCase()} will be saved as entered
+                </p>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'searchable-select':
+        return (
+          <SearchableSelect
+            options={field.options || []}
+            value={value || ''}
+            onValueChange={onChange}
+            placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
+            searchPlaceholder="Search..."
+            disabled={field.disabled}
+            className={field.className}
+            emptyMessage="No options found"
+          />
         );
 
       case 'checkbox':
@@ -290,13 +366,14 @@ export const FormField: React.FC<FormFieldProps> = ({
         name={field.name}
         control={control}
         render={({ field: { value, onChange } }) => {
-          // Set existing file when value is a string (existing file path)
+          // Set existing file from prop or from value
           useEffect(() => {
-            if (typeof value === 'string' && value && !value.startsWith('blob:')) {
+            if (propExistingFile) {
+              setExistingFile(propExistingFile);
+            } else if (typeof value === 'string' && value && !value.startsWith('blob:')) {
               setExistingFile(value);
             }
-          }, [value]);
-
+          }, [value, propExistingFile]);
 
           return renderField(value, onChange);
         }}

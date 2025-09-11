@@ -9,9 +9,11 @@ export { DynamicForm } from './DynamicForm';
 export { FormField } from './FormField';
 export { PasswordField } from './PasswordField';
 export { FormSchema, createFormSchema } from './FormSchema';
+export { DocumentManager } from './DocumentManager';
 
 // Export types
 export type { Column, DataTableProps } from './DataTable';
 export type { FilterOption, FilterBarProps } from './FilterBar';
 export type { FormFieldConfig, FormFieldOption } from './FormField';
 export type { FormSchemaConfig } from './FormSchema';
+export type { BaseDocument, DocumentManagerProps } from './DocumentManager';
