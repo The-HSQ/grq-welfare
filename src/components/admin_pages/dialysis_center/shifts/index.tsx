@@ -25,7 +25,7 @@ import { FormSchema } from '../../../common/FormSchema';
 
 const ShiftsPageComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { shifts, isLoading, isCreating, isUpdating, isDeleting, error, currentShift } = useSelector(
+  const { shifts, isLoadingShifts, isCreating, isUpdating, isDeleting, error, currentShift } = useSelector(
     (state: RootState) => state.dialysis
   );
 
@@ -174,7 +174,7 @@ const ShiftsPageComponent = () => {
       <DataTable
         data={shifts || []}
         columns={columns}
-        loading={isLoading}
+        loading={isLoadingShifts}
         emptyMessage="No shifts found"
         pagination={true}
         pageSize={10}

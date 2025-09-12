@@ -38,7 +38,7 @@ const DialysisDashboardComponent = () => {
   if (isLoading) {
     return (
       <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
           {[...Array(12)].map((_, i) => (
             <Card key={i}>
               <CardHeader>
@@ -86,7 +86,6 @@ const DialysisDashboardComponent = () => {
 
   const {
     total_patients,
-    active_machines,
     working_machines,
     not_working_machines,
     warning_machines,

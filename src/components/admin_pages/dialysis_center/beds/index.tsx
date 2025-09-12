@@ -28,7 +28,7 @@ const BedsPageComponent = () => {
   const { 
     beds, 
     wards, 
-    isLoading, 
+    isLoadingBeds, 
     isCreating, 
     isUpdating, 
     isDeleting, 
@@ -207,7 +207,7 @@ const BedsPageComponent = () => {
           data={filteredData}
           columns={bedTableColumns}
           onEdit={handleEditClick}
-          loading={isLoading}
+          loading={isLoadingBeds}
           emptyMessage="No beds found"
           pagination={true}
           pageSize={10}

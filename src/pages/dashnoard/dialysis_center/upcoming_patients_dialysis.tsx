@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle, Calendar, Users, Clock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/mediaUtils';
+import LazyImage from '@/components/common/LazyImage';
 
 // Simple date formatting function
 const formatDate = (dateString: string) => {
@@ -144,20 +145,24 @@ const UpcomingPatientsDialysis = () => {
       key: "image",
       header: "Image",
       render: (value: string, patient: UpcomingPatient) => {
+        const image = getMediaUrl(patient.image);
+        
         return (
           <div className="flex w-full items-center">
             {patient.image ? (
-              <img
-                src={getMediaUrl(patient.image) || undefined}
-                alt="image"
+              <LazyImage
+                src={image || ''}
+                alt={patient.name || 'Patient'}
                 className="w-10 h-10 rounded-lg object-cover"
-                onError={(e) => {
-                  console.error("Image failed to load:", {
-                    src: e.currentTarget.src,
-                    patientId: patient.patient_id,
-                    imageField: patient.image,
-                  });
-                }}
+                fallback={
+                  <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500 text-xs font-medium">
+                      {patient.name
+                        ? patient.name.charAt(0).toUpperCase()
+                        : "?"}
+                    </span>
+                  </div>
+                }
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">

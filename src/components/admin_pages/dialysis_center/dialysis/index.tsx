@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import LazyImage from "../../../common/LazyImage";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -45,6 +46,7 @@ const DialysisPageComponent = () => {
     machinesArray,
     shifts,
     isLoading,
+    isLoadingDialysis,
     isCreating,
     isUpdating,
     isDeleting,
@@ -117,9 +119,11 @@ const DialysisPageComponent = () => {
     return months;
   };
 
-  // Filter dialysis data
-  const filteredDialysis =
-    dialysis?.filter((item) => {
+  // Filter dialysis data - memoized for performance
+  const filteredDialysis = useMemo(() => {
+    if (!dialysis) return [];
+    
+    return dialysis.filter((item) => {
       if (
         filters.patient &&
         !item.patient_name.toLowerCase().includes(filters.patient.toLowerCase())
@@ -160,7 +164,8 @@ const DialysisPageComponent = () => {
       }
 
       return true;
-    }) || [];
+    });
+  }, [dialysis, filters]);
 
   // Get machines array safely - filter only dialysis machines that are not working
   const getMachinesArray = () => {
@@ -507,14 +512,12 @@ const DialysisPageComponent = () => {
 
     return (
       <div className="flex w-full items-center">
-            {patient.patient_image ? (
-              <img
-                src={image || ""}
-                alt="image"
-                className="w-10 h-10 rounded-lg object-cover"
-                loading="lazy"
-              />
-            ) : (
+        {patient.patient_image ? (
+          <LazyImage
+            src={image || ""}
+            alt={patient.patient_name || 'Patient'}
+            className="w-10 h-10 rounded-lg object-cover"
+            fallback={
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-500 text-xs font-medium">
                   {patient.patient_name
@@ -522,8 +525,18 @@ const DialysisPageComponent = () => {
                     : "?"}
                 </span>
               </div>
-            )}
+            }
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500 text-xs font-medium">
+              {patient.patient_name
+                ? patient.patient_name.charAt(0).toUpperCase()
+                : "?"}
+            </span>
           </div>
+        )}
+      </div>
     );
   };
 
@@ -658,22 +671,22 @@ const DialysisPageComponent = () => {
   };
 
   // Handle view dialysis details
-  const handleViewDialysis = (dialysis: Dialysis) => {
+  const handleViewDialysis = useCallback((dialysis: Dialysis) => {
     dispatch(setCurrentDialysis(dialysis));
     navigate(`/dialysis-center/dialysis/${dialysis.id}`);
-  };
+  }, [dispatch, navigate]);
 
   // Handle edit button click
-  const handleEditClick = (dialysis: Dialysis) => {
+  const handleEditClick = useCallback((dialysis: Dialysis) => {
     setSelectedDialysis(dialysis);
     setEditDialogOpen(true);
-  };
+  }, []);
 
   // Handle delete button click
-  const handleDeleteClick = (dialysis: Dialysis) => {
+  const handleDeleteClick = useCallback((dialysis: Dialysis) => {
     setSelectedDialysis(dialysis);
     setDeleteDialogOpen(true);
-  };
+  }, []);
 
   // Get default values for edit dialog
   const getEditDefaultValues = () => {
@@ -769,7 +782,7 @@ const DialysisPageComponent = () => {
         columns={columns}
         onEdit={handleEditClick}
         onView={handleViewDialysis}
-        loading={isLoading}
+        loading={isLoadingDialysis}
         emptyMessage="No dialysis sessions found"
         pagination={true}
         pageSize={10}

@@ -1,5 +1,6 @@
 import * as React from 'react';
-const { useEffect, useState } = React;
+const { useEffect, useState, useMemo, useCallback } = React;
+import LazyImage from '../../../common/LazyImage';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -38,7 +39,7 @@ export const PatientsComponent: React.FC = () => {
   // Redux state
   const { 
     patients, 
-    isLoading, 
+    isLoadingPatients, 
     isCreating, 
     isUpdating, 
     isDeleting, 
@@ -141,10 +142,10 @@ export const PatientsComponent: React.FC = () => {
   };
 
   // Handle view patient details
-  const handleViewPatient = (patient: Patient) => {
+  const handleViewPatient = useCallback((patient: Patient) => {
     dispatch(setCurrentPatient(patient));
     navigate(`/dialysis-center/patients/${patient.id}`);
-  };
+  }, [dispatch, navigate]);
 
   // Format date for datetime-local input
   const formatDateForInput = (dateString: string | null | undefined): string => {
@@ -160,16 +161,16 @@ export const PatientsComponent: React.FC = () => {
   };
 
   // Handle edit patient
-  const handleEditClick = (patient: Patient) => {
+  const handleEditClick = useCallback((patient: Patient) => {
     setSelectedPatient(patient);
     setIsEditDialogOpen(true);
-  };
+  }, []);
 
   // Handle delete patient
-  const handleDeleteClick = (patient: Patient) => {
+  const handleDeleteClick = useCallback((patient: Patient) => {
     setSelectedPatient(patient);
     setIsDeleteDialogOpen(true);
-  };
+  }, []);
 
   // Handle view documents
   const handleViewDocuments = async (patient: Patient) => {
@@ -190,47 +191,51 @@ export const PatientsComponent: React.FC = () => {
     dispatch(fetchPatients(undefined));
   };
 
-  // Filter patients based on search and filters
-  const filteredPatients = patients?.filter(patient => {
-    const matchesSearch = (patient.name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
-                         (patient.nic?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
-                         (patient.phone?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
-                         (patient.address?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
-                         (patient.relative_name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
-                         (patient.relative_phone?.toLowerCase().includes(filters.search.toLowerCase()) || false);
+  // Filter patients based on search and filters - memoized for performance
+  const filteredPatients = useMemo(() => {
+    if (!patients) return [];
     
-    const matchesZakat = filters.zakat_eligible === '' || 
-                        (filters.zakat_eligible === 'true' && patient.zakat_eligible) ||
-                        (filters.zakat_eligible === 'false' && !patient.zakat_eligible);
-    
-    const matchesDialysis = filters.dialysis_per_week === '' || 
-                           patient.dialysis_per_week === parseInt(filters.dialysis_per_week);
-    
-    const matchesStatus = filters.status === 'all' || filters.status === '' || patient.status === filters.status;
+    return patients.filter(patient => {
+      const matchesSearch = (patient.name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                           (patient.nic?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                           (patient.phone?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                           (patient.address?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                           (patient.relative_name?.toLowerCase().includes(filters.search.toLowerCase()) || false) ||
+                           (patient.relative_phone?.toLowerCase().includes(filters.search.toLowerCase()) || false);
+      
+      const matchesZakat = filters.zakat_eligible === '' || 
+                          (filters.zakat_eligible === 'true' && patient.zakat_eligible) ||
+                          (filters.zakat_eligible === 'false' && !patient.zakat_eligible);
+      
+      const matchesDialysis = filters.dialysis_per_week === '' || 
+                             patient.dialysis_per_week === parseInt(filters.dialysis_per_week);
+      
+      const matchesStatus = filters.status === 'all' || filters.status === '' || patient.status === filters.status;
 
-    const matchesHandicapped = filters.handicapped === 'all' || filters.handicapped === '' || patient.handicapped === (filters.handicapped === 'true');
+      const matchesHandicapped = filters.handicapped === 'all' || filters.handicapped === '' || patient.handicapped === (filters.handicapped === 'true');
 
-    const matchesAccessType = filters.access_type === 'all' || filters.access_type === '' || patient.access_type === filters.access_type;
+      const matchesAccessType = filters.access_type === 'all' || filters.access_type === '' || patient.access_type === filters.access_type;
 
-    // Medical test filters
-    const matchesHbsag = filters.hbsag === 'all' || filters.hbsag === '' || patient.hbsag === filters.hbsag;
-    const matchesHcv = filters.hcv === 'all' || filters.hcv === '' || patient.hcv === filters.hcv;
-    const matchesHiv = filters.hiv === 'all' || filters.hiv === '' || patient.hiv === filters.hiv;
-    
-    // Date filter
-    if (filters.date) {
-      const itemDate = new Date(patient.created_at).toISOString().split('T')[0];
-      if (itemDate !== filters.date) return false;
-    }
-    
-    // Year filter
-    if (filters.year) {
-      const itemYear = new Date(patient.created_at).getFullYear().toString();
-      if (itemYear !== filters.year) return false;
-    }
-    
-    return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType && matchesHbsag && matchesHcv && matchesHiv;
-  }) || [];
+      // Medical test filters
+      const matchesHbsag = filters.hbsag === 'all' || filters.hbsag === '' || patient.hbsag === filters.hbsag;
+      const matchesHcv = filters.hcv === 'all' || filters.hcv === '' || patient.hcv === filters.hcv;
+      const matchesHiv = filters.hiv === 'all' || filters.hiv === '' || patient.hiv === filters.hiv;
+      
+      // Date filter
+      if (filters.date) {
+        const itemDate = new Date(patient.created_at).toISOString().split('T')[0];
+        if (itemDate !== filters.date) return false;
+      }
+      
+      // Year filter
+      if (filters.year) {
+        const itemYear = new Date(patient.created_at).getFullYear().toString();
+        if (itemYear !== filters.year) return false;
+      }
+      
+      return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType && matchesHbsag && matchesHcv && matchesHiv;
+    });
+  }, [patients, filters]);
 
   // Create FormSchema instances
   const addSchema = new FormSchema(patientAddSchema);
@@ -239,16 +244,21 @@ export const PatientsComponent: React.FC = () => {
   // Separate component for image cell that can use hooks
   const ImageCell = ({ patient }: { patient: Patient }) => {
     const image = getMediaUrl(patient.image);
-    console.log(image);
 
     return (
       <div className="flex w-full items-center">
         {patient.image ? (
-          <img
+          <LazyImage
             src={image || ''}
-            alt="image"
+            alt={patient.name || 'Patient'}
             className="w-10 h-10 rounded-lg object-cover"
-            loading="lazy"
+            fallback={
+              <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-500 text-xs font-medium">
+                  {patient.name ? patient.name.charAt(0).toUpperCase() : '?'}
+                </span>
+              </div>
+            }
           />
         ) : (
           <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
@@ -559,7 +569,7 @@ export const PatientsComponent: React.FC = () => {
       <DataTable
         data={filteredPatients}
         columns={columns}
-        loading={isLoading}
+        loading={isLoadingPatients}
         emptyMessage="No patients found"
         onView={handleViewPatient}
         onEdit={handleEditClick}
@@ -628,7 +638,7 @@ export const PatientsComponent: React.FC = () => {
         documents={currentPatient?.documents || []}
         patientName={selectedPatientForDocuments?.name || ''}
         patientId={selectedPatientForDocuments?.id || ''}
-        isLoading={isLoading}
+        isLoading={isLoadingPatients}
         isUploading={isCreating}
         isDeleting={isDeleting}
         uploadError={error}

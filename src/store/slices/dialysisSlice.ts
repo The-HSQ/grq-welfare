@@ -565,6 +565,12 @@ interface DialysisState {
   isDeleting: boolean;
   isAddingQuantity: boolean;
   isUsingItems: boolean;
+  // Separate loading states for different operations
+  isLoadingDialysis: boolean;
+  isLoadingPatients: boolean;
+  isLoadingBeds: boolean;
+  isLoadingMachines: boolean;
+  isLoadingShifts: boolean;
   error: string | null;
 }
 
@@ -600,6 +606,12 @@ const initialState: DialysisState = {
   isDeleting: false,
   isAddingQuantity: false,
   isUsingItems: false,
+  // Separate loading states for different operations
+  isLoadingDialysis: false,
+  isLoadingPatients: false,
+  isLoadingBeds: false,
+  isLoadingMachines: false,
+  isLoadingShifts: false,
   error: null,
 };
 
@@ -1476,11 +1488,11 @@ const dialysisSlice = createSlice({
       })
       // Fetch machines
       .addCase(fetchMachines.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingMachines = true;
         state.error = null;
       })
       .addCase(fetchMachines.fulfilled, (state, action: PayloadAction<{ type: string; data: any }>) => {
-        state.isLoading = false;
+        state.isLoadingMachines = false;
         if (action.payload.type === 'array') {
           state.machinesArray = action.payload.data;
           state.machines = null;
@@ -1491,7 +1503,7 @@ const dialysisSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMachines.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingMachines = false;
         state.error = action.payload as string || 'Failed to fetch machines';
       })
       // Create machine
@@ -1628,16 +1640,16 @@ const dialysisSlice = createSlice({
       })
       // Fetch beds
       .addCase(fetchBeds.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingBeds = true;
         state.error = null;
       })
       .addCase(fetchBeds.fulfilled, (state, action: PayloadAction<Bed[]>) => {
-        state.isLoading = false;
+        state.isLoadingBeds = false;
         state.beds = action.payload;
         state.error = null;
       })
       .addCase(fetchBeds.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingBeds = false;
         state.error = action.payload as string || 'Failed to fetch beds';
       })
       // Create bed
@@ -1695,16 +1707,16 @@ const dialysisSlice = createSlice({
       })
       // Fetch shifts
       .addCase(fetchShifts.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingShifts = true;
         state.error = null;
       })
       .addCase(fetchShifts.fulfilled, (state, action: PayloadAction<Shift[]>) => {
-        state.isLoading = false;
+        state.isLoadingShifts = false;
         state.shifts = action.payload;
         state.error = null;
       })
       .addCase(fetchShifts.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingShifts = false;
         state.error = action.payload as string || 'Failed to fetch shifts';
       })
       // Create shift
@@ -1915,16 +1927,16 @@ const dialysisSlice = createSlice({
       })
       // Fetch patients
       .addCase(fetchPatients.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingPatients = true;
         state.error = null;
       })
       .addCase(fetchPatients.fulfilled, (state, action: PayloadAction<Patient[]>) => {
-        state.isLoading = false;
+        state.isLoadingPatients = false;
         state.patients = action.payload;
         state.error = null;
       })
       .addCase(fetchPatients.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingPatients = false;
         state.error = action.payload as string || 'Failed to fetch patients';
       })
       // Create patient
@@ -2050,16 +2062,16 @@ const dialysisSlice = createSlice({
       })
       // Fetch dialysis
       .addCase(fetchDialysis.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingDialysis = true;
         state.error = null;
       })
       .addCase(fetchDialysis.fulfilled, (state, action: PayloadAction<Dialysis[]>) => {
-        state.isLoading = false;
+        state.isLoadingDialysis = false;
         state.dialysis = action.payload;
         state.error = null;
       })
       .addCase(fetchDialysis.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingDialysis = false;
         state.error = action.payload as string || 'Failed to fetch dialysis sessions';
       })
       // Create dialysis

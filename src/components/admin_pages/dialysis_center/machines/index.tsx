@@ -29,7 +29,7 @@ const MachinePageComponent = () => {
   const { 
     machines, 
     machinesArray,
-    isLoading, 
+    isLoadingMachines, 
     isCreating, 
     isUpdating, 
     isDeleting, 
@@ -268,7 +268,7 @@ const MachinePageComponent = () => {
         data={filteredData}
         columns={columns}
         onEdit={handleEdit}
-        loading={isLoading}
+        loading={isLoadingMachines}
         emptyMessage="No machines found"
         pagination={true}
         pageSize={10}

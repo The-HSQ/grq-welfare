@@ -22,6 +22,7 @@ import { Calendar, Clock } from "lucide-react";
 import { getMediaUrl } from "@/lib/mediaUtils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import LazyImage from "../../../components/common/LazyImage";
 
 const TodayDialysis = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -241,20 +242,24 @@ const TodayDialysis = () => {
       key: "patient_image",
       header: "Image",
       render: (value: string, patient: TodayDialysisSession) => {
+        const image = getMediaUrl(patient.patient_image);
+        
         return (
           <div className="flex w-full items-center">
             {patient.patient_image ? (
-              <img
-                src={getMediaUrl(patient.patient_image) || undefined}
-                alt="image"
+              <LazyImage
+                src={image || ''}
+                alt={patient.patient_name || 'Patient'}
                 className="w-10 h-10 rounded-lg object-cover"
-                onError={(e) => {
-                  console.error("Image failed to load:", {
-                    src: e.currentTarget.src,
-                    patientId: patient.dialysis_id,
-                    imageField: patient.patient_image,
-                  });
-                }}
+                fallback={
+                  <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500 text-xs font-medium">
+                      {patient.patient_name
+                        ? patient.patient_name.charAt(0).toUpperCase()
+                        : "?"}
+                    </span>
+                  </div>
+                }
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
