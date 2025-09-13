@@ -64,6 +64,13 @@ const itemFields: FormFieldConfig[] = [
       min: 0,
     },
   },
+  {
+    name: 'admin_comment',
+    label: 'Admin Comment',
+    type: 'textarea',
+    placeholder: 'Enter admin comment',
+    required: false,
+  },
 ];
 
 // Create form schema for adding new items
@@ -87,6 +94,7 @@ export const createItemDefaultValues = {
   quantity: '',
   quantity_type: '',
   used_items: '',
+  admin_comment: '',
 };
 
 // Helper function to get edit form default values from product data
@@ -96,6 +104,7 @@ export const getEditItemDefaultValues = (product: any) => ({
   quantity: product.quantity || product.available_items || '',
   quantity_type: product.quantity_type || '',
   used_items: product.used_items || 0,
+  admin_comment: product.admin_comment || '',
 });
 
 // Form field configuration for adding new quantity

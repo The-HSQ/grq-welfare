@@ -145,6 +145,7 @@ const VendorsPageComponent: React.FC = () => {
       key: 'contact_person',
       header: 'Contact Person',
       sortable: true,
+      width: '180px',
       render: (value, vendor: Vendor) => (
         <div className="text-gray-700">
           {vendor.contact_person}
@@ -155,6 +156,7 @@ const VendorsPageComponent: React.FC = () => {
       key: 'email',
       header: 'Email',
       sortable: true,
+      width: '250px',
       render: (value, vendor: Vendor) => (
         <div className="text-gray-600">
           {vendor.email}
@@ -195,6 +197,7 @@ const VendorsPageComponent: React.FC = () => {
       key: 'payment_terms',
       header: 'Payment Terms',
       sortable: true,
+      width: '180px',
       render: (value, vendor: Vendor) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
           {vendor.payment_terms}
@@ -324,14 +327,14 @@ const VendorsPageComponent: React.FC = () => {
       name: 'tax_id',
       label: 'Tax ID',
       type: 'text' as const,
-      placeholder: 'Enter tax ID',
-      required: true
+      placeholder: 'Enter tax ID (registration no, company ID, etc)',
+      required: false
     },
     {
       name: 'payment_terms',
       label: 'Payment Terms',
       type: 'text' as const,
-      placeholder: 'Enter payment terms',
+      placeholder: 'Enter payment terms (cash, check, etc)',
       required: true
     },
   ];

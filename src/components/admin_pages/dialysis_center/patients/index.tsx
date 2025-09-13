@@ -222,15 +222,31 @@ export const PatientsComponent: React.FC = () => {
       const matchesHiv = filters.hiv === 'all' || filters.hiv === '' || patient.hiv === filters.hiv;
       
       // Date filter
-      if (filters.date) {
-        const itemDate = new Date(patient.created_at).toISOString().split('T')[0];
-        if (itemDate !== filters.date) return false;
+      if (filters.date && patient.created_at) {
+        try {
+          const date = new Date(patient.created_at);
+          if (!isNaN(date.getTime())) {
+            const itemDate = date.toISOString().split('T')[0];
+            if (itemDate !== filters.date) return false;
+          }
+        } catch (error) {
+          // Skip this patient if date is invalid
+          return false;
+        }
       }
       
       // Year filter
-      if (filters.year) {
-        const itemYear = new Date(patient.created_at).getFullYear().toString();
-        if (itemYear !== filters.year) return false;
+      if (filters.year && patient.created_at) {
+        try {
+          const date = new Date(patient.created_at);
+          if (!isNaN(date.getTime())) {
+            const itemYear = date.getFullYear().toString();
+            if (itemYear !== filters.year) return false;
+          }
+        } catch (error) {
+          // Skip this patient if date is invalid
+          return false;
+        }
       }
       
       return matchesSearch && matchesZakat && matchesDialysis && matchesStatus && matchesHandicapped && matchesAccessType && matchesHbsag && matchesHcv && matchesHiv;
@@ -604,13 +620,54 @@ export const PatientsComponent: React.FC = () => {
         defaultValues={selectedPatient ? {
           ...selectedPatient,
           next_dialysis_date: formatDateForInput(selectedPatient.next_dialysis_date),
-          // Show only filename for existing files, not the full path
-          image: selectedPatient.image ? selectedPatient.image.split('/').pop() : null,
-          document_path: selectedPatient.document_path ? selectedPatient.document_path.split('/').pop() : null
-        } : {}}
+          // For image field, set to empty string to avoid validation issues
+          // The existing image will be shown in the form field display
+          image: '',
+          // Ensure all select fields have default values
+          zakat_eligible: selectedPatient.zakat_eligible ?? false,
+          status: selectedPatient.status ?? 'active',
+          handicapped: selectedPatient.handicapped ?? false,
+          access_type: selectedPatient.access_type ?? '',
+          hbsag: selectedPatient.hbsag ?? '',
+          hcv: selectedPatient.hcv ?? '',
+          hiv: selectedPatient.hiv ?? '',
+          dialysis_per_week: selectedPatient.dialysis_per_week ?? 0,
+          name: selectedPatient.name ?? '',
+          nic: selectedPatient.nic ?? '',
+          phone: selectedPatient.phone ?? '',
+          address: selectedPatient.address ?? '',
+          relative_name: selectedPatient.relative_name ?? '',
+          relative_phone: selectedPatient.relative_phone ?? '',
+          blood_test_cbc: selectedPatient.blood_test_cbc ?? false,
+          rft_creatinine: selectedPatient.rft_creatinine ?? false,
+          rft_urea: selectedPatient.rft_urea ?? false
+        } : {
+          // Default values for new patient
+          zakat_eligible: false,
+          status: 'active',
+          handicapped: false,
+          access_type: '',
+          hbsag: '',
+          hcv: '',
+          hiv: '',
+          dialysis_per_week: 0,
+          name: '',
+          nic: '',
+          phone: '',
+          address: '',
+          relative_name: '',
+          relative_phone: '',
+          blood_test_cbc: false,
+          rft_creatinine: false,
+          rft_urea: false
+        }}
         loading={isUpdating}
         error={error || undefined}
         getMediaUrl={getMediaUrl}
+        existingFiles={{
+          image: selectedPatient?.image || null,
+          document_path: selectedPatient?.document_path || null
+        }}
       />
 
       {/* Delete Dialog */}

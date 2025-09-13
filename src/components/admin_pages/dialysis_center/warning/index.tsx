@@ -113,7 +113,7 @@ const WarningPageComponent = () => {
     // Search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      return warning.warning_description.toLowerCase().includes(searchLower);
+      return warning.warning_description?.toLowerCase().includes(searchLower);
     }
 
     return true;

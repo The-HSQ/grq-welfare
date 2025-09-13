@@ -18,6 +18,7 @@ import {
   AddDialog, 
   EditDialog, 
   DeleteDialog,
+  SuccessDialog,
   type Column 
 } from '@/components/common';
 import { Button } from '@/components/ui/button';
@@ -58,7 +59,10 @@ const DoctorAppointmentPageComponent = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [successAppointment, setSuccessAppointment] = useState<Appointment | null>(null);
+  const [successDialogTitle, setSuccessDialogTitle] = useState<string>('Appointment Saved Successfully!');
 
   // Error states for each dialog
   const [addError, setAddError] = useState<string | null>(null);
@@ -147,6 +151,15 @@ const DoctorAppointmentPageComponent = () => {
   // Table columns configuration
   const columns: Column<Appointment>[] = [
     {
+      key: 'id',
+      header: 'Token Number',
+      sortable: true,
+      width: '150px',
+      render: (value) => (
+        <span className="text-sm text-muted-foreground">{value}</span>
+      )
+    },
+    {
       key: 'patient_name',
       header: 'Patient Name',
       sortable: true,
@@ -233,6 +246,10 @@ const DoctorAppointmentPageComponent = () => {
       
       if (createAppointment.fulfilled.match(result)) {
         setAddDialogOpen(false);
+        // Show success dialog with the created appointment details
+        setSuccessAppointment(result.payload);
+        setSuccessDialogTitle('Appointment Created Successfully!');
+        setSuccessDialogOpen(true);
       } else if (createAppointment.rejected.match(result)) {
         setAddError(result.payload as string);
       }
@@ -263,6 +280,10 @@ const DoctorAppointmentPageComponent = () => {
       if (updateAppointment.fulfilled.match(result)) {
         setEditDialogOpen(false);
         setSelectedAppointment(null);
+        // Show success dialog with the updated appointment details
+        setSuccessAppointment(result.payload);
+        setSuccessDialogTitle('Appointment Updated Successfully!');
+        setSuccessDialogOpen(true);
       } else if (updateAppointment.rejected.match(result)) {
         setEditError(result.payload as string);
       }
@@ -395,6 +416,20 @@ const DoctorAppointmentPageComponent = () => {
         onConfirm={handleDeleteAppointment}
         loading={isDeleting}
         error={deleteError}
+      />
+
+      {/* Success Dialog */}
+      <SuccessDialog
+        open={successDialogOpen}
+        onOpenChange={setSuccessDialogOpen}
+        title={successDialogTitle}
+        description="Now Use Token Number for the patient appointment."
+        patientName={successAppointment?.patient_name}
+        tokenNumber={successAppointment?.id}
+        onClose={() => {
+          setSuccessAppointment(null);
+          setAddDialogOpen(false);
+        }}
       />
     </div>
   );

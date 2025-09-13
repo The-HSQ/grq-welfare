@@ -40,9 +40,9 @@ export class FormSchema {
           break;
         case 'file':
         case 'image':
-          // For file uploads, we accept File objects, existing file paths (strings), or null/undefined
+          // For file uploads, we accept File objects, existing file paths (strings), or null/undefined/empty string
           fieldSchema = z.any().refine(
-            (val) => val === null || val === undefined || val instanceof File || (typeof val === 'string' && val.length > 0),
+            (val) => val === null || val === undefined || val === '' || val instanceof File || (typeof val === 'string' && val.length > 0),
             'Please select a valid file'
           );
           break;
@@ -50,6 +50,11 @@ export class FormSchema {
         case 'searchable-select':
           // Select fields can accept both string and number values, convert to string
           fieldSchema = z.union([z.string(), z.number()]).transform(val => String(val));
+          break;
+        case 'multi-select':
+        case 'item-selector':
+          // Multi-select and item-selector fields accept arrays of strings
+          fieldSchema = z.array(z.string());
           break;
         default:
           fieldSchema = z.string();
@@ -65,6 +70,9 @@ export class FormSchema {
           fieldSchema = z.union([z.string(), z.null()]).transform(val => val === null ? undefined : val);
         } else if (field.type === 'file' || field.type === 'image') {
           // File fields already handle null in their base schema
+        } else if (field.type === 'multi-select' || field.type === 'item-selector') {
+          // Multi-select and item-selector fields can be empty arrays
+          fieldSchema = z.array(z.string()).optional();
         } else {
           // For string fields (text, textarea, etc.)
           fieldSchema = z.union([z.string(), z.null()]).transform(val => val === null || val === '' ? undefined : val);

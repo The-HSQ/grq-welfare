@@ -137,54 +137,54 @@ const VehiclesUsagePageComponent: React.FC = () => {
       key: 'vehicle_number_plate',
       header: 'Number Plate',
       sortable: true,
-      width: '120px'
+      width: '150px'
     },
     {
       key: 'trip_purpose',
       header: 'Trip Purpose',
       sortable: true,
-      width: '120px',
+      width: '150px',
       render: (value) => value.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
     },
     {
       key: 'driver_name',
       header: 'Driver',
       sortable: true,
-      width: '120px'
+      width: '150px'
     },
     {
       key: 'current_mileage',
-      header: 'Start Mileage',
+      header: 'Start Mileage (KM)',
       sortable: true,
-      width: '120px',
+      width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'end_mileage',
-      header: 'End Mileage',
+      header: 'End Mileage (KM)',
       sortable: true,
-      width: '120px',
+      width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'total_mileage_used',
-      header: 'Miles Used',
+      header: 'Miles Used (KM)',
       sortable: true,
-      width: '100px',
+      width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'paid_amount',
       header: 'Paid Amount',
       sortable: true,
-      width: '120px',
+      width: '150px',
       render: (value) => `PKR ${parseFloat(value || '0').toFixed(2)}`
     },
     {
       key: 'total_amount_to_pay',
       header: 'Total Amount to Pay',
       sortable: true,
-      width: '120px',
+      width: '150px',
       render: (value) => `PKR ${parseFloat(value || '0').toFixed(2)}`
     },
     {

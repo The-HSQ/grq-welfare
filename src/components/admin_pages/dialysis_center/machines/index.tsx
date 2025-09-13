@@ -216,7 +216,7 @@ const MachinePageComponent = () => {
     // Search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      if (!machine.machine_name.toLowerCase().includes(searchLower)) {
+      if (!machine.machine_name?.toLowerCase().includes(searchLower)) {
         return false;
       }
     }

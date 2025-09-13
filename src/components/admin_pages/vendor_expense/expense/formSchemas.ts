@@ -6,7 +6,9 @@ import {
 // Get categories and vendors from API (these will be populated dynamically)
 export const getExpenseFormSchema = (
   categories: { id: number; name: string }[] = [],
-  vendors: { id: number; name: string }[] = []
+  vendors: { id: number; name: string }[] = [],
+  medicalProducts: { id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[] = [],
+  inventoryItems: { id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[] = []
 ): FormSchema => {
   return createFormSchema({
     fields: [
@@ -85,6 +87,24 @@ export const getExpenseFormSchema = (
         required: true,
         options: paymentMethodOptions,
         placeholder: 'Enter payment method',
+      },
+      {
+        name: 'inventory_items',
+        label: 'Welfare Inventory Items',
+        type: 'item-selector',
+        required: false,
+        items: inventoryItems,
+        selectorType: 'inventory',
+        placeholder: 'Select inventory items',
+      },
+      {
+        name: 'dialysis_products',
+        label: 'Dialysis Inventory Items',
+        type: 'item-selector',
+        required: false,
+        items: medicalProducts,
+        selectorType: 'medical',
+        placeholder: 'Select dialysis products',
       },
     ],
     layout: 'two-column',

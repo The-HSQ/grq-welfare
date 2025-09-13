@@ -209,6 +209,7 @@ export interface Product {
   quantity?: number;
   new_quantity?: number;
   used_items?: number;
+  admin_comment?: string;
   updated_at?: string;
 }
 
@@ -230,6 +231,7 @@ export interface CreateProductData {
   quantity: number;
   quantity_type: string;
   used_items: number;
+  admin_comment?: string;
 }
 
 // Update product interface
@@ -239,6 +241,7 @@ export interface UpdateProductData {
   quantity?: number;
   quantity_type?: string;
   used_items?: number;
+  admin_comment?: string;
 }
 
 // Patient Document interface

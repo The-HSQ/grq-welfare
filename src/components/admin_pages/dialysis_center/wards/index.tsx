@@ -115,7 +115,7 @@ const WardsPageComponent = () => {
       // Search filter
       if (
         filters.search &&
-        !ward.ward_name.toLowerCase().includes(filters.search.toLowerCase())
+        !ward.ward_name?.toLowerCase().includes(filters.search.toLowerCase())
       ) {
         return false;
       }

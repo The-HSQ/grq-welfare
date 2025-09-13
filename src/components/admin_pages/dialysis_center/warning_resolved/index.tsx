@@ -187,7 +187,7 @@ const WarningResolvedPageComponent = () => {
       const matchesSearch =
         searchTerm === "" ||
         item.fix_warning_description
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
 
       const warning = warnings?.find((w) => w.id === item.warning);

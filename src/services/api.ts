@@ -523,6 +523,8 @@ export const expenseAPI = {
     payment_method: string;
     due_balance_to_vendor: string;
     notes: string;
+    inventory_items_ids?: number[];
+    dialysis_product_ids?: number[];
   }) => api.post('/financial/expenses/', expenseData),
   
   // Update expense
@@ -536,6 +538,8 @@ export const expenseAPI = {
     payment_method?: string;
     due_balance_to_vendor?: string;
     notes?: string;
+    inventory_items_ids?: number[];
+    dialysis_product_ids?: number[];
   }) => api.patch(`/financial/expenses/${id}/`, expenseData),
   
   // Delete expense

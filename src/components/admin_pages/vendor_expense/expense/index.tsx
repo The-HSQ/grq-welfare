@@ -13,7 +13,7 @@ import {
   CreateExpenseData,
   UpdateExpenseData,
 } from "../../../../store/slices/expenseSlice";
-import { expenseCategoryAPI, vendorAPI } from "../../../../services/api";
+import { expenseCategoryAPI, vendorAPI, dialysisAPI, inventoryAPI } from "../../../../services/api";
 import { PageHeader } from "../../../common";
 import {
   DataTable,
@@ -52,8 +52,12 @@ const ExpensePageComponent = () => {
     []
   );
   const [vendors, setVendors] = useState<{ id: number; name: string }[]>([]);
+  const [medicalProducts, setMedicalProducts] = useState<{ id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<{ id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingVendors, setLoadingVendors] = useState(false);
+  const [loadingMedicalProducts, setLoadingMedicalProducts] = useState(false);
+  const [loadingInventoryItems, setLoadingInventoryItems] = useState(false);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -75,19 +79,27 @@ const ExpensePageComponent = () => {
     try {
       setLoadingCategories(true);
       setLoadingVendors(true);
+      setLoadingMedicalProducts(true);
+      setLoadingInventoryItems(true);
 
-      const [categoriesResponse, vendorsResponse] = await Promise.all([
+      const [categoriesResponse, vendorsResponse, medicalProductsResponse, inventoryItemsResponse] = await Promise.all([
         expenseCategoryAPI.getExpenseCategories(),
         vendorAPI.getVendors(),
+        dialysisAPI.getProducts(),
+        inventoryAPI.getInventoryItems(),
       ]);
 
       setCategories(categoriesResponse.data);
       setVendors(vendorsResponse.data);
+      setMedicalProducts(medicalProductsResponse.data);
+      setInventoryItems(inventoryItemsResponse.data);
     } catch (error) {
-      console.error("Error fetching categories and vendors:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoadingCategories(false);
       setLoadingVendors(false);
+      setLoadingMedicalProducts(false);
+      setLoadingInventoryItems(false);
     }
   };
 
@@ -102,6 +114,8 @@ const ExpensePageComponent = () => {
       payment_method: data.payment_method,
       due_balance_to_vendor: data.due_balance_to_vendor,
       notes: data.notes || "",
+      inventory_items_ids: data.inventory_items || [],
+      dialysis_product_ids: data.dialysis_products || [],
     };
 
     try {
@@ -126,6 +140,8 @@ const ExpensePageComponent = () => {
       payment_method: data.payment_method,
       due_balance_to_vendor: data.due_balance_to_vendor,
       notes: data.notes || "",
+      inventory_items_ids: data.inventory_items || [],
+      dialysis_product_ids: data.dialysis_products || [],
     };
 
     try {
@@ -202,12 +218,12 @@ const ExpensePageComponent = () => {
     }
 
     // Filter by category
-    if (filters.category && expense.category.toString() !== filters.category) {
+    if (filters.category && expense.category?.toString() !== filters.category) {
       return false;
     }
 
     // Filter by vendor
-    if (filters.vendor && expense.vendor.toString() !== filters.vendor) {
+    if (filters.vendor && expense.vendor?.toString() !== filters.vendor) {
       return false;
     }
 
@@ -251,7 +267,7 @@ const ExpensePageComponent = () => {
       key: "category_name",
       header: "Expense Type/Category Type",
       sortable: true,
-      width: "150px",
+      width: "250px",
     },
     {
       key: "vendor_name",
@@ -263,21 +279,21 @@ const ExpensePageComponent = () => {
       key: "amount",
       header: "Amount",
       sortable: true,
-      width: "120px",
+      width: "150px",
       render: (value) => formatCurrency(value),
     },
     {
       key: "due_balance_to_vendor",
       header: "Due Balance to Vendor",
       sortable: true,
-      width: "120px",
+      width: "210px",
       render: (value) => formatCurrency(value),
     },
     {
       key: "payment_method_display",
       header: "Payment Method",
       sortable: true,
-      width: "150px",
+      width: "175px",
     },
     {
       key: "expense_date",
@@ -307,7 +323,7 @@ const ExpensePageComponent = () => {
     },
   ];
 
-  const getFormSchema = () => getExpenseFormSchema(categories, vendors);
+  const getFormSchema = () => getExpenseFormSchema(categories, vendors, medicalProducts, inventoryItems);
 
   // Filter configuration
   const filterOptions: FilterOption[] = [
@@ -357,12 +373,14 @@ const ExpensePageComponent = () => {
       title: selectedExpense.title,
       description: selectedExpense.description,
       amount: selectedExpense.amount,
-      category: selectedExpense.category.toString(),
-      vendor: selectedExpense.vendor.toString(),
+      category: selectedExpense.category?.toString() || "",
+      vendor: selectedExpense.vendor?.toString() || "",
       expense_date: selectedExpense.expense_date,
       payment_method: selectedExpense.payment_method,
       due_balance_to_vendor: selectedExpense.due_balance_to_vendor,
       notes: selectedExpense.notes || "",
+      inventory_items: selectedExpense.inventory_items?.map((item: any) => item.id.toString()) || [],
+      dialysis_products: selectedExpense.dialysis_product?.map((product: any) => product.id.toString()) || [],
     };
   };
 

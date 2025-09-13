@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Controller, type FieldError } from 'react-hook-form';
 import { X, FileText, Image as ImageIcon, Download } from 'lucide-react';
 import { PasswordField } from './PasswordField';
+import { MultiSelect, MultiSelectOption } from '../ui/multi-select';
+import { ItemSelectorField } from '../ui/item-selector-field';
 
 export interface FormFieldOption {
   value: string;
@@ -20,9 +22,12 @@ export interface FormFieldOption {
 export interface FormFieldConfig {
   name: string;
   label: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'textarea' | 'select' | 'searchable-select' | 'checkbox' | 'radio' | 'switch' | 'date' | 'datetime-local' | 'time' | 'file' | 'image';
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'textarea' | 'select' | 'searchable-select' | 'multi-select' | 'item-selector' | 'checkbox' | 'radio' | 'switch' | 'date' | 'datetime-local' | 'time' | 'file' | 'image';
   placeholder?: string;
   options?: FormFieldOption[];
+  items?: any[]; // For item-selector fields
+  selectorType?: 'inventory' | 'medical'; // For item-selector fields
+  loading?: boolean; // For item-selector fields
   required?: boolean;
   disabled?: boolean;
   min?: number;
@@ -293,6 +298,33 @@ export const FormField: React.FC<FormFieldProps> = ({
             disabled={field.disabled}
             className={field.className}
             emptyMessage="No options found"
+          />
+        );
+
+      case 'multi-select':
+        return (
+          <MultiSelect
+            options={field.options || []}
+            value={Array.isArray(value) ? value : []}
+            onChange={onChange}
+            placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
+            disabled={field.disabled}
+            className={field.className}
+          />
+        );
+
+      case 'item-selector':
+        return (
+          <ItemSelectorField
+            label={field.label}
+            value={Array.isArray(value) ? value : []}
+            onChange={onChange}
+            items={field.items || []}
+            type={field.selectorType || 'inventory'}
+            placeholder={field.placeholder || `Select ${field.label.toLowerCase()}`}
+            disabled={field.disabled}
+            className={field.className}
+            loading={field.loading}
           />
         );
 

@@ -80,10 +80,10 @@ const InventoryPageComponent = () => {
   const filterOptions: FilterOption[] = [
     {
       key: "inventory_type",
-      label: "Location",
+      label: "Inventory Type",
       type: "select",
       options: [
-        { value: "", label: "All Locations" },
+        { value: "", label: "All Inventory Types" },
         { value: "lab", label: "Lab" },
         { value: "women_center", label: "Women Center" },
         { value: "OTHER", label: "Other" },
@@ -367,6 +367,15 @@ const InventoryPageComponent = () => {
       ),
     },
     {
+      key: "used_items",
+      header: "Used Items",
+      sortable: true,
+      width: "100px",
+      render: (value, row) => (
+        <div className="font-semibold text-red-600">{value}</div>
+      ),
+    },
+    {
       key: "available_items",
       header: "Available",
       sortable: true,
@@ -388,7 +397,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "inventory_type",
-      header: "Location",
+      header: "Inventory Type",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -396,6 +405,22 @@ const InventoryPageComponent = () => {
           {value}
         </Badge>
       ),
+    },
+    {
+      key: "admin_comment",
+      header: "Admin Comment",
+      sortable: true,
+      width: "250px",
+      render: (value) => (
+        <div className="text-xs text-muted-foreground">{value}</div>
+      ),
+    },
+    {
+      key: "updated_at",
+      header: "Last Update",
+      sortable: true,
+      width: "120px",
+      render: (value) => new Date(value).toLocaleDateString(),
     },
     {
       key: "date",

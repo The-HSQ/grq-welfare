@@ -232,27 +232,6 @@ const ItemDetail = () => {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button className="w-full" variant="outline">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Add Quantity
-              </Button>
-              <Button className="w-full" variant="outline">
-                <TrendingDown className="h-4 w-4 mr-2" />
-                Use Items
-              </Button>
-              <Button className="w-full" variant="outline">
-                <Package className="h-4 w-4 mr-2" />
-                Edit Item
-              </Button>
-            </CardContent>
-          </Card>
-
           {/* Item Summary */}
           <Card>
             <CardHeader>

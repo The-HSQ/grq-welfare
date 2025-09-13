@@ -24,6 +24,8 @@ export interface Expense {
   expense_type_display: string;
   payment_method_display: string;
   receipt_documents: ReceiptDocument[];
+  inventory_items?: { id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[];
+  dialysis_product?: { id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[];
   title: string;
   description: string;
   amount: string;
@@ -48,6 +50,8 @@ export interface CreateExpenseData {
   payment_method: string;
   due_balance_to_vendor: string;
   notes: string;
+  inventory_items_ids?: number[];
+  dialysis_product_ids?: number[];
 }
 
 export interface UpdateExpenseData {
@@ -60,6 +64,8 @@ export interface UpdateExpenseData {
   payment_method?: string;
   due_balance_to_vendor?: string;
   notes?: string;
+  inventory_items_ids?: number[];
+  dialysis_product_ids?: number[];
 }
 
 export interface ExpenseState {

@@ -139,14 +139,6 @@ export const patientAddSchema: FormSchemaConfig = {
       placeholder: 'Enter relative phone number (e.g., +923004567890)',
     },
     {
-      name: 'document_path',
-      label: 'Patient Document',
-      type: 'file',
-      required: false,
-      accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
-      maxSize: 10, // 10MB max
-    },
-    {
       name: 'created_at',
       label: 'Created Date',
       type: 'datetime-local',
@@ -294,14 +286,6 @@ export const patientEditSchema: FormSchemaConfig = {
       type: 'text',
       required: false,
       placeholder: 'Enter relative phone number (e.g., +923004567890)',
-    },
-    {
-      name: 'document_path',
-      label: 'Patient Document',
-      type: 'file',
-      required: false,
-      accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
-      maxSize: 10, // 10MB max
     },
     {
       name: 'created_at',

@@ -4,6 +4,7 @@ export { AddDialog } from './AddDialog';
 export { EditDialog } from './EditDialog';
 export { DeleteDialog } from './DeleteDialog';
 export { ViewDialog } from './ViewDialog';
+export { SuccessDialog } from './SuccessDialog';
 export { FilterBar } from './FilterBar';
 export { DynamicForm } from './DynamicForm';
 export { FormField } from './FormField';

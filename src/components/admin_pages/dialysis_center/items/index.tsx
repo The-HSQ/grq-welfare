@@ -103,6 +103,7 @@ const ItemsPageComponent = () => {
         quantity: parseInt(data.quantity),
         quantity_type: data.quantity_type,
         used_items: parseInt(data.used_items),
+        admin_comment: data.admin_comment,
       })
     ).then((result) => {
       if (createProduct.fulfilled.match(result)) {
@@ -123,6 +124,7 @@ const ItemsPageComponent = () => {
             quantity: parseInt(data.quantity),
             quantity_type: data.quantity_type,
             used_items: parseInt(data.used_items),
+            admin_comment: data.admin_comment,
           },
         })
       ).then((result) => {
@@ -287,8 +289,15 @@ const ItemsPageComponent = () => {
       render: (value) => <span className="capitalize">{value}</span>,
     },
     {
+      key: "admin_comment",
+      header: "Admin Comment",
+      sortable: true,
+      width: "250px",
+      render: (value) => <span className="text-xs text-muted-foreground">{value}</span>,
+    },
+    {
       key: "created_at",
-      header: "Created At",
+      header: "Created",
       sortable: true,
       width: "180px",
       render: (value) => formatDate(value),

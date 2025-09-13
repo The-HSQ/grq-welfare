@@ -29,6 +29,7 @@ import {
   currencyOptions,
   type CreateDonationFormData,
   type EditDonationFormData,
+  donationTypeOptions,
 } from "../../../../lib/schemas";
 import { PlusIcon } from "lucide-react";
 
@@ -146,10 +147,11 @@ const createFormFields = [
   {
     name: "donation_type",
     label: "Donation Type",
-    type: "text" as const,
+    type: "select" as const,
     placeholder:
-      "donation type (e.g. zakat, sadaqah, vehicle, computer, dialysis machine)",
+      "Select Donation Type",
     required: true,
+    options: donationTypeOptions,
   },
   {
     name: "currency",
@@ -176,6 +178,13 @@ const createFormFields = [
     required: true,
     min: 0,
     step: 0.01,
+  },
+  {
+    name: "donor_comment",
+    label: "Donor Comment",
+    type: "textarea" as const,
+    placeholder: "Enter donor comment (optional)",
+    required: false,
   },
 ];
 
@@ -206,10 +215,11 @@ const editFormFields = [
   {
     name: "donation_type",
     label: "Donation Type",
-    type: "text" as const,
+    type: "select" as const,
     placeholder:
-      "donation type (e.g. zakat, sadaqah, vehicle, computer, dialysis machine)",
+      "Select Donation Type",
     required: true,
+    options: donationTypeOptions,
   },
   {
     name: "currency",
@@ -236,6 +246,13 @@ const editFormFields = [
     required: true,
     min: 0,
     step: 0.01,
+  },
+  {
+    name: "donor_comment",
+    label: "Donor Comment",
+    type: "textarea" as const,
+    placeholder: "Enter donor comment (optional)",
+    required: false,
   },
 ];
 
@@ -299,6 +316,7 @@ const DonationManagement: React.FC = () => {
         ...data,
         donner: Number(data.donner),
         in_rupees: data.in_rupees === "" ? undefined : data.in_rupees,
+        donor_comment: data.donor_comment === "" ? undefined : data.donor_comment,
       };
       await dispatch(createDonation(donationData)).unwrap();
       setIsAddDialogOpen(false);
@@ -323,6 +341,7 @@ const DonationManagement: React.FC = () => {
         ...data,
         donner: Number(data.donner),
         in_rupees: data.in_rupees === "" ? undefined : data.in_rupees,
+        donor_comment: data.donor_comment === "" ? undefined : data.donor_comment,
       };
       await dispatch(
         updateDonation({ donationId: selectedDonation.id, donationData })
@@ -486,6 +505,7 @@ const DonationManagement: React.FC = () => {
                 donation_type: selectedDonation.donation_type,
                 currency: selectedDonation.currency,
                 in_rupees: selectedDonation.in_rupees || "",
+                donor_comment: selectedDonation.donor_comment || "",
               }
             : {}
         }

@@ -72,6 +72,13 @@ export const addInventorySchema = new FormSchema({
       required: true,
       placeholder: 'Select date',
     },
+    {
+      name: 'admin_comment',
+      label: 'Admin Comment',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter admin comment',
+    },
   ],
   layout: 'two-column',
 });
@@ -139,6 +146,13 @@ export const editInventorySchema = new FormSchema({
       type: 'date',
       required: true,
       placeholder: 'Select date',
+    },
+    {
+      name: 'admin_comment',
+      label: 'Admin Comment',
+      type: 'textarea',
+      required: false,
+      placeholder: 'Enter admin comment',
     },
   ],
   layout: 'two-column',

@@ -126,22 +126,22 @@ const DialysisPageComponent = () => {
     return dialysis.filter((item) => {
       if (
         filters.patient &&
-        !item.patient_name.toLowerCase().includes(filters.patient.toLowerCase())
+        !item.patient_name?.toLowerCase().includes(filters.patient.toLowerCase())
       )
         return false;
       if (
         filters.bed &&
-        !item.bed_name.toLowerCase().includes(filters.bed.toLowerCase())
+        !item.bed_name?.toLowerCase().includes(filters.bed.toLowerCase())
       )
         return false;
       if (
         filters.machine &&
-        !item.machine_name.toLowerCase().includes(filters.machine.toLowerCase())
+        !item.machine_name?.toLowerCase().includes(filters.machine.toLowerCase())
       )
         return false;
       if (
         filters.shift &&
-        !item.shift_no.toLowerCase().includes(filters.shift.toLowerCase())
+        !item.shift_no?.toLowerCase().includes(filters.shift.toLowerCase())
       )
         return false;
 

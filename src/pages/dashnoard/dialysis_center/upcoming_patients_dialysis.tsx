@@ -108,31 +108,31 @@ const UpcomingPatientsDialysis = () => {
     // Search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      if (!patient.name.toLowerCase().includes(searchLower) &&
-          !patient.nic.toLowerCase().includes(searchLower) &&
-          !patient.phone.toLowerCase().includes(searchLower) &&
-          !patient.address.toLowerCase().includes(searchLower)) {
+      if (!(patient.name?.toLowerCase().includes(searchLower) ||
+          patient.nic?.toLowerCase().includes(searchLower) ||
+          patient.phone?.toLowerCase().includes(searchLower) ||
+          patient.address?.toLowerCase().includes(searchLower))) {
         return false;
       }
     }
 
     // Zakat eligible filter
     if (filters.zakat_eligible && filters.zakat_eligible !== '') {
-      if (patient.zakat_eligible.toString() !== filters.zakat_eligible) {
+      if (patient.zakat_eligible?.toString() !== filters.zakat_eligible) {
         return false;
       }
     }
 
     // Dialysis per week filter
     if (filters.dialysis_per_week && filters.dialysis_per_week !== '') {
-      if (patient.dialysis_per_week.toString() !== filters.dialysis_per_week) {
+      if (patient.dialysis_per_week?.toString() !== filters.dialysis_per_week) {
         return false;
       }
     }
 
     // Days until dialysis filter
     if (filters.days_until_dialysis && filters.days_until_dialysis !== '') {
-      if (patient.days_until_dialysis.toString() !== filters.days_until_dialysis) {
+      if (patient.days_until_dialysis?.toString() !== filters.days_until_dialysis) {
         return false;
       }
     }

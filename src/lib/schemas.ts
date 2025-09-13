@@ -179,7 +179,25 @@ export const purposeOptions: { value: string; label: string }[] = [
   { value: "woman_center", label: "Woman Center" },
   { value: "donated_vehicle", label: "Donated Vehicle" },
   { value: "computer_lab", label: "Computer Lab" },
+  { value: "grq_welfare", label: "GRQ Welfare" },
 ];
+
+// Donation type options
+export const donationTypeOptions: { value: string; label: string }[] = [
+  { value: "zakat", label: "Zakat" },
+  { value: "sadaqah", label: "Sadaqah" },
+  { value: "vehicle", label: "Vehicle" },
+  { value: "computer", label: "Computer" },
+  { value: "dialysis_machine", label: "Dialysis Machine" },
+  { value: "dialysis_bed", label: "Dialysis Bed" },
+  { value: "ro_system", label: "RO System" },
+  { value: "generator", label: "Generator" },
+  { value: "lab_machine", label: "Lab Machine" },
+  { value: "silai_machine", label: "Silai Machine" },
+  { value: "furniture", label: "Furniture" },
+  { value: "OTHER", label: "Other" },
+];
+
 
 // Currency options
 export const currencyOptions: { value: string; label: string }[] = [
@@ -197,6 +215,21 @@ export const purposeEnum = z.enum([
   "woman_center",
   "donated_vehicle",
   "computer_lab",
+  "grq_welfare",
+]);
+export const donationTypeEnum = z.enum([
+  "zakat",
+  "sadaqah",
+  "vehicle",
+  "computer",
+  "dialysis_machine",
+  "dialysis_bed",
+  "ro_system",
+  "generator",
+  "lab_machine",
+  "silai_machine",
+  "furniture",
+  "OTHER",
 ]);
 export const currencyEnum = z.string().min(1, "Currency is required");
 
@@ -211,11 +244,16 @@ export const createDonationSchema = z.object({
     .min(0.01, "Amount must be greater than 0")
     .max(999999999, "Amount is too large"),
   purpose: purposeEnum,
-  donation_type: z.string(),
+  donation_type: donationTypeEnum,
   currency: currencyEnum,
   in_rupees: z
     .number()
     .min(0, "Amount in rupees must be positive")
+    .optional()
+    .or(z.literal("")),
+  donor_comment: z
+    .string()
+    .max(500, "Donor comment must be less than 500 characters")
     .optional()
     .or(z.literal("")),
 });
@@ -231,11 +269,16 @@ export const editDonationSchema = z.object({
     .min(0.01, "Amount must be greater than 0")
     .max(999999999, "Amount is too large"),
   purpose: purposeEnum,
-  donation_type: z.string(),
+  donation_type: donationTypeEnum,
   currency: currencyEnum,
   in_rupees: z
     .number()
     .min(0, "Amount in rupees must be positive")
+    .optional()
+    .or(z.literal("")),
+  donor_comment: z
+    .string()
+    .max(500, "Donor comment must be less than 500 characters")
     .optional()
     .or(z.literal("")),
 });
@@ -251,7 +294,6 @@ export const vendorTypeOptions: { value: string; label: string }[] = [
   { value: "woman_center", label: "Woman Center" },
   { value: "donated_vehicle", label: "Donated Vehicle" },
   { value: "computer_lab", label: "Computer Lab" },
-  { value: "zakat", label: "Zakat" },
 ];
 
 // Vendor type enum
@@ -261,7 +303,6 @@ export const vendorTypeEnum = z.enum([
   "woman_center",
   "donated_vehicle",
   "computer_lab",
-  "zakat",
 ]);
 
 // Create Vendor Schema
@@ -351,7 +392,7 @@ export const expenseCategoryTypeOptions: { value: string; label: string }[] = [
   { value: "woman_center", label: "Woman Center" },
   { value: "donated_vehicle", label: "Donated Vehicle" },
   { value: "computer_lab", label: "Computer Lab" },
-  { value: "zakat", label: "Zakat" },
+  
 ];
 
 // Expense Category type enum
@@ -361,7 +402,6 @@ export const expenseCategoryTypeEnum = z.enum([
   "woman_center",
   "donated_vehicle",
   "computer_lab",
-  "zakat",
 ]);
 
 // Create Expense Category Schema

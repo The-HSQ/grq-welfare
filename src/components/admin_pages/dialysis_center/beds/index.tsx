@@ -85,8 +85,8 @@ const BedsPageComponent = () => {
     // Search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      if (!bed.bed_name.toLowerCase().includes(searchLower) && 
-          !bed.ward_name.toLowerCase().includes(searchLower)) {
+      if (!bed.bed_name?.toLowerCase().includes(searchLower) && 
+          !bed.ward_name?.toLowerCase().includes(searchLower)) {
         return false;
       }
     }

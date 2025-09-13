@@ -84,13 +84,20 @@ export const createVehicleUsageSchema = (): FormSchema => {
         name: 'paid_amount',
         label: 'Paid Amount (PKR)',
         type: 'number',
-        required: true,
+        required: false,
         placeholder: 'Enter paid amount',
         min: 0,
         step: 0.01,
         validation: {
           min: 0
         }
+      },
+      {
+        name: 'admin_comment',
+        label: 'Admin Comment',
+        type: 'textarea',
+        required: false,
+        placeholder: 'Enter admin comment'
       }
     ],
     layout: 'two-column',
@@ -172,13 +179,20 @@ export const updateVehicleUsageSchema = (): FormSchema => {
         name: 'paid_amount',
         label: 'Paid Amount (PKR)',
         type: 'number',
-        required: true,
+        required: false,
         placeholder: 'Enter paid amount',
         min: 0,
         step: 0.01,
         validation: {
           min: 0
         }
+      },
+      {
+        name: 'admin_comment',
+        label: 'Admin Comment',
+        type: 'textarea',
+        required: false,
+        placeholder: 'Enter admin comment'
       }
     ],
     layout: 'two-column',

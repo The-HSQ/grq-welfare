@@ -45,6 +45,7 @@ export interface Donation {
   donation_type: string;
   currency: string;
   in_rupees: number | null;
+  donor_comment: string | null;
   created_at: string;
 }
 
@@ -57,6 +58,7 @@ export interface CreateDonationData {
   donation_type: string;
   currency: string;
   in_rupees?: number;
+  donor_comment?: string;
 }
 
 // Update donation interface
@@ -68,6 +70,7 @@ export interface UpdateDonationData {
   donation_type?: string;
   currency?: string;
   in_rupees?: number;
+  donor_comment?: string;
 }
 
 // Donations response interface (array response)
@@ -85,6 +88,7 @@ export interface CreateDonationResponse {
   donation_type: string;
   currency: string;
   in_rupees: number | null;
+  donor_comment: string | null;
   created_at: string;
 }
 
@@ -100,6 +104,7 @@ export interface UpdateDonationResponse {
   donation_type: string;
   currency: string;
   in_rupees: number | null;
+  donor_comment: string | null;
   created_at: string;
 }
 

@@ -26,6 +26,7 @@ import { FormSchema } from '../../../common';
 import { formatDate } from '../../../../lib/utils';
 import { getMediaUrl } from '../../../../lib/mediaUtils';
 import { Plus } from 'lucide-react';
+import LazyImage from '../../../common/LazyImage';
 
 // Filter options for the donor table
 const filterOptions: FilterOption[] = [
@@ -55,18 +56,34 @@ const columns: Column<Donor>[] = [
     key: 'image',
     header: 'Image',
     sortable: false,
-    render: (value, donor: Donor) => (
-      <div className="flex items-center">
-        <img
-          src={getMediaUrl(donor.image) || '/placeholder-avatar.png'}
-          alt={donor.name}
-          className="w-10 h-10 rounded-md object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder-avatar.png';
-          }}
-        />
-      </div>
-    ),
+    render: (value, donor: Donor) => {
+      const image = getMediaUrl(donor.image);
+      
+      return (
+        <div className="flex items-center">
+          {donor.image ? (
+            <LazyImage
+              src={image || ''}
+              alt={donor.name || 'Donor'}
+              className="w-10 h-10 rounded-md object-cover"
+              fallback={
+                <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 text-xs font-medium">
+                    {donor.name ? donor.name.charAt(0).toUpperCase() : '?'}
+                  </span>
+                </div>
+              }
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500 text-xs font-medium">
+                {donor.name ? donor.name.charAt(0).toUpperCase() : '?'}
+              </span>
+            </div>
+          )}
+        </div>
+      );
+    },
   },
   {
     key: 'name',

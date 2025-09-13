@@ -45,6 +45,7 @@ export interface InventoryItem {
   available_items: number;
   inventory_type: string;
   date: string;
+  admin_comment: string;
   created_at: string;
   updated_at: string;
 }
@@ -59,6 +60,7 @@ export interface CreateInventoryItemData {
   used_items?: number;
   inventory_type: string;
   date: string;
+  admin_comment?: string;
 }
 
 // Update inventory item interface
@@ -71,6 +73,7 @@ export interface UpdateInventoryItemData {
   used_items?: number;
   inventory_type?: string;
   date?: string;
+  admin_comment?: string;
 }
 
 // Add quantity interface

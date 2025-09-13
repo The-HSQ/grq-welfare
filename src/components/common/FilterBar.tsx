@@ -65,7 +65,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       case 'select':
         return (
           <Select
-            value={values[filter.key] || undefined}
+            value={values[filter.key] || ''}
             onValueChange={(value) => onFilterChange(filter.key, value)}
           >
             <SelectTrigger className="w-full">
