@@ -54,7 +54,7 @@ export const getExpenseFormSchema = (
       },
       {
         name: 'category',
-        label: 'Expense Type/Category Type',
+        label: 'Expense / Category Type',
         type: 'searchable-select',
         required: true,
         options: categories.map(cat => ({

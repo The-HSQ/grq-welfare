@@ -27,6 +27,7 @@ import VendorPage from '@/pages/dashnoard/vendor_expense/vendor/page';
 import VendorDetailPage from '@/pages/dashnoard/vendor_expense/vendor/detail';
 import ExpenseCategoryPage from '@/pages/dashnoard/vendor_expense/expense_category/page';
 import ExpensePage from '@/pages/dashnoard/vendor_expense/expense/page';
+import ExpenseDetailPage from '@/pages/dashnoard/vendor_expense/expense/ExpenseDetail';
 import VehiclesPage from '@/pages/dashnoard/vehicles/vehicles/page';
 import VehiclesUsagePage from '@/pages/dashnoard/vehicles/vehicles_usage/page';
 import DoctorAppointmentPage from '@/pages/dashnoard/dialysis_center/doctor_appointment/page';
@@ -275,6 +276,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole={['admin', 'office_admin']}>
             <ExpensePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/expense/:id',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
+            <ExpenseDetailPage />
           </ProtectedRoute>
         ),
       },

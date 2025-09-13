@@ -28,9 +28,11 @@ import { getExpenseFormSchema } from "./formSchemas";
 import { Button } from "../../../ui/button";
 import { FileTextIcon, Plus } from "lucide-react";
 import { ExpenseDocumentManager } from "./ExpenseDocumentManager";
+import { useNavigate } from "react-router-dom";
 
 const ExpensePageComponent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     expenses,
     loading,
@@ -184,6 +186,10 @@ const ExpensePageComponent = () => {
     setDocumentsModalOpen(true);
   };
 
+  const handleViewExpense = (expense: Expense) => {
+    navigate(`/office-management/expense/${expense.id}`);
+  };
+
   // Filter handling functions
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({
@@ -265,7 +271,7 @@ const ExpensePageComponent = () => {
     },
     {
       key: "category_name",
-      header: "Expense Type/Category Type",
+      header: "Expense / Category Type",
       sortable: true,
       width: "250px",
     },
@@ -436,6 +442,7 @@ const ExpensePageComponent = () => {
         columns={columns}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
+        onView={handleViewExpense}
         loading={loading}
         emptyMessage={
           expenses.length === 0

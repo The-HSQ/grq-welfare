@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 // Create axios instance with default config
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "https://mzas.site/api",
+  // baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -112,6 +113,7 @@ api.interceptors.response.use(
         const response = await axios.post(
           `${
             import.meta.env.VITE_API_URL || "https://mzas.site/api"
+            // import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api"
           }/auth/refresh/`,
           { refresh: refreshToken },
           {
