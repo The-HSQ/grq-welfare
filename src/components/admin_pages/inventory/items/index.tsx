@@ -715,6 +715,10 @@ const InventoryPageComponent = () => {
                 Available: {selectedItemForUsage.available_items} {selectedItemForUsage.quantity_type}
               </DialogDescription>
             </DialogHeader>
+
+            <div className="">
+              Available Items: <span className="font-semibold text-green-600">{selectedItemForUsage.available_items} {selectedItemForUsage.quantity_type}</span>
+            </div>
             
             <div className="py-4">
               {/* Error Display */}
