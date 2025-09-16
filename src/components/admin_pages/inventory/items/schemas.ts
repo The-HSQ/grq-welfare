@@ -1,4 +1,4 @@
-import { FormSchema } from '../../common/FormSchema';
+import { FormSchema } from '../../../common/FormSchema';
 
 // Quantity type options for the select field
 export const quantityTypeOptions = [
@@ -36,8 +36,8 @@ export const addInventorySchema = new FormSchema({
       name: 'item_type',
       label: 'Item Type',
       type: 'text',
-      required: false,
-      placeholder: 'Enter item type',
+      required: true,
+      placeholder: 'Enter item type (e.g., mg, ml, etc.)',
     },
     {
       name: 'quantity',
@@ -53,7 +53,7 @@ export const addInventorySchema = new FormSchema({
       name: 'quantity_type',
       label: 'Quantity Type',
       type: 'select',
-      required: false,
+      required: true,
       options: quantityTypeOptions,
       placeholder: 'Select quantity type',
     },
@@ -90,6 +90,7 @@ export const editInventorySchema = new FormSchema({
       name: 'item_name',
       label: 'Item Name',
       type: 'text',
+      disabled: true,
       required: true,
       validation: {
         minLength: 2,
@@ -101,41 +102,35 @@ export const editInventorySchema = new FormSchema({
       name: 'item_type',
       label: 'Item Type',
       type: 'text',
-      required: false,
-      placeholder: 'Enter item type',
+      disabled: true,
+      required: true,
+      placeholder: 'Enter item type (e.g., mg, ml, etc.)',
     },
     {
       name: 'quantity',
-      label: 'Quantity',
+      label: 'Available Items',
       type: 'number',
+      disabled: true,
       required: true,
       validation: {
         min: 0,
       },
-      placeholder: 'Enter quantity',
+      placeholder: 'Enter items available',
     },
     {
       name: 'quantity_type',
       label: 'Quantity Type',
       type: 'select',
-      required: false,
+      disabled: true,
+      required: true,
       options: quantityTypeOptions,
       placeholder: 'Select quantity type',
-    },
-    {
-      name: 'used_items',
-      label: 'Used Items',
-      type: 'number',
-      required: true,
-      validation: {
-        min: 0,
-      },
-      placeholder: 'Enter used items count',
     },
     {
       name: 'inventory_type',
       label: 'Inventory Type',
       type: 'select',
+      disabled: true,
       required: true,
       options: inventoryTypeOptions,
       placeholder: 'Select inventory type',
@@ -143,6 +138,7 @@ export const editInventorySchema = new FormSchema({
     {
       name: 'date',
       label: 'Date',
+      disabled: true,
       type: 'date',
       required: true,
       placeholder: 'Select date',
@@ -163,30 +159,13 @@ export const addQuantitySchema = new FormSchema({
   fields: [
     {
       name: 'additional_quantity',
-      label: 'Additional Quantity',
+      label: 'Additional Quantity to Available Item',
       type: 'number',
       required: true,
       validation: {
         min: 1,
       },
-      placeholder: 'Enter additional quantity to add',
-    },
-  ],
-  layout: 'single',
-});
-
-// Schema for using items from inventory
-export const useItemsSchema = new FormSchema({
-  fields: [
-    {
-      name: 'items_to_use',
-      label: 'Items to Use',
-      type: 'number',
-      required: true,
-      validation: {
-        min: 1,
-      },
-      placeholder: 'Enter number of items to use',
+      placeholder: 'Enter additional quantity to available item',
     },
   ],
   layout: 'single',

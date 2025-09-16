@@ -155,8 +155,8 @@ const ItemDetail = () => {
                   <p className="text-lg font-semibold capitalize">{item.quantity_type}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Total Quantity</label>
-                  <p className="text-lg font-semibold">{item.quantity}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Available Quantity</label>
+                  <p className="text-lg font-semibold">{item.available_items}</p>
                 </div>
               </div>
             </CardContent>

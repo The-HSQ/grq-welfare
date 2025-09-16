@@ -65,6 +65,17 @@ const itemFields: FormFieldConfig[] = [
     },
   },
   {
+    name: 'waste_items',
+    label: 'Waste Items',
+    type: 'number',
+    placeholder: 'Enter waste items count',
+    required: true,
+    min: 0,
+    validation: {
+      min: 0,
+    },
+  },
+  {
     name: 'admin_comment',
     label: 'Admin Comment',
     type: 'textarea',
@@ -94,6 +105,7 @@ export const createItemDefaultValues = {
   quantity: '',
   quantity_type: '',
   used_items: '',
+  waste_items: '',
   admin_comment: '',
 };
 
@@ -104,6 +116,7 @@ export const getEditItemDefaultValues = (product: any) => ({
   quantity: product.quantity || product.available_items || '',
   quantity_type: product.quantity_type || '',
   used_items: product.used_items || 0,
+  waste_items: product.waste_items || 0,
   admin_comment: product.admin_comment || '',
 });
 
@@ -137,6 +150,21 @@ const useItemsField: FormFieldConfig[] = [
   },
 ];
 
+// Form field configuration for adding waste items
+const addWasteItemsField: FormFieldConfig[] = [
+  {
+    name: 'items_to_waste',
+    label: 'Items to Waste',
+    type: 'number',
+    placeholder: 'Enter number of items to waste',
+    required: true,
+    min: 1,
+    validation: {
+      min: 1,
+    },
+  },
+];
+
 // Create form schema for adding new quantity
 export const addQuantitySchema = createFormSchema({
   fields: addQuantityField,
@@ -151,6 +179,13 @@ export const useItemsSchema = createFormSchema({
   className: 'space-y-4',
 });
 
+// Create form schema for adding waste items
+export const addWasteItemsSchema = createFormSchema({
+  fields: addWasteItemsField,
+  layout: 'single',
+  className: 'space-y-4',
+});
+
 // Default values for add quantity form
 export const addQuantityDefaultValues = {
   additional_quantity: '',
@@ -159,4 +194,9 @@ export const addQuantityDefaultValues = {
 // Default values for use items form
 export const useItemsDefaultValues = {
   items_to_use: '',
+};
+
+// Default values for add waste items form
+export const addWasteItemsDefaultValues = {
+  items_to_waste: '',
 };

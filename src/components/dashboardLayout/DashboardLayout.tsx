@@ -37,14 +37,21 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
+import { Button } from "../ui/button";
 
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { isAdmin, isMedicalAdmin, isAccountantMedical, isOfficeAdmin, isDriver, isLabAccountant } =
-    useAuth();
+  const {
+    isAdmin,
+    isMedicalAdmin,
+    isAccountantMedical,
+    isOfficeAdmin,
+    isDriver,
+    isLabAccountant,
+  } = useAuth();
 
   // State for tracking expanded/collapsed sub-menus (supports multiple levels)
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
@@ -244,8 +251,19 @@ export default function DashboardLayout() {
         },
         {
           title: "Welfare Inventory",
-          url: "/office-management/inventory",
           icon: SquaresExclude,
+          items: [
+            {
+              title: "Items",
+              url: "/office-management/inventory",
+              icon: Package,
+            },
+            {
+              title: "Tracking Items",
+              url: "/office-management/inventory/tracking-items",
+              icon: Package,
+            },
+          ],
         },
         {
           title: "Welfare Donation",
@@ -591,7 +609,7 @@ export default function DashboardLayout() {
               <SidebarMenuButton
                 onClick={handleLogout}
                 tooltip="Logout"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="bg-red-500 text-white hover:text-white hover:bg-red-600"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>
@@ -613,6 +631,14 @@ export default function DashboardLayout() {
 }
 
 function SiteHeader({ user }: { user: any }) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate("/login");
+  };
+
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sm:h-14 md:h-16 lg:h-18">
       <div className="flex w-full items-center gap-1 px-2 sm:gap-2 sm:px-3 md:gap-3 md:px-4 lg:gap-4 lg:px-6">
@@ -625,11 +651,19 @@ function SiteHeader({ user }: { user: any }) {
           <span className="hidden sm:inline">GRQ Welfare</span>
           <span className="sm:hidden">GRQ</span>
         </h1>
-        <div className="ml-auto flex items-center gap-1 sm:gap-2 md:gap-3">
+        <div className="ml-auto flex items-center gap-2 md:gap-3">
           <span className="text-xs text-muted-foreground sm:text-sm md:text-base truncate max-w-[120px] sm:max-w-[150px] md:max-w-[200px] lg:max-w-none">
             <span className="hidden sm:inline">Welcome, </span>
             {user?.name || "User"}
           </span>
+          <Button
+            onClick={handleLogout}
+            title="Logout"
+            className="bg-red-500 text-white hover:bg-red-600"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden md:block">Logout</span>
+          </Button>
         </div>
       </div>
     </header>

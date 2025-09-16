@@ -9,6 +9,7 @@ import expenseCategoriesReducer from './slices/expenseCategorySlice';
 import expensesReducer from './slices/expenseSlice';
 import vehiclesReducer from './slices/vehicleSlice';
 import inventoryReducer from './slices/inventorySlice';
+import itemUsageReducer from './slices/itemUsageSlice';
 
 // Import your reducers here
 // import userReducer from './slices/userSlice';
@@ -26,6 +27,7 @@ export const store = configureStore({
     expenses: expensesReducer,
     vehicles: vehiclesReducer,
     inventory: inventoryReducer,
+    itemUsage: itemUsageReducer,
     // user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -53,6 +55,8 @@ export const store = configureStore({
           'inventory/updateInventoryItem/fulfilled',
           'inventory/addQuantityToItem/fulfilled',
           'inventory/useItemsFromInventory/fulfilled',
+          'itemUsage/createItemUsageRecord/fulfilled',
+          'itemUsage/updateItemUsageRecord/fulfilled',
         ],
         // Ignore these paths in all actions
         ignoredPaths: ['payload.headers'],

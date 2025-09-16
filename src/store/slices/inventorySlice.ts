@@ -33,6 +33,21 @@ const handleAsyncError = (error: any, defaultMessage: string) => {
          defaultMessage;
 };
 
+// Usage record interface
+export interface UsageRecord {
+  id: number;
+  itemid: number;
+  item_name: string;
+  itemused: number;
+  item_waste: number;
+  taken_items: number;
+  taken_by: string;
+  comment: string;
+  date: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Inventory item interface
 export interface InventoryItem {
   id: number;
@@ -41,13 +56,15 @@ export interface InventoryItem {
   quantity: number;
   new_quantity: number;
   quantity_type: string;
-  used_items: number;
+  total_used_items: number;
+  total_waste_items: number;
   available_items: number;
   inventory_type: string;
   date: string;
   admin_comment: string;
   created_at: string;
   updated_at: string;
+  usage_records?: UsageRecord[];
 }
 
 // Create inventory item interface
@@ -57,7 +74,6 @@ export interface CreateInventoryItemData {
   quantity: number;
   new_quantity?: number;
   quantity_type: string;
-  used_items?: number;
   inventory_type: string;
   date: string;
   admin_comment?: string;
@@ -70,7 +86,6 @@ export interface UpdateInventoryItemData {
   quantity?: number;
   new_quantity?: number;
   quantity_type?: string;
-  used_items?: number;
   inventory_type?: string;
   date?: string;
   admin_comment?: string;
@@ -84,6 +99,11 @@ export interface AddQuantityData {
 // Use items interface
 export interface UseItemsData {
   items_to_use: number;
+}
+
+// Add waste items interface
+export interface AddWasteItemsData {
+  items_to_waste: number;
 }
 
 // Inventory state interface
@@ -101,6 +121,8 @@ export interface InventoryState {
   addQuantityError: string | null;
   useItemsLoading: boolean;
   useItemsError: string | null;
+  addWasteItemsLoading: boolean;
+  addWasteItemsError: string | null;
   selectedItem: InventoryItem | null;
   itemDetail: InventoryItem | null;
   itemDetailLoading: boolean;
@@ -122,6 +144,8 @@ const initialState: InventoryState = {
   addQuantityError: null,
   useItemsLoading: false,
   useItemsError: null,
+  addWasteItemsLoading: false,
+  addWasteItemsError: null,
   selectedItem: null,
   itemDetail: null,
   itemDetailLoading: false,
@@ -214,6 +238,20 @@ export const useItemsFromInventory = createAsyncThunk(
   }
 );
 
+export const addWasteItemsToInventory = createAsyncThunk(
+  'inventory/addWasteItemsToInventory',
+  async ({ itemId, data }: { itemId: string; data: AddWasteItemsData }, { rejectWithValue }) => {
+    try {
+      console.log('API call - Adding waste items to inventory with data:', data);
+      const response = await inventoryAPI.addWasteItems(itemId, data);
+      // Only return the data, not the entire response object
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to add waste items to inventory'));
+    }
+  }
+);
+
 export const fetchInventoryItemDetail = createAsyncThunk(
   'inventory/fetchInventoryItemDetail',
   async (itemId: string, { rejectWithValue }) => {
@@ -240,6 +278,7 @@ const inventorySlice = createSlice({
       state.addQuantityError = null;
       state.useItemsError = null;
       state.itemDetailError = null;
+      state.addWasteItemsError = null;
     },
     setSelectedItem: (state, action: PayloadAction<InventoryItem | null>) => {
       state.selectedItem = action.payload;
@@ -264,6 +303,9 @@ const inventorySlice = createSlice({
     },
     clearItemDetail: (state) => {
       state.itemDetail = null;
+    },
+    clearAddWasteItemsError: (state) => {
+      state.addWasteItemsError = null;
     },
   },
   extraReducers: (builder) => {
@@ -409,6 +451,26 @@ const inventorySlice = createSlice({
         state.useItemsError = action.payload as string;
       });
 
+    // Add waste items to inventory
+    builder
+      .addCase(addWasteItemsToInventory.pending, (state) => {
+        state.addWasteItemsLoading = true;
+        state.addWasteItemsError = null;
+      })
+      .addCase(addWasteItemsToInventory.fulfilled, (state, action) => {
+        state.addWasteItemsLoading = false;
+        state.addWasteItemsError = null;
+        // Update the item in the list
+        const index = state.items.findIndex(item => item.id === action.payload.id);
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        }
+      })
+      .addCase(addWasteItemsToInventory.rejected, (state, action) => {
+        state.addWasteItemsLoading = false;
+        state.addWasteItemsError = action.payload as string;
+      });
+
     // Fetch inventory item detail
     builder
       .addCase(fetchInventoryItemDetail.pending, (state) => {
@@ -437,6 +499,7 @@ export const {
   clearUseItemsError,
   clearItemDetailError,
   clearItemDetail,
+  clearAddWasteItemsError,
 } = inventorySlice.actions;
 
 export default inventorySlice.reducer;

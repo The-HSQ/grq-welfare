@@ -259,6 +259,19 @@ export class FormSchema {
       };
     }
   }
+
+  // Clone the schema with deep copy
+  clone(): FormSchema {
+    const clonedConfig = {
+      ...this.config,
+      fields: this.config.fields.map(field => ({
+        ...field,
+        options: field.options ? [...field.options] : undefined,
+        validation: field.validation ? { ...field.validation } : undefined,
+      }))
+    };
+    return new FormSchema(clonedConfig);
+  }
 }
 
 // Utility function to create form schema

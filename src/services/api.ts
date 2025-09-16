@@ -88,6 +88,10 @@ export const dialysisAPI = {
   useItems: (id: string, data: { items_to_use: number }) => 
     api.post(`/medical/products/${id}/use-items/`, data),
   
+  // Add waste items to product
+  addWasteItems: (id: string, data: { items_to_waste: number }) => 
+    api.post(`/medical/products/${id}/waste-items/`, data),
+  
   // Get dialysis machines
   getMachines: (params?: { page?: number; page_size?: number }) => 
     api.get('/medical/machines/', { params }),
@@ -568,13 +572,13 @@ export const inventoryAPI = {
   // Create new inventory item
   createInventoryItem: (itemData: {
     item_name: string;
-    item_type?: string;
+    item_type: string;
     quantity: number;
     new_quantity?: number;
-    quantity_type?: string;
-    used_items?: number;
+    quantity_type: string;
     inventory_type: string;
     date: string;
+    admin_comment?: string;
   }) => api.post('/inventory/items/', itemData),
   
   // Update inventory item
@@ -584,9 +588,9 @@ export const inventoryAPI = {
     quantity?: number;
     new_quantity?: number;
     quantity_type?: string;
-    used_items?: number;
     inventory_type?: string;
     date?: string;
+    admin_comment?: string;
   }) => api.patch(`/inventory/items/${id}/`, itemData),
   
   // Delete inventory item
@@ -600,6 +604,10 @@ export const inventoryAPI = {
   // Use items from inventory
   useItems: (id: string, data: { items_to_use: number }) => 
     api.post(`/inventory/items/${id}/use-items/`, data),
+  
+  // Add waste items to inventory
+  addWasteItems: (id: string, data: { items_to_waste: number }) => 
+    api.post(`/inventory/items/${id}/waste-items/`, data),
   
   // Get items by inventory type
   getItemsByInventoryType: (inventoryType: string) => 
@@ -622,6 +630,38 @@ export const inventoryAPI = {
   // Get inventory summary
   getInventorySummary: () => 
     api.get('/inventory/items/summary/'),
+  
+  // Get all item usage records
+  getItemUsageRecords: () => 
+    api.get('/inventory/item-usage/'),
+  
+  // Get single item usage record by ID
+  getItemUsageRecordById: (id: string) => 
+    api.get(`/inventory/item-usage/${id}/`),
+  
+  // Create new item usage record
+  createItemUsageRecord: (usageData: {
+    itemid: number;
+    taken_items: number;
+    itemused: number;
+    item_waste: number;
+    taken_by: string;
+    comment: string;
+  }) => api.post('/inventory/item-usage/', usageData),
+  
+  // Update item usage record
+  updateItemUsageRecord: (id: string, usageData: {
+    itemid?: number;
+    taken_items?: number;
+    itemused?: number;
+    item_waste?: number;
+    taken_by?: string;
+    comment?: string;
+  }) => api.patch(`/inventory/item-usage/${id}/`, usageData),
+  
+  // Delete item usage record
+  deleteItemUsageRecord: (id: string) => 
+    api.delete(`/inventory/item-usage/${id}/`),
 };
 
 export const dashboardAPI = {

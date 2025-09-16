@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Plus, Package, Minus, OctagonMinus } from "lucide-react";
+import { Plus, Package, OctagonMinus, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -17,6 +17,7 @@ import {
   deleteProduct,
   addQuantity,
   useItems,
+  addWasteItemsToInventory,
   type Product,
 } from "@/store/slices/dialysisSlice";
 import {
@@ -28,6 +29,8 @@ import {
   getEditItemDefaultValues,
   addQuantityDefaultValues,
   useItemsDefaultValues,
+  addWasteItemsDefaultValues,
+  addWasteItemsSchema,
 } from "./schemas";
 import type { RootState, AppDispatch } from "@/store";
 
@@ -43,6 +46,7 @@ const ItemsPageComponent = () => {
     isDeleting,
     isAddingQuantity,
     isUsingItems,
+    isAddingWasteItems,
     error,
   } = useSelector((state: RootState) => state.dialysis);
 
@@ -52,6 +56,7 @@ const ItemsPageComponent = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
   const [useItemsDialogOpen, setUseItemsDialogOpen] = useState(false);
+  const [addWasteItemsDialogOpen, setAddWasteItemsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Filter states
@@ -103,6 +108,7 @@ const ItemsPageComponent = () => {
         quantity: parseInt(data.quantity),
         quantity_type: data.quantity_type,
         used_items: parseInt(data.used_items),
+        waste_items: parseInt(data.waste_items),
         admin_comment: data.admin_comment,
       })
     ).then((result) => {
@@ -124,6 +130,7 @@ const ItemsPageComponent = () => {
             quantity: parseInt(data.quantity),
             quantity_type: data.quantity_type,
             used_items: parseInt(data.used_items),
+            waste_items: parseInt(data.waste_items),
             admin_comment: data.admin_comment,
           },
         })
@@ -211,6 +218,24 @@ const ItemsPageComponent = () => {
     setUseItemsDialogOpen(true);
   };
 
+  // Handle add waste items
+  const handleAddWasteItems = (data: any) => {
+    if (selectedProduct) {
+      dispatch(addWasteItemsToInventory({ id: selectedProduct.id, data })).then((result) => {
+        if (addWasteItemsToInventory.fulfilled.match(result)) {
+          setAddWasteItemsDialogOpen(false);
+          setSelectedProduct(null);
+        }
+      });
+    }
+  };
+
+  // Handle add waste items button click
+  const handleAddWasteItemsClick = (product: Product) => {
+    setSelectedProduct(product);
+    setAddWasteItemsDialogOpen(true);
+  };
+
   // Filter handlers
   const handleFilterChange = (key: string, value: any) => {
     setFilterValues(prev => ({
@@ -271,6 +296,24 @@ const ItemsPageComponent = () => {
       header: "Item Type",
       sortable: true,
       width: "120px",
+    },
+    {
+      key: "used_items",
+      header: "Used Items",
+      sortable: true,
+      width: "120px",
+      render: (value) => (
+        <span className="font-medium text-red-600">{value}</span>
+      ),
+    },
+    {
+      key: "waste_items",
+      header: "Waste Items",
+      sortable: true,
+      width: "120px",
+      render: (value) => (
+        <span className="font-medium text-yellow-600">{value}</span>
+      ),
     },
     {
       key: "available_items",
@@ -369,6 +412,15 @@ const ItemsPageComponent = () => {
             >
               <OctagonMinus className="h-4 w-4" />
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleAddWasteItemsClick(row)}
+              className="h-8 w-8 p-0"
+              title="Add Waste Items"
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
           </>
         )}
         loading={isLoading}
@@ -444,6 +496,20 @@ const ItemsPageComponent = () => {
         onSubmit={handleUseItems}
         loading={isUsingItems}
         submitText={isUsingItems ? "Using..." : "Use Items"}
+        error={error}
+      />
+
+      {/* Add Waste Items Dialog */}
+      <AddDialog
+        open={addWasteItemsDialogOpen}
+        onOpenChange={setAddWasteItemsDialogOpen}
+        title="Add Waste Items"
+        description={`Add waste items to "${selectedProduct?.item_name}"`}
+        schema={addWasteItemsSchema}
+        defaultValues={addWasteItemsDefaultValues}
+        onSubmit={handleAddWasteItems}
+        loading={isAddingWasteItems}
+        submitText={isAddingWasteItems ? "Adding..." : "Add Waste Items"}
         error={error}
       />
     </div>

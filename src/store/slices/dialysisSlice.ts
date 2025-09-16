@@ -209,6 +209,7 @@ export interface Product {
   quantity?: number;
   new_quantity?: number;
   used_items?: number;
+  waste_items?: number;
   admin_comment?: string;
   updated_at?: string;
 }
@@ -231,6 +232,7 @@ export interface CreateProductData {
   quantity: number;
   quantity_type: string;
   used_items: number;
+  waste_items: number;
   admin_comment?: string;
 }
 
@@ -241,6 +243,7 @@ export interface UpdateProductData {
   quantity?: number;
   quantity_type?: string;
   used_items?: number;
+  waste_items?: number;
   admin_comment?: string;
 }
 
@@ -568,6 +571,8 @@ interface DialysisState {
   isDeleting: boolean;
   isAddingQuantity: boolean;
   isUsingItems: boolean;
+  isAddingWasteItems: boolean;
+  addWasteItemsError: string | null;
   // Separate loading states for different operations
   isLoadingDialysis: boolean;
   isLoadingPatients: boolean;
@@ -609,6 +614,8 @@ const initialState: DialysisState = {
   isDeleting: false,
   isAddingQuantity: false,
   isUsingItems: false,
+  isAddingWasteItems: false,
+  addWasteItemsError: null,
   // Separate loading states for different operations
   isLoadingDialysis: false,
   isLoadingPatients: false,
@@ -711,6 +718,19 @@ export const useItems = createAsyncThunk(
           } catch (error: any) {
         return rejectWithValue(handleAsyncError(error, 'Failed to use items'));
       }
+  }
+);
+
+// Async thunk to add waste items
+export const addWasteItemsToInventory = createAsyncThunk(
+  'dialysis/addWasteItemsToInventory',
+  async ({ id, data }: { id: string; data: { items_to_waste: number } }, { rejectWithValue }) => {
+    try {
+      const response = await dialysisAPI.addWasteItems(id, data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to add waste items'));
+    }
   }
 );
 
@@ -1488,6 +1508,33 @@ const dialysisSlice = createSlice({
       .addCase(useItems.rejected, (state, action) => {
         state.isUsingItems = false;
         state.error = action.payload as string || 'Failed to use items';
+      })
+      // Add waste items
+      .addCase(addWasteItemsToInventory.pending, (state) => {
+        state.isAddingWasteItems = true;
+        state.addWasteItemsError = null;
+        state.error = null;
+      })
+      .addCase(addWasteItemsToInventory.fulfilled, (state, action: PayloadAction<Product>) => {
+        state.isAddingWasteItems = false;
+        if (state.products) {
+          const index = state.products.results.findIndex(p => p.id === action.payload.id);
+          if (index !== -1) {
+            state.products.results[index] = action.payload;
+          }
+        }
+        if (state.productsArray) {
+          const index = state.productsArray.findIndex(p => p.id === action.payload.id);
+          if (index !== -1) {
+            state.productsArray[index] = action.payload;
+          }
+        }
+        state.error = null;
+      })
+      .addCase(addWasteItemsToInventory.rejected, (state, action) => {
+        state.isAddingWasteItems = false;
+        state.addWasteItemsError = action.payload as string || 'Failed to add waste items';
+        state.error = action.payload as string || 'Failed to add waste items';
       })
       // Fetch machines
       .addCase(fetchMachines.pending, (state) => {

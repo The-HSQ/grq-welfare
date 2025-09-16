@@ -273,6 +273,7 @@ export function DataTable<T extends Record<string, any>>({
                             size="sm"
                             onClick={() => onView(row)}
                             className="h-8 w-8 p-0"
+                            title="View"
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -283,6 +284,7 @@ export function DataTable<T extends Record<string, any>>({
                             size="sm"
                             onClick={() => onEdit(row)}
                             className="h-8 w-8 p-0"
+                            title="Edit"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -293,6 +295,7 @@ export function DataTable<T extends Record<string, any>>({
                             size="sm"
                             onClick={() => onDelete(row)}
                             className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -325,6 +328,7 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1 || totalPages <= 1}
+              title="First Page"
               className="h-8 w-8 sm:h-9 sm:w-9 p-0"
             >
               <ChevronsLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -334,6 +338,7 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1 || totalPages <= 1}
+              title="Previous Page"
               className="h-8 w-8 sm:h-9 sm:w-9 p-0"
             >
               <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -348,6 +353,7 @@ export function DataTable<T extends Record<string, any>>({
                     variant={currentPage === page ? "default" : "outline"}
                     size="sm"
                     onClick={() => handlePageChange(page as number)}
+                    title={`Go to page ${page}`}
                     className="w-8 h-8 p-0"
                     disabled={totalPages <= 1}
                   >
@@ -362,6 +368,7 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || totalPages <= 1}
+              title="Next Page"
               className="h-8 w-8 sm:h-9 sm:w-9 p-0"
             >
               <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -371,6 +378,7 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages || totalPages <= 1}
+              title="Last Page"
               className="h-8 w-8 sm:h-9 sm:w-9 p-0"
               >
               <ChevronsRight className="h-3 w-3 sm:h-4 sm:w-4" />

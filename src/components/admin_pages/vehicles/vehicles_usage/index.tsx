@@ -40,7 +40,8 @@ const VehiclesUsagePageComponent: React.FC = () => {
     deleteUsageLoading,
     createUsageError,
     updateUsageError,
-    deleteUsageError
+    deleteUsageError,
+    error
   } = useSelector((state: RootState) => (state as any).vehicles);
 
   // Dialog states
@@ -154,21 +155,21 @@ const VehiclesUsagePageComponent: React.FC = () => {
     },
     {
       key: 'current_mileage',
-      header: 'Start Mileage (KM)',
+      header: 'Start Odometer (KM)',
       sortable: true,
-      width: '150px',
+      width: '160px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'end_mileage',
-      header: 'End Mileage (KM)',
+      header: 'End Odometer (KM)',
       sortable: true,
       width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'total_mileage_used',
-      header: 'Miles Used (KM)',
+      header: 'Odometer Used (KM)',
       sortable: true,
       width: '150px',
       render: (value) => value?.toLocaleString() || '-'
@@ -303,6 +304,13 @@ const VehiclesUsagePageComponent: React.FC = () => {
           </Button>
         }
       />
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
 
       <FilterBar
         filters={filterOptions}

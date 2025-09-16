@@ -97,10 +97,10 @@ export const createVehicleSchema = createFormSchema({
     },
     {
       name: 'current_mileage',
-      label: 'Current Mileage',
+      label: 'Current Odometer (KM)',
       type: 'number',
       required: true,
-      placeholder: 'Enter current mileage',
+      placeholder: 'Enter current odometer (KM)',
       validation: {
         min: 0,
       },

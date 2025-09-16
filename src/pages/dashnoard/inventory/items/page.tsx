@@ -1,4 +1,4 @@
-import InventoryPageComponent from "@/components/admin_pages/inventory"
+import InventoryPageComponent from "@/components/admin_pages/inventory/items"
 
 const InventoryPage = () => {
   return (

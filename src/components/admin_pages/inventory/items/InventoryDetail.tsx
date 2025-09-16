@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '../../../store';
+import { RootState, AppDispatch } from '../../../../store';
 import {
   fetchInventoryItemDetail,
   clearItemDetail,
-} from '../../../store/slices/inventorySlice';
-import { PageHeader } from '../../common/PageHeader';
-import { Button } from '../../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Skeleton } from '../../ui/skeleton';
-import { ArrowLeft, Package, Calendar, MapPin, Hash, TrendingUp, TrendingDown } from 'lucide-react';
+} from '../../../../store/slices/inventorySlice';
+import { PageHeader } from '../../../common/PageHeader';
+import { Button } from '../../../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card';
+import { Badge } from '../../../ui/badge';
+import { Skeleton } from '../../../ui/skeleton';
+import { ArrowLeft, Package, Calendar, MapPin, Hash, TrendingUp, TrendingDown, Users, Clock } from 'lucide-react';
 
 const InventoryDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -160,11 +160,6 @@ const InventoryDetail = () => {
           <CardContent>
             <div className="space-y-2">
               <div>
-                <p className="text-xs text-muted-foreground">Initial Quantity</p>
-                <p className="text-2xl font-bold">{itemDetail.quantity}</p>
-                <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
-              </div>
-              <div>
                 <p className="text-xs text-muted-foreground">Available Items</p>
                 <p className="text-2xl font-bold text-green-600">{itemDetail.available_items}</p>
                 <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
@@ -180,19 +175,22 @@ const InventoryDetail = () => {
             <TrendingDown className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 space-y-2">
               <div>
                 <p className="text-xs text-muted-foreground">Used Items</p>
-                <p className="text-2xl font-bold text-red-600">{itemDetail.used_items}</p>
+                <p className="text-2xl font-bold text-red-600">{itemDetail.total_used_items}</p>
                 <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
               </div>
-              {itemDetail.new_quantity > 0 && (
-                <div>
-                  <p className="text-xs text-muted-foreground">New Quantity Added</p>
-                  <p className="text-2xl font-bold text-blue-600">+{itemDetail.new_quantity}</p>
-                  <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-xs text-muted-foreground">Waste Items</p>
+                <p className="text-2xl font-bold text-yellow-600">{itemDetail.total_waste_items}</p>
+                <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">New Quantity Added</p>
+                <p className="text-2xl font-bold text-blue-600">{itemDetail.new_quantity}</p>
+                <p className="text-xs text-muted-foreground">{itemDetail.quantity_type}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -239,7 +237,7 @@ const InventoryDetail = () => {
                 <p className="text-xs text-muted-foreground">Usage Percentage</p>
                 <p className="text-2xl font-bold">
                   {itemDetail.quantity > 0 
-                    ? Math.round((itemDetail.used_items / itemDetail.quantity) * 100)
+                    ? Math.round((itemDetail.total_used_items / itemDetail.quantity) * 100)
                     : 0}%
                 </p>
               </div>
@@ -294,18 +292,70 @@ const InventoryDetail = () => {
           <CardTitle>Summary</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <p className="text-2xl font-bold text-red-600">{itemDetail.used_items}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-red-50 rounded-lg border">
+              <p className="text-2xl font-bold text-red-600">{itemDetail.total_used_items}</p>
               <p className="text-sm text-muted-foreground">Used Items</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
+            <div className="text-center p-4 bg-yellow-50 rounded-lg border">
+              <p className="text-2xl font-bold text-yellow-600">{itemDetail.total_waste_items}</p>
+              <p className="text-sm text-muted-foreground">Waste Items</p>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg border">
               <p className="text-2xl font-bold text-green-600">{itemDetail.available_items}</p>
               <p className="text-sm text-muted-foreground">Available Items</p>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Usage Records */}
+      {itemDetail.usage_records && itemDetail.usage_records.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Usage Records
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {itemDetail.usage_records.map((record) => (
+                <div key={record.id} className="border rounded-lg p-4 bg-gray-50">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Taken By</p>
+                      <p className="text-sm font-medium">{record.taken_by}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Items Taken</p>
+                      <p className="text-sm font-medium text-blue-600">{record.taken_items}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Items Used</p>
+                      <p className="text-sm font-medium text-red-600">{record.itemused}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Items Wasted</p>
+                      <p className="text-sm font-medium text-yellow-600">{record.item_waste}</p>
+                    </div>
+                  </div>
+                  {record.comment && (
+                    <div className="mt-3">
+                      <p className="text-xs text-muted-foreground">Comment</p>
+                      <p className="text-sm">{record.comment}</p>
+                    </div>
+                  )}
+                  <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    {new Date(record.date).toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

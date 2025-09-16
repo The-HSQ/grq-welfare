@@ -142,14 +142,14 @@ const createFormFields = [
     label: 'Address',
     type: 'textarea' as const,
     placeholder: 'Enter address',
-    required: true,
+    required: false,
   },
   {
     name: 'image',
     label: 'Image',
     type: 'file' as const,
     accept: 'image/*',
-    required: true,
+    required: false,
   },
 ];
 
@@ -173,7 +173,7 @@ const editFormFields = [
     label: 'Address',
     type: 'textarea' as const,
     placeholder: 'Enter address',
-    required: true,
+    required: false,
   },
   {
     name: 'image',

@@ -31,9 +31,10 @@ import ExpenseDetailPage from '@/pages/dashnoard/vendor_expense/expense/ExpenseD
 import VehiclesPage from '@/pages/dashnoard/vehicles/vehicles/page';
 import VehiclesUsagePage from '@/pages/dashnoard/vehicles/vehicles_usage/page';
 import DoctorAppointmentPage from '@/pages/dashnoard/dialysis_center/doctor_appointment/page';
-import InventoryPage from '@/pages/dashnoard/inventory/page';
-import InventoryDetail from '../components/admin_pages/inventory/InventoryDetail';
+import InventoryPage from '@/pages/dashnoard/inventory/items/page';
+import InventoryDetail from '../components/admin_pages/inventory/items/InventoryDetail';
 import OfficeManagementDashboard from '@/pages/dashnoard/office/page';
+import TrackingItemsPage from '@/pages/dashnoard/inventory/tracking_items/page';
 
 const router = createBrowserRouter([
   {
@@ -210,7 +211,7 @@ const router = createBrowserRouter([
       {
         path: 'office-management/inventory',
         element: (
-          <ProtectedRoute requiredRole={['admin', 'office_admin', 'lab_accountant']}>
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
             <InventoryPage />
           </ProtectedRoute>
         ),
@@ -218,8 +219,16 @@ const router = createBrowserRouter([
       {
         path: 'office-management/inventory/:id',
         element: (
-          <ProtectedRoute requiredRole={['admin', 'office_admin', 'lab_accountant']}>
+          <ProtectedRoute requiredRole={['admin', 'office_admin']}>
             <InventoryDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'office-management/inventory/tracking-items',
+        element: (
+          <ProtectedRoute requiredRole={['admin', 'office_admin', 'lab_accountant']}>
+            <TrackingItemsPage />
           </ProtectedRoute>
         ),
       },

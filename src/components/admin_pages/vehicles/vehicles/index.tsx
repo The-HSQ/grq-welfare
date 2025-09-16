@@ -158,11 +158,11 @@ const VehiclesPage: React.FC = () => {
       header: 'Rate/KM',
       sortable: true,
       width: '100px',
-      render: (value) => `$${value}`,
+      render: (value) => `PKR ${value}`,
     },
     {
       key: 'current_mileage',
-      header: 'Mileage',
+      header: 'Current Odometer',
       sortable: true,
       width: '100px',
       render: (value) => value?.toLocaleString() || '0',
