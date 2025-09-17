@@ -38,7 +38,7 @@ export default function Login() {
       case 'vehicle_user':
         return '/office-management/vehicles-usage'; // Vehicles Usage
       case 'lab_accountant':
-        return '/office-management/inventory'; // Lab Accountant Dashboard
+        return '/office-management/inventory/tracking-items'; // Lab Accountant Dashboard
       default:
         return '/'; // Default to main dashboard
     }

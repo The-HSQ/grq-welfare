@@ -107,7 +107,7 @@ export const editInventorySchema = new FormSchema({
       placeholder: 'Enter item type (e.g., mg, ml, etc.)',
     },
     {
-      name: 'quantity',
+      name: 'available_items',
       label: 'Available Items',
       type: 'number',
       disabled: true,

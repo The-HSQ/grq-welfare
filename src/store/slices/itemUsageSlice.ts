@@ -1,37 +1,38 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { inventoryAPI } from '../../services/api';
+import { handleAsyncError } from './dialysisSlice';
 
 // Reusable error handling function for async thunks
-const handleAsyncError = (error: any, defaultMessage: string) => {
-  const errorData = error.response?.data;
-  if (errorData) {
-    // Handle field-specific validation errors
-    if (typeof errorData === 'object' && !Array.isArray(errorData)) {
-      const fieldErrors = Object.entries(errorData)
-        .map(([field, messages]) => {
-          const messageArray = Array.isArray(messages) ? messages : [messages];
-          return `${field}: ${messageArray.join(', ')}`;
-        })
-        .join('; ');
-      return fieldErrors;
-    }
-    // Handle simple error string
-    if (typeof errorData === 'string') {
-      return errorData;
-    }
-    // Handle error object with error property
-    if (errorData.error) {
-      return errorData.error;
-    }
-  }
-  // Fallback error message
-  return error.response?.data?.message || 
-         error.response?.data?.error || 
-         error.response?.data?.detail ||
-         error.message || 
-         defaultMessage;
-};
+// const handleAsyncError = (error: any, defaultMessage: string) => {
+//   const errorData = error.response?.data;
+//   if (errorData) {
+//     // Handle field-specific validation errors
+//     if (typeof errorData === 'object' && !Array.isArray(errorData)) {
+//       const fieldErrors = Object.entries(errorData)
+//         .map(([field, messages]) => {
+//           const messageArray = Array.isArray(messages) ? messages : [messages];
+//           return `${field}: ${messageArray.join(', ')}`;
+//         })
+//         .join('; ');
+//       return fieldErrors;
+//     }
+//     // Handle simple error string
+//     if (typeof errorData === 'string') {
+//       return errorData;
+//     }
+//     // Handle error object with error property
+//     if (errorData.error) {
+//       return errorData.error;
+//     }
+//   }
+//   // Fallback error message
+//   return error.response?.data?.message || 
+//          error.response?.data?.error || 
+//          error.response?.data?.detail ||
+//          error.message || 
+//          defaultMessage;
+// };
 
 // Item usage record interface
 export interface ItemUsageRecord {
@@ -189,10 +190,6 @@ export const deleteItemUsageRecord = createAsyncThunk(
       await inventoryAPI.deleteItemUsageRecord(recordId);
       return recordId;
     } catch (error: any) {
-      const errorData = error.response?.data;
-      if (error.response?.status === 404) {
-        return rejectWithValue('Item usage record not found');
-      }
       return rejectWithValue(handleAsyncError(error, 'Failed to delete item usage record'));
     }
   }

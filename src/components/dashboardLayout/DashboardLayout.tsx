@@ -442,8 +442,19 @@ export default function DashboardLayout() {
     },
     {
       title: "Welfare Inventory",
-      url: "/office-management/inventory",
       icon: SquaresExclude,
+      items: [
+        {
+          title: "Items",
+          url: "/office-management/inventory",
+          icon: Package,
+        },
+        {
+          title: "Tracking Items",
+          url: "/office-management/inventory/tracking-items",
+          icon: Package,
+        },
+      ],
     },
     {
       title: "Welfare Donation",
@@ -513,8 +524,14 @@ export default function DashboardLayout() {
   const labAccountantNavigationItems: NavigationItem[] = [
     {
       title: "Welfare Inventory",
-      url: "/office-management/inventory",
       icon: SquaresExclude,
+      items: [
+        {
+          title: "Tracking Items",
+          url: "/office-management/inventory/tracking-items",
+          icon: Package,
+        },
+      ],
     },
   ];
 
@@ -568,7 +585,7 @@ export default function DashboardLayout() {
       return `/office-management/vehicles-usage`;
     }
     if (isLabAccountant()) {
-      return `/office-management/inventory`;
+      return `/office-management/inventory/tracking-items`;
     }
     return `/`;
   };

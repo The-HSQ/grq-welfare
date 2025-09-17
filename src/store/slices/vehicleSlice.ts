@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import { apiService } from '../../services/api';
+import { handleAsyncError } from './dialysisSlice';
 
 // Vehicle interfaces
 export interface Vehicle {
@@ -146,12 +146,7 @@ export const fetchVehicles = createAsyncThunk(
       const response = await apiService.get('/vehicles/vehicles/');
       return response.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to fetch vehicles';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to fetch vehicles'));
     }
   }
 );
@@ -163,30 +158,7 @@ export const createVehicle = createAsyncThunk(
       const response = await apiService.post('/vehicles/vehicles/', vehicleData);
       return response.data;
     } catch (error: any) {
-      // Handle validation errors
-      if (error.response?.data && typeof error.response.data === 'object') {
-        const errorData = error.response.data;
-        // Check for field-specific errors
-        const fieldErrors = Object.entries(errorData)
-          .map(([key, value]) => {
-            if (Array.isArray(value)) {
-              return `${key}: ${value.join(', ')}`;
-            }
-            return `${key}: ${value}`;
-          })
-          .join('; ');
-        
-        if (fieldErrors) {
-          return rejectWithValue(fieldErrors);
-        }
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to create vehicle';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to create vehicle'));
     }
   }
 );
@@ -198,30 +170,7 @@ export const updateVehicle = createAsyncThunk(
       const response = await apiService.put(`/vehicles/vehicles/${id}/`, vehicleData);
       return response.data;
     } catch (error: any) {
-      // Handle validation errors
-      if (error.response?.data && typeof error.response.data === 'object') {
-        const errorData = error.response.data;
-        // Check for field-specific errors
-        const fieldErrors = Object.entries(errorData)
-          .map(([key, value]) => {
-            if (Array.isArray(value)) {
-              return `${key}: ${value.join(', ')}`;
-            }
-            return `${key}: ${value}`;
-          })
-          .join('; ');
-        
-        if (fieldErrors) {
-          return rejectWithValue(fieldErrors);
-        }
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to update vehicle';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to update vehicle'));
     }
   }
 );
@@ -234,16 +183,7 @@ export const deleteVehicle = createAsyncThunk(
       return id;
     } catch (error: any) {
       // Handle specific error cases
-      if (error.response?.status === 404) {
-        return rejectWithValue('Vehicle not found');
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to delete vehicle';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to delete vehicle'));
     }
   }
 );
@@ -256,12 +196,7 @@ export const fetchVehicleUsages = createAsyncThunk(
       const response = await apiService.get('/vehicles/vehicle-usage/');
       return response.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to fetch vehicle usages';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to fetch vehicle usages'));
     }
   }
 );
@@ -273,30 +208,7 @@ export const createVehicleUsage = createAsyncThunk(
       const response = await apiService.post('/vehicles/vehicle-usage/', usageData);
       return response.data;
     } catch (error: any) {
-      // Handle validation errors
-      if (error.response?.data && typeof error.response.data === 'object') {
-        const errorData = error.response.data;
-        // Check for field-specific errors
-        const fieldErrors = Object.entries(errorData)
-          .map(([key, value]) => {
-            if (Array.isArray(value)) {
-              return `${key}: ${value.join(', ')}`;
-            }
-            return `${key}: ${value}`;
-          })
-          .join('; ');
-        
-        if (fieldErrors) {
-          return rejectWithValue(fieldErrors);
-        }
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to create vehicle usage';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to create vehicle usage'));
     }
   }
 );
@@ -308,30 +220,7 @@ export const updateVehicleUsage = createAsyncThunk(
       const response = await apiService.put(`/vehicles/vehicle-usage/${id}/`, usageData);
       return response.data;
     } catch (error: any) {
-      // Handle validation errors
-      if (error.response?.data && typeof error.response.data === 'object') {
-        const errorData = error.response.data;
-        // Check for field-specific errors
-        const fieldErrors = Object.entries(errorData)
-          .map(([key, value]) => {
-            if (Array.isArray(value)) {
-              return `${key}: ${value.join(', ')}`;
-            }
-            return `${key}: ${value}`;
-          })
-          .join('; ');
-        
-        if (fieldErrors) {
-          return rejectWithValue(fieldErrors);
-        }
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to update vehicle usage';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to update vehicle usage'));
     }
   }
 );
@@ -343,17 +232,7 @@ export const deleteVehicleUsage = createAsyncThunk(
       await apiService.delete(`/vehicles/vehicle-usage/${id}/`);
       return id;
     } catch (error: any) {
-      // Handle specific error cases
-      if (error.response?.status === 404) {
-        return rejectWithValue('Vehicle usage not found');
-      }
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.response?.data?.detail ||
-                          error.message || 
-                          'Failed to delete vehicle usage';
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleAsyncError(error, 'Failed to delete vehicle usage'));
     }
   }
 );

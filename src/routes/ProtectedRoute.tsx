@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
       case 'office_admin':
         return '/office-management'; // Office Management Dashboard
       case 'lab_accountant':
-        return '/office-management/inventory'; // Lab Accountant Dashboard
+        return '/office-management/inventory/tracking-items'; // Lab Accountant Dashboard
       case 'vehicle_user':
         return '/office-management/vehicles-usage'; // Vehicles Usage
       default:

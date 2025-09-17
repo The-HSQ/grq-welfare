@@ -3,9 +3,27 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { dialysisAPI } from '../../services/api';
 
 // Reusable error handling function for async thunks
-const handleAsyncError = (error: any, defaultMessage: string) => {
+export const handleAsyncError = (error: any, defaultMessage: string) => {
   const errorData = error.response?.data;
   if (errorData) {
+    if (errorData.status === 401) {
+      return 'Session expired. Please login again.';
+    }
+    if (errorData.status === 403) {
+      return 'You are not authorized to access this resource.';
+    }
+    if (errorData.status === 404) {
+      return 'Resource not found.';
+    }
+    if (errorData.status === 500) {
+      return 'Internal server error.';
+    }
+    if (errorData.status === 502) {
+      return 'Bad gateway.';
+    }
+    if (errorData.status === 504) {
+      return 'Gateway timeout.';
+    }
     // Handle field-specific validation errors
     if (typeof errorData === 'object' && !Array.isArray(errorData)) {
       const fieldErrors = Object.entries(errorData)

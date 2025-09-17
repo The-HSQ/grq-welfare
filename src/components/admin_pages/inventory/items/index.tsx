@@ -663,7 +663,7 @@ const InventoryPageComponent = () => {
           defaultValues={{
             item_name: selectedItem.item_name,
             item_type: selectedItem.item_type,
-            quantity: selectedItem.quantity,
+            available_items: selectedItem.available_items,
             quantity_type: selectedItem.quantity_type,
             inventory_type: selectedItem.inventory_type,
             admin_comment: selectedItem.admin_comment,

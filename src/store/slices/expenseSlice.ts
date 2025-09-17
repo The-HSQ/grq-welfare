@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { expenseAPI } from '../../services/api';
-
+import { handleAsyncError } from './dialysisSlice';
 // Types
 export interface ReceiptDocument {
   id: number;
@@ -100,9 +100,7 @@ export const fetchExpenses = createAsyncThunk(
       const response = await expenseAPI.getExpenses();
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Failed to fetch expenses'
-      );
+      return rejectWithValue(handleAsyncError(error, 'Failed to fetch expenses'));
     }
   }
 );
@@ -114,9 +112,7 @@ export const createExpense = createAsyncThunk(
       const response = await expenseAPI.createExpense(expenseData);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data || 'Failed to create expense'
-      );
+      return rejectWithValue(handleAsyncError(error, 'Failed to create expense'));
     }
   }
 );
@@ -131,9 +127,7 @@ export const updateExpense = createAsyncThunk(
       const response = await expenseAPI.updateExpense(id, expenseData);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data || 'Failed to update expense'
-      );
+      return rejectWithValue(handleAsyncError(error, 'Failed to update expense'));
     }
   }
 );
@@ -145,9 +139,7 @@ export const deleteExpense = createAsyncThunk(
       await expenseAPI.deleteExpense(id);
       return id;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data || 'Failed to delete expense'
-      );
+      return rejectWithValue(handleAsyncError(error, 'Failed to delete expense'));
     }
   }
 );

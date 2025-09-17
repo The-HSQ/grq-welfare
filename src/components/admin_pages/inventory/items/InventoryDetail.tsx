@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../../../../store';
@@ -6,7 +6,6 @@ import {
   fetchInventoryItemDetail,
   clearItemDetail,
 } from '../../../../store/slices/inventorySlice';
-import { PageHeader } from '../../../common/PageHeader';
 import { Button } from '../../../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card';
 import { Badge } from '../../../ui/badge';
