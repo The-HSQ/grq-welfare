@@ -42,7 +42,10 @@ const TrackingItemsPageComponent = () => {
     selectedRecord,
   } = useSelector((state: RootState) => state.itemUsage);
   
-  const { items: inventoryItems } = useSelector((state: RootState) => state.inventory);
+  const { items: inventoryItems, loading: inventoryLoading } = useSelector((state: RootState) => state.inventory);
+  
+  // Local loading state to show skeleton immediately on mount
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -200,7 +203,9 @@ const TrackingItemsPageComponent = () => {
   useEffect(() => {
     // Fetch inventory items first, then usage records
     dispatch(fetchInventoryItems()).then(() => {
-      dispatch(fetchItemUsageRecords());
+      dispatch(fetchItemUsageRecords()).finally(() => {
+        setInitialLoading(false);
+      });
     });
   }, [dispatch]);
 
@@ -398,7 +403,7 @@ const TrackingItemsPageComponent = () => {
         columns={columns}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
-        loading={loading}
+        loading={loading || initialLoading}
         emptyMessage="No tracking item records found"
         pagination={true}
         pageSize={10}
