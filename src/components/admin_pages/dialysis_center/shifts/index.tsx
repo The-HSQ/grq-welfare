@@ -13,9 +13,9 @@ import { DataTable } from '../../../common/DataTable';
 import type { Column } from '../../../common/DataTable';
 import { PageHeader } from '../../../common/PageHeader';
 import { FilterBar } from '../../../common/FilterBar';
-import { AddDialog } from '../../../common/AddDialog';
-import { EditDialog } from '../../../common/EditDialog';
-import { DeleteDialog } from '../../../common/DeleteDialog';
+import { ResponsiveAddDialog } from '@/components/common';
+import { ResponsiveEditDialog } from '@/components/common';
+import { ResponsiveDeleteDialog } from '@/components/common';
 import { Button } from '../../../ui/button';
 import { Plus } from 'lucide-react';
 import { shiftFormFields } from './schemas';
@@ -92,12 +92,12 @@ const ShiftsPageComponent = () => {
   const columns: Column<Shift>[] = [
     {
       key: 'shift_no',
-      header: 'Shift Number',
+      header: 'SHIFT NUMBER',
       sortable: true,
     },
     {
       key: 'start_time',
-      header: 'Start Time',
+      header: 'START TIME',
       sortable: true,
       render: (value) => {
         const time = new Date(`2000-01-01T${value}`);
@@ -110,7 +110,7 @@ const ShiftsPageComponent = () => {
     },
     {
       key: 'end_time',
-      header: 'End Time',
+      header: 'END TIME',
       sortable: true,
       render: (value) => {
         const time = new Date(`2000-01-01T${value}`);
@@ -123,7 +123,7 @@ const ShiftsPageComponent = () => {
     },
     {
       key: 'created_at',
-      header: 'Created At',
+      header: 'CREATED AT',
       sortable: true,
       render: (value) => {
         return new Date(value).toLocaleDateString('en-US', {
@@ -181,7 +181,7 @@ const ShiftsPageComponent = () => {
         onEdit={handleEditClick}
       />
 
-      <AddDialog
+      <ResponsiveAddDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         title="Add New Shift"
@@ -190,7 +190,7 @@ const ShiftsPageComponent = () => {
         loading={isCreating}
       />
 
-      <EditDialog
+      <ResponsiveEditDialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
           setIsEditDialogOpen(open);
@@ -206,7 +206,7 @@ const ShiftsPageComponent = () => {
         loading={isUpdating}
       />
 
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);

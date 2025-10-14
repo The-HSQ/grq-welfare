@@ -6,9 +6,9 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { FilterBar } from "@/components/common/FilterBar";
 import { DataTable } from "@/components/common/DataTable";
 import type { Column } from "@/components/common/DataTable";
-import { AddDialog } from "@/components/common/AddDialog";
-import { EditDialog } from "@/components/common/EditDialog";
-import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { ResponsiveAddDialog } from "@/components/common";
+import { ResponsiveEditDialog } from "@/components/common";
+import { ResponsiveDeleteDialog } from "@/components/common";
 import { Spinner } from "@/components/ui/spinner";
 import {
   fetchWarningFixes,
@@ -122,7 +122,7 @@ const WarningResolvedPageComponent = () => {
   const columns: Column<WarningFix>[] = [
     {
       key: "warning",
-      header: "Machine",
+      header: "MACHINE",
       sortable: true,
       render: (value) => {
         const warning = warnings?.find((w) => w.id === value);
@@ -140,7 +140,7 @@ const WarningResolvedPageComponent = () => {
     },
     {
       key: "warning",
-      header: "Warning",
+      header: "WARNING",
       render: (value) => {
         const warning = warnings?.find((w) => w.id === value);
         return warning ? (
@@ -156,7 +156,7 @@ const WarningResolvedPageComponent = () => {
     },
     {
       key: "fix_warning_description",
-      header: "Fix Description",
+      header: "FIX DESCRIPTION",
       render: (value) => (
         <div className="max-w-md">
           <p className="text-sm line-clamp-2">{value}</p>
@@ -165,7 +165,7 @@ const WarningResolvedPageComponent = () => {
     },
     {
       key: "created_at",
-      header: "Created At",
+      header: "CREATED AT",
       sortable: true,
       render: (value) => (
         <span className="text-sm text-muted-foreground">
@@ -308,7 +308,7 @@ const WarningResolvedPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add Warning Fix"
@@ -320,7 +320,7 @@ const WarningResolvedPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Warning Fix"
@@ -333,7 +333,7 @@ const WarningResolvedPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Warning Fix"

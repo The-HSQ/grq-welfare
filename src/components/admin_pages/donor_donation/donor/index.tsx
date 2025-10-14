@@ -15,9 +15,9 @@ import {
   PageHeader,
   DataTable,
   FilterBar,
-  AddDialog,
-  EditDialog,
-  DeleteDialog,
+  ResponsiveAddDialog,
+  ResponsiveEditDialog,
+  ResponsiveDeleteDialog,
   type Column,
   type FilterOption,
 } from '../../../common';
@@ -54,7 +54,7 @@ const filterOptions: FilterOption[] = [
 const columns: Column<Donor>[] = [
   {
     key: 'image',
-    header: 'Image',
+    header: 'IMAGE',
     sortable: false,
     render: (value, donor: Donor) => {
       const image = getMediaUrl(donor.image);
@@ -87,7 +87,7 @@ const columns: Column<Donor>[] = [
   },
   {
     key: 'name',
-    header: 'Name',
+    header: 'NAME',
     sortable: true,
     render: (value, donor: Donor) => (
       <div className="font-medium text-gray-900">{donor.name}</div>
@@ -95,7 +95,7 @@ const columns: Column<Donor>[] = [
   },
   {
     key: 'contact',
-    header: 'Contact',
+    header: 'CONTACT',
     sortable: true,
     render: (value, donor: Donor) => (
       <div className="text-gray-600">{donor.contact}</div>
@@ -103,7 +103,7 @@ const columns: Column<Donor>[] = [
   },
   {
     key: 'address',
-    header: 'Address',
+    header: 'ADDRESS',
     sortable: true,
     render: (value, donor: Donor) => (
       <div className="text-gray-600 max-w-xs truncate" title={donor.address}>
@@ -113,7 +113,7 @@ const columns: Column<Donor>[] = [
   },
   {
     key: 'created_at',
-    header: 'Created Date',
+    header: 'CREATED AT',
     sortable: true,
     render: (value, donor: Donor) => (
       <div className="text-gray-600">{formatDate(donor.created_at)}</div>
@@ -359,7 +359,7 @@ const DonorManagement: React.FC = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={isAddDialogOpen}
         onOpenChange={(open) => {
           setIsAddDialogOpen(open);
@@ -374,7 +374,7 @@ const DonorManagement: React.FC = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
           setIsEditDialogOpen(open);
@@ -402,7 +402,7 @@ const DonorManagement: React.FC = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);

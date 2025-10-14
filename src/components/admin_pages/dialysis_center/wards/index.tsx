@@ -5,9 +5,7 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { FilterBar } from "@/components/common/FilterBar";
 import { DataTable } from "@/components/common/DataTable";
 import type { Column } from "@/components/common/DataTable";
-import { AddDialog } from "@/components/common/AddDialog";
-import { EditDialog } from "@/components/common/EditDialog";
-import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { ResponsiveAddDialog, ResponsiveEditDialog, ResponsiveDeleteDialog } from "@/components/common";
 import { Spinner } from "@/components/ui/spinner";
 import { PlusIcon } from "lucide-react";
 import {
@@ -126,18 +124,18 @@ const WardsPageComponent = () => {
   const columns: Column<Ward>[] = [
     {
       key: "ward_name",
-      header: "Ward Name",
+      header: "WARD NAME",
       sortable: true,
     },
     {
       key: "total_beds_count",
-      header: "Total Beds",
+      header: "TOTAL BEDS",
       sortable: true,
       render: (value: number) => <span className="font-medium">{value}</span>,
     },
     {
       key: "created_at",
-      header: "Created At",
+      header: "CREATED AT",
       sortable: true,
       render: (value: string) => (
         <span className="text-sm text-muted-foreground">
@@ -202,7 +200,7 @@ const WardsPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Ward"
@@ -214,7 +212,7 @@ const WardsPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Ward"
@@ -227,7 +225,7 @@ const WardsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Ward"

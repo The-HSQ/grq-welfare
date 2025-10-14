@@ -8,9 +8,7 @@ import { FilterBar } from '@/components/common/FilterBar';
 import type { FilterOption } from '@/components/common/FilterBar';
 import { DataTable } from '@/components/common/DataTable';
 import type { Column } from '@/components/common/DataTable';
-import { AddDialog } from '@/components/common/AddDialog';
-import { EditDialog } from '@/components/common/EditDialog';
-import { DeleteDialog } from '@/components/common/DeleteDialog';
+import { ResponsiveAddDialog, ResponsiveEditDialog, ResponsiveDeleteDialog } from '@/components/common';
 import { machineAddSchema, machineEditSchema } from './schemas';
 import { 
   fetchMachines, 
@@ -66,12 +64,12 @@ const MachinePageComponent = () => {
   const columns: Column<Machine>[] = [
     {
       key: 'machine_name',
-      header: 'Machine Name',
+      header: 'MACHINE NAME',
       sortable: true,
     },
     {
       key: 'machine_type',
-      header: 'Machine Type',
+      header: 'MACHINE TYPE',
       sortable: true,
       render: (value) => (
         <Badge variant="outline" className="capitalize">
@@ -81,31 +79,31 @@ const MachinePageComponent = () => {
     },
     {
       key: 'maintenance_date',
-      header: 'Maintenance Date',
+      header: 'MAINTENANCE DATE',
       sortable: true,
       render: (value) => new Date(value).toLocaleDateString(),
     },
     {
       key: 'next_maintenance_date',
-      header: 'Next Maintenance',
+      header: 'NEXT MAINTENANCE',
       sortable: true,
       render: (value) => new Date(value).toLocaleDateString(),
     },
     {
       key: 'disinfection_chemical_change',
-      header: 'Disinfection Chemical Change',
+      header: 'DISINFECTION CHEMICAL CHANGE',
       sortable: true,
       render: (value) => value ? new Date(value).toLocaleDateString() : '---',
     },
     {
       key: 'dia_safe_filter_change',
-      header: 'Dia Safe Filter Change',
+      header: 'DIA SAFE FILTER CHANGE',
       sortable: true,
       render: (value) => value ? new Date(value).toLocaleDateString() : '---',
     },
     {
       key: 'active_warnings_count',
-      header: 'Active Warnings',
+      header: 'ACTIVE WARNINGS',
       sortable: true,
       render: (value) => (
         <Badge variant={value > 0 ? 'destructive' : 'secondary'}>
@@ -115,7 +113,7 @@ const MachinePageComponent = () => {
     },
     {
       key: 'created_at',
-      header: 'Created At',
+      header: 'CREATED AT',
       sortable: true,
       render: (value) => new Date(value).toLocaleDateString(),
     },
@@ -276,7 +274,7 @@ const MachinePageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Machine"
@@ -288,7 +286,7 @@ const MachinePageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Machine"
@@ -308,7 +306,7 @@ const MachinePageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Machine"

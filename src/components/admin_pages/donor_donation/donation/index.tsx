@@ -15,12 +15,12 @@ import {
   PageHeader,
   DataTable,
   FilterBar,
-  AddDialog,
-  EditDialog,
-  DeleteDialog,
+  ResponsiveAddDialog,
+  ResponsiveEditDialog,
+  ResponsiveDeleteDialog,
   type Column,
   type FilterOption,
-} from "../../../common";
+} from "@/components/common";
 import { Button } from "../../../../components/ui/button";
 import { FormSchema } from "../../../common";
 import { formatDate } from "../../../../lib/utils";
@@ -65,7 +65,7 @@ const filterOptions: FilterOption[] = [
 const columns: Column<Donation>[] = [
   {
     key: "donner_name",
-    header: "Donor Name",
+    header: "DONOR NAME",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="font-medium text-gray-900">{donation.donner_name}</div>
@@ -73,7 +73,7 @@ const columns: Column<Donation>[] = [
   },
   {
     key: "amount",
-    header: "Amount",
+    header: "AMOUNT",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="text-gray-900">
@@ -83,7 +83,7 @@ const columns: Column<Donation>[] = [
   },
   {
     key: "purpose_display",
-    header: "Purpose",
+    header: "PURPOSE",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="text-gray-600">{donation.purpose_display}</div>
@@ -91,7 +91,7 @@ const columns: Column<Donation>[] = [
   },
   {
     key: "donation_type",
-    header: "Type",
+    header: "TYPE",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="text-gray-600 capitalize">{donation.donation_type}</div>
@@ -99,7 +99,7 @@ const columns: Column<Donation>[] = [
   },
   {
     key: "in_rupees",
-    header: "In Rupees",
+    header: "IN RUPEES",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="text-gray-600">
@@ -111,7 +111,7 @@ const columns: Column<Donation>[] = [
   },
   {
     key: "date",
-    header: "Date",
+    header: "DATE",
     sortable: true,
     render: (value, donation: Donation) => (
       <div className="text-gray-600">{formatDate(donation.date)}</div>
@@ -467,7 +467,7 @@ const DonationManagement: React.FC = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={isAddDialogOpen}
         onOpenChange={(open) => {
           setIsAddDialogOpen(open);
@@ -482,7 +482,7 @@ const DonationManagement: React.FC = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
           setIsEditDialogOpen(open);
@@ -516,7 +516,7 @@ const DonationManagement: React.FC = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);

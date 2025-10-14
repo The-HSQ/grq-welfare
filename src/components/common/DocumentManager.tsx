@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DeleteDialog } from '@/components/common/DeleteDialog';
+import { ResponsiveDeleteDialog } from '@/components/common/ResponsiveDeleteDialog';
 import { 
   DownloadIcon, 
   FileIcon, 
@@ -184,11 +184,11 @@ export const DocumentManager = <T extends BaseDocument>({
 
   const getFileIcon = (doc: T) => {
     if (doc.is_image) {
-      return <ImageIcon className="w-5 h-5 text-blue-500" />;
+      return <ImageIcon className="w-5 h-5 text-primary" />;
     } else if (doc.is_pdf) {
-      return <FileIcon className="w-5 h-5 text-red-500" />;
+      return <FileIcon className="w-5 h-5 text-primary" />;
     } else {
-      return <FileIcon className="w-5 h-5 text-gray-500" />;
+      return <FileIcon className="w-5 h-5 text-primary" />;
     }
   };
 
@@ -323,7 +323,7 @@ export const DocumentManager = <T extends BaseDocument>({
 
   // Skeleton loading component for documents
   const DocumentSkeleton = ({ showDescription = true }: { showDescription?: boolean }) => (
-    <Card className="hover:shadow-md transition-shadow border-l-4 border-l-gray-300">
+    <Card className="hover:shadow-md transition-shadow border-l-4 border-l-primary">
       <CardContent className="p-4">
         <div className="flex items-start gap-4">
           {/* File Icon Skeleton */}
@@ -386,22 +386,22 @@ export const DocumentManager = <T extends BaseDocument>({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0">
-        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-          <DialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            <FileTextIcon className="w-5 h-5 text-blue-600" />
+        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-primary/10 to-primary/5">
+          <DialogTitle className="text-xl font-semibold text-foreground flex items-center gap-2">
+            <FileTextIcon className="w-5 h-5 text-primary" />
             {title}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-600">
+          <DialogDescription className="text-sm text-muted-foreground">
             {description}
           </DialogDescription>
         </DialogHeader>
 
         {/* Upload Section */}
-        <div className="px-6 py-4 border-b bg-gray-50/50">
+        <div className="px-6 py-4 border-b bg-foreground/10">
           {!showUploadForm ? (
             <Button
               onClick={() => setShowUploadForm(true)}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+              className="flex items-center gap-2"
             >
               <PlusIcon className="w-4 h-4" />
               <span>Add Document/Image</span>
@@ -410,8 +410,8 @@ export const DocumentManager = <T extends BaseDocument>({
             <Card className="border-0 shadow-sm overflow-y-auto max-h-[70dvh]">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-4">
-                    <UploadIcon className="size-6 text-blue-600" />
+                  <CardTitle className="text-lg font-medium text-foreground flex items-center gap-4">
+                    <UploadIcon className="size-6 text-primary" />
                     Upload New Document/Image
                   </CardTitle>
                   <Button
@@ -490,27 +490,27 @@ export const DocumentManager = <T extends BaseDocument>({
                   <Label htmlFor="document_path" className="text-sm font-medium text-gray-700">
                     File *
                   </Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                  <div className="border-2 border-dashed border-primary/20 rounded-lg p-4 hover:border-primary/10 transition-colors">
                     <Input
                       ref={fileInputRef}
                       id="document_path"
                       type="file"
                       onChange={handleFileChange}
                       accept={getAcceptString(uploadForm.document_type)}
-                      className="border-0 p-0 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      className="border-0 p-0 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary/20 file:text-primary hover:file:bg-primary/10 cursor-pointer file:cursor-pointer"
                     />
                     <p className="text-xs text-gray-500 mt-2">
                       {getFileTypeDescription(uploadForm.document_type)}
                     </p>
                   </div>
                   {uploadForm.document_path && (
-                    <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <FileIcon className="w-4 h-4 text-green-600" />
+                    <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                      <FileIcon className="w-4 h-4 text-primary" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-green-800 truncate">
+                        <p className="text-sm font-medium text-primary truncate">
                           {uploadForm.document_path.name}
                         </p>
-                        <p className="text-xs text-green-600">
+                        <p className="text-xs text-primary">
                           {(uploadForm.document_path.size / 1024 / 1024).toFixed(2)} MB
                         </p>
                       </div>
@@ -532,7 +532,7 @@ export const DocumentManager = <T extends BaseDocument>({
                   <Button
                     onClick={handleUpload}
                     disabled={isUploading || isDeleting || !uploadForm.document_name.trim() || !uploadForm.document_path}
-                    className="px-6 bg-blue-600 hover:bg-blue-700"
+                    className="px-6"
                   >
                     {isUploading ? (
                       <>
@@ -566,28 +566,28 @@ export const DocumentManager = <T extends BaseDocument>({
             </div>
           ) : documents.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-2 py-12">
-              <FileIcon className="w-12 h-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-              <p className="text-gray-500 text-center max-w-sm">
+              <FileIcon className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-lg font-medium text-mute mb-2">No documents found</h3>
+              <p className="text-muted-foreground text-center max-w-sm">
                 This {entityName} doesn't have any documents yet. Click "Add Document/Image" to upload the first one.
               </p>
             </div>
           ) : (
             <div className="px-6 py-4 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-foreground">
                   Documents ({documents.length})
                 </h3>
               </div>
               
               <div className="grid gap-4">
                 {documents.map((doc) => (
-                  <Card key={doc.id} className="hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                  <Card key={doc.id} className="hover:shadow-md transition-shadow border-l-4 border-l-primary">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
                         {/* File Icon */}
                         <div className="flex-shrink-0">
-                          <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                             {getFileIcon(doc)}
                           </div>
                         </div>
@@ -596,11 +596,11 @@ export const DocumentManager = <T extends BaseDocument>({
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-col sm:items-start sm:justify-between gap-3">
                             <div className="flex-1 min-w-0">
-                              <h4 className="font-semibold text-gray-900 truncate">
+                              <h4 className="font-semibold text-foreground truncate">
                                 {doc.document_name}
                               </h4>
                               {doc.description && (
-                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                                   {doc.description}
                                 </p>
                               )}
@@ -679,7 +679,7 @@ export const DocumentManager = <T extends BaseDocument>({
       </DialogContent>
 
       {/* Delete Confirmation Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Document"

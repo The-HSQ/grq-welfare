@@ -45,17 +45,17 @@ export const editBedSchema = new FormSchema({
 export const bedTableColumns: Column<Bed>[] = [
   {
     key: "bed_name",
-    header: "Bed Name",
+    header: "BED NAME",
     sortable: true,
   },
   {
     key: "ward_name",
-    header: "Ward",
+    header: "WARD",
     sortable: true,
   },
   {
     key: "created_at",
-    header: "Created At",
+    header: "CREATED AT",
     sortable: true,
     render: (value: string) => new Date(value).toLocaleDateString(),
   },

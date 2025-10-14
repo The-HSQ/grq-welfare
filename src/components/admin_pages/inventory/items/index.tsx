@@ -24,9 +24,9 @@ import {
 } from "../../../../store/slices/itemUsageSlice";
 import { PageHeader } from "../../../common/PageHeader";
 import { DataTable, Column } from "../../../common/DataTable";
-import { AddDialog } from "../../../common/AddDialog";
-import { EditDialog } from "../../../common/EditDialog";
-import { DeleteDialog } from "../../../common/DeleteDialog";
+import { ResponsiveAddDialog } from "@/components/common";
+import { ResponsiveEditDialog } from "@/components/common";
+import { ResponsiveDeleteDialog } from "@/components/common";
 import { FilterBar, FilterOption } from "../../../common/FilterBar";
 import { Button } from "../../../ui/button";
 import { Badge } from "../../../ui/badge";
@@ -431,13 +431,13 @@ const InventoryPageComponent = () => {
     },
     {
       key: "item_name",
-      header: "Item Name",
+      header: "ITEM NAME",
       sortable: true,
       width: "200px",
     },
     {
       key: "item_type",
-      header: "Item Type",
+      header: "ITEM TYPE",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -448,7 +448,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "total_used_items",
-      header: "Total Used Items",
+      header: "TOTAL USED ITEMS",
       sortable: true,
       width: "120px",
       render: (value, row) => (
@@ -457,7 +457,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "total_waste_items",
-      header: "Total Waste Items",
+      header: "TOTAL WASTE ITEMS",
       sortable: true,
       width: "130px",
       render: (value, row) => (
@@ -466,7 +466,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "available_items",
-      header: "Available",
+      header: "AVAILABLE ITEMS",
       sortable: true,
       width: "100px",
       render: (value, row) => (
@@ -475,7 +475,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "quantity_type",
-      header: "Quantity Type",
+      header: "QUANTITY TYPE",
       sortable: true,
       width: "100px",
       render: (value, row) => (
@@ -486,7 +486,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "inventory_type",
-      header: "Inventory Type",
+      header: "INVENTORY TYPE",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -497,7 +497,7 @@ const InventoryPageComponent = () => {
     },
     {
       key: "admin_comment",
-      header: "Admin Comment",
+      header: "ADMIN COMMENT",
       sortable: true,
       width: "250px",
       render: (value) => (
@@ -506,14 +506,14 @@ const InventoryPageComponent = () => {
     },
     {
       key: "updated_at",
-      header: "Last Update",
+      header: "LAST UPDATE",
       sortable: true,
       width: "140px",
       render: (value) => new Date(value).toLocaleDateString(),
     },
     {
       key: "date",
-      header: "Date",
+      header: "DATE",
       sortable: true,
       width: "120px",
       render: (value) => new Date(value).toLocaleDateString(),
@@ -641,7 +641,7 @@ const InventoryPageComponent = () => {
       />
 
       {/* Add Item Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Inventory Item"
@@ -654,7 +654,7 @@ const InventoryPageComponent = () => {
 
       {/* Edit Item Dialog */}
       {selectedItem && (
-        <EditDialog
+        <ResponsiveEditDialog
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
           title="Edit Inventory Item"
@@ -677,7 +677,7 @@ const InventoryPageComponent = () => {
 
       {/* Delete Item Dialog */}
       {selectedItem && (
-        <DeleteDialog
+        <ResponsiveDeleteDialog
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           title="Delete Inventory Item"
@@ -691,7 +691,7 @@ const InventoryPageComponent = () => {
 
       {/* Add Quantity Dialog */}
       {selectedItem && (
-        <AddDialog
+        <ResponsiveAddDialog
           open={addQuantityDialogOpen}
           onOpenChange={setAddQuantityDialogOpen}
           title={`Add Available Quantity - ${selectedItem.item_name}`}

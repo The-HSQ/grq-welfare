@@ -1,27 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { DocumentManager, type BaseDocument } from '@/components/common/DocumentManager';
-import { Expense } from '../../../../store/slices/expenseSlice';
-import api from '../../../../lib/axios';
+import React, { useState, useEffect } from "react";
+import {
+  DocumentManager,
+  type BaseDocument,
+} from "@/components/common/DocumentManager";
+import { Expense } from "../../../../store/slices/expenseSlice";
+import api from "../../../../lib/axios";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { 
-  UploadIcon, 
-  Loader2Icon, 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import {
+  UploadIcon,
+  Loader2Icon,
   PlusIcon,
   AlertCircleIcon,
-  FileIcon
-} from 'lucide-react';
+  FileIcon,
+} from "lucide-react";
 
 // Interface for expense documents based on the API response
 export interface ExpenseDocument extends BaseDocument {
@@ -67,10 +70,10 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [uploadForm, setUploadForm] = useState({
-    receipt_number: '',
-    description: '',
+    receipt_number: "",
+    description: "",
     document_path: null as File | null,
-    document_type: '',
+    document_type: "",
   });
 
   // Fetch documents when modal opens and expense changes
@@ -88,20 +91,30 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
 
     setIsLoading(true);
     try {
-      const response = await api.get(`/financial/receipt-documents/by_expense/?expense_id=${expense.id}`);
+      const response = await api.get(
+        `/financial/receipt-documents/by_expense/?expense_id=${expense.id}`
+      );
       const fetchedDocuments = response.data.map((doc: any) => ({
         ...doc,
         // Map API response to BaseDocument interface
-        document_name: doc.file_name || doc.receipt_number || `Document ${doc.id}`,
+        document_name:
+          doc.file_name || doc.receipt_number || `Document ${doc.id}`,
         document_path: doc.file_url || doc.file,
-        file_extension: doc.file_name ? doc.file_name.split('.').pop()?.toLowerCase() || 'pdf' : 'pdf',
-        is_image: doc.document_type === 'image' || (doc.file_name && /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(doc.file_name)),
-        is_pdf: doc.document_type === 'receipt' || (doc.file_name && doc.file_name.toLowerCase().endsWith('.pdf')),
-        uploaded_by_name: 'System', // API doesn't provide this, using default
+        file_extension: doc.file_name
+          ? doc.file_name.split(".").pop()?.toLowerCase() || "pdf"
+          : "pdf",
+        is_image:
+          doc.document_type === "image" ||
+          (doc.file_name &&
+            /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(doc.file_name)),
+        is_pdf:
+          doc.document_type === "receipt" ||
+          (doc.file_name && doc.file_name.toLowerCase().endsWith(".pdf")),
+        uploaded_by_name: "System", // API doesn't provide this, using default
       }));
       setDocuments(fetchedDocuments);
     } catch (error) {
-      console.error('Error fetching documents:', error);
+      console.error("Error fetching documents:", error);
       setDocuments([]);
     } finally {
       setIsLoading(false);
@@ -111,15 +124,17 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
   const handleDelete = async (documentId: number) => {
     setIsDeleting(true);
     setDeleteError(null);
-    
+
     try {
       await api.delete(`/financial/receipt-documents/${documentId}/`);
       // Remove the deleted document from the local state
-      setDocuments(prev => prev.filter(doc => doc.id !== documentId));
+      setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
       onDocumentChange?.();
     } catch (error: any) {
-      console.error('Error deleting document:', error);
-      setDeleteError(error?.response?.data?.message || 'Failed to delete document');
+      console.error("Error deleting document:", error);
+      setDeleteError(
+        error?.response?.data?.message || "Failed to delete document"
+      );
       throw error; // Re-throw to let DocumentManager handle the error
     } finally {
       setIsDeleting(false);
@@ -128,16 +143,16 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
 
   const handleUpload = async () => {
     if (!expense) {
-      throw new Error('No expense selected');
+      throw new Error("No expense selected");
     }
 
     if (!uploadForm.receipt_number.trim()) {
-      setUploadError('Receipt number is required');
+      setUploadError("Receipt number is required");
       return;
     }
 
     if (!uploadForm.document_path) {
-      setUploadError('Please select a file');
+      setUploadError("Please select a file");
       return;
     }
 
@@ -147,48 +162,55 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
     try {
       // Create a new FormData object with the correct field names for the API
       const uploadFormData = new FormData();
-      
+
       // Add the expense ID (the API expects 'expense' field)
-      uploadFormData.append('expense', expense.id.toString());
-      
+      uploadFormData.append("expense", expense.id.toString());
+
       // Add receipt number
-      uploadFormData.append('receipt_number', uploadForm.receipt_number);
-      
+      uploadFormData.append("receipt_number", uploadForm.receipt_number);
+
       // Add the file
-      uploadFormData.append('file', uploadForm.document_path);
-      
+      uploadFormData.append("file", uploadForm.document_path);
+
       // Add description if provided
       if (uploadForm.description) {
-        uploadFormData.append('description', uploadForm.description);
+        uploadFormData.append("description", uploadForm.description);
       }
-      
+
       // Add document type
-      uploadFormData.append('document_type', uploadForm.document_type);
-      
+      uploadFormData.append("document_type", uploadForm.document_type);
+
       // Upload the document
-      const response = await api.post('/financial/receipt-documents/', uploadFormData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post(
+        "/financial/receipt-documents/",
+        uploadFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       // Reset form
       setUploadForm({
-        receipt_number: '',
-        description: '',
+        receipt_number: "",
+        description: "",
         document_path: null,
-        document_type: 'receipt',
+        document_type: "receipt",
       });
       setShowUploadForm(false);
 
       // Refresh the documents list after successful upload
       await fetchDocuments();
       onDocumentChange?.();
-      
+
       return response.data;
     } catch (error: any) {
-      console.error('Error uploading document:', error);
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to upload document';
+      console.error("Error uploading document:", error);
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to upload document";
       setUploadError(errorMessage);
     } finally {
       setIsUploading(false);
@@ -198,16 +220,16 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setUploadForm(prev => ({ ...prev, document_path: file }));
+      setUploadForm((prev) => ({ ...prev, document_path: file }));
     }
   };
 
   const handleCancelUpload = () => {
     setUploadForm({
-      receipt_number: '',
-      description: '',
+      receipt_number: "",
+      description: "",
       document_path: null,
-      document_type: 'receipt',
+      document_type: "receipt",
     });
     setShowUploadForm(false);
     setUploadError(null);
@@ -220,9 +242,9 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0">
-        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-          <DialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            <FileIcon className="w-5 h-5 text-blue-600" />
+        <DialogHeader className="px-6 py-4 border-b bg-primary/5">
+          <DialogTitle className="text-xl font-semibold text-foreground flex items-center gap-2">
+            <FileIcon className="w-5 h-5 text-primary" />
             Receipt Documents for {expense.title}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
@@ -242,7 +264,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
           {!showUploadForm ? (
             <Button
               onClick={() => setShowUploadForm(true)}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+              className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm"
             >
               <PlusIcon className="w-4 h-4" />
               <span>Add Receipt Document</span>
@@ -265,7 +287,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                   </Button>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 {uploadError && (
                   <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
@@ -276,26 +298,42 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="receipt_number" className="text-sm font-medium text-gray-700">
+                    <Label
+                      htmlFor="receipt_number"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Receipt Number *
                     </Label>
                     <Input
                       id="receipt_number"
                       value={uploadForm.receipt_number}
-                      onChange={(e) => setUploadForm(prev => ({ ...prev, receipt_number: e.target.value }))}
+                      onChange={(e) =>
+                        setUploadForm((prev) => ({
+                          ...prev,
+                          receipt_number: e.target.value,
+                        }))
+                      }
                       placeholder="e.g., RCP-2024-001"
                       className="p-3"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="document_type" className="text-sm font-medium text-gray-700">
+                    <Label
+                      htmlFor="document_type"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Document Type *
                     </Label>
                     <Input
                       id="document_type"
                       value={uploadForm.document_type}
-                      onChange={(e) => setUploadForm(prev => ({ ...prev, document_type: e.target.value }))}
+                      onChange={(e) =>
+                        setUploadForm((prev) => ({
+                          ...prev,
+                          document_type: e.target.value,
+                        }))
+                      }
                       placeholder="Enter document type"
                       className="p-3"
                     />
@@ -303,13 +341,21 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+                  <Label
+                    htmlFor="description"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Description
                   </Label>
                   <Textarea
                     id="description"
                     value={uploadForm.description}
-                    onChange={(e) => setUploadForm(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e) =>
+                      setUploadForm((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
                     placeholder="Enter description (optional)"
                     rows={3}
                     className="resize-none p-3"
@@ -317,7 +363,10 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="document_path" className="text-sm font-medium text-gray-700">
+                  <Label
+                    htmlFor="document_path"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     File *
                   </Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
@@ -340,7 +389,12 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                           {uploadForm.document_path.name}
                         </p>
                         <p className="text-xs text-green-600">
-                          {(uploadForm.document_path.size / 1024 / 1024).toFixed(2)} MB
+                          {(
+                            uploadForm.document_path.size /
+                            1024 /
+                            1024
+                          ).toFixed(2)}{" "}
+                          MB
                         </p>
                       </div>
                     </div>
@@ -360,7 +414,11 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                   </Button>
                   <Button
                     onClick={handleUpload}
-                    disabled={isUploading || !uploadForm.receipt_number.trim() || !uploadForm.document_path}
+                    disabled={
+                      isUploading ||
+                      !uploadForm.receipt_number.trim() ||
+                      !uploadForm.document_path
+                    }
                     className="px-6 bg-blue-600 hover:bg-blue-700"
                   >
                     {isUploading ? (
@@ -385,14 +443,19 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
             <div className="px-6 py-4">
-              <div className="text-center text-gray-500">Loading documents...</div>
+              <div className="text-center text-gray-500">
+                Loading documents...
+              </div>
             </div>
           ) : documents.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-2 py-12">
               <FileIcon className="w-12 h-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No documents found
+              </h3>
               <p className="text-gray-500 text-center max-w-sm">
-                This expense doesn't have any receipt documents yet. Click "Add Receipt Document" to upload the first one.
+                This expense doesn't have any receipt documents yet. Click "Add
+                Receipt Document" to upload the first one.
               </p>
             </div>
           ) : (
@@ -402,10 +465,13 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                   Documents ({documents.length})
                 </h3>
               </div>
-              
+
               <div className="grid gap-4">
                 {documents.map((doc) => (
-                  <Card key={doc.id} className="hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                  <Card
+                    key={doc.id}
+                    className="hover:shadow-md transition-shadow border-l-4 border-l-blue-500"
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
@@ -413,7 +479,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                             <FileIcon className="w-5 h-5 text-gray-500" />
                           </div>
                         </div>
-                        
+
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-col sm:items-start sm:justify-between gap-3">
                             <div className="flex-1 min-w-0">
@@ -425,28 +491,40 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                                   {doc.description}
                                 </p>
                               )}
-                              
+
                               <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-4 mt-3 text-xs text-gray-500">
                                 <div className="flex items-center gap-1">
                                   <FileIcon className="w-3 h-3" />
-                                  <span>{(doc.file_size / 1024).toFixed(1)} KB</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                    {doc.document_type_display || doc.document_type}
+                                  <span>
+                                    {(doc.file_size / 1024).toFixed(1)} KB
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  <span>{new Date(doc.uploaded_at).toLocaleDateString()}</span>
+                                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                    {doc.document_type_display ||
+                                      doc.document_type}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span>
+                                    {new Date(
+                                      doc.uploaded_at
+                                    ).toLocaleDateString()}
+                                  </span>
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-2">
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => window.open(doc.file_url || doc.file, '_blank')}
+                                onClick={() =>
+                                  window.open(
+                                    doc.file_url || doc.file,
+                                    "_blank"
+                                  )
+                                }
                                 className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-none"
                               >
                                 <FileIcon className="w-4 h-4" />
@@ -457,7 +535,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                                 size="sm"
                                 onClick={() => handleDelete(doc.id)}
                                 disabled={isDeleting}
-                                className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                                className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-none text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
                               >
                                 {isDeleting ? (
                                   <Loader2Icon className="w-4 h-4 animate-spin" />
@@ -465,7 +543,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                                   <FileIcon className="w-4 h-4" />
                                 )}
                                 <span className="hidden sm:inline">
-                                  {isDeleting ? 'Deleting...' : 'Delete'}
+                                  {isDeleting ? "Deleting..." : "Delete"}
                                 </span>
                               </Button>
                             </div>

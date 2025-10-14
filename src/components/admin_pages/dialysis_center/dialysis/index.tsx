@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import {
   PageHeader,
   DataTable,
-  AddDialog,
-  EditDialog,
-  DeleteDialog,
+  ResponsiveAddDialog,
+  ResponsiveEditDialog,
+  ResponsiveDeleteDialog,
   FilterBar,
   createFormSchema,
   type FilterOption,
@@ -544,7 +544,7 @@ const DialysisPageComponent = () => {
   const columns: Column<Dialysis>[] = [
     {
       key: "patient_image",
-      header: "Image",
+      header: "IMAGE",
       render: (value: string, patient: Dialysis) => {
         return (
           <ImageCell patient={patient} />
@@ -553,63 +553,63 @@ const DialysisPageComponent = () => {
     },
     {
       key: "patient_name" as keyof Dialysis,
-      header: "Patient",
+      header: "PATIENT",
       sortable: true,
     },
     {
       key: "bed_name" as keyof Dialysis,
-      header: "Bed",
+      header: "BED",
       sortable: true,
     },
     {
       key: "machine_name" as keyof Dialysis,
-      header: "Machine",
+      header: "MACHINE",
       sortable: true,
     },
     {
       key: "shift_no" as keyof Dialysis,
-      header: "Shift",
+      header: "SHIFT",
       sortable: true,
     },
     {
       key: "start_time" as keyof Dialysis,
-      header: "Start Time",
+      header: "START TIME",
       sortable: true,
     },
     {
       key: "end_time" as keyof Dialysis,
-      header: "End Time",
+      header: "END TIME",
       sortable: true,
     },
     {
       key: "blood_pressure" as keyof Dialysis,
-      header: "Before - After Dialysis BP",
+      header: "BEFORE - AFTER DIALYSIS BP",
       sortable: true,
       render: (value: string, patient: Dialysis) =>
         value ? `${value} - ${patient.last_blood_pressure}` : "-",
     },
     {
       key: "weight" as keyof Dialysis,
-      header: "Before - After Dialysis Weight",
+      header: "BEFORE - AFTER DIALYSIS WEIGHT",
       sortable: true,
       render: (value: string, patient: Dialysis) =>
         value ? `${value} - ${patient.last_weight}` : "-",
     },
     {
       key: "technician_comment" as keyof Dialysis,
-      header: "Technician Comment",
+      header: "TECHNICIAN COMMENT",
       sortable: true,
       render: (value: string) => value || "-",
     },
     {
       key: "doctor_comment" as keyof Dialysis,
-      header: "Doctor Comment",
+      header: "DOCTOR COMMENT",
       sortable: true,
       render: (value: string) => value || "-",
     },
     {
       key: "created_at" as keyof Dialysis,
-      header: "Created At",
+      header: "CREATED At",
       sortable: true,
       render: (value: string) => new Date(value).toLocaleDateString(),
     },
@@ -790,7 +790,7 @@ const DialysisPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add Dialysis Session"
@@ -802,7 +802,7 @@ const DialysisPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Dialysis Session"
@@ -815,7 +815,7 @@ const DialysisPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Dialysis Session"

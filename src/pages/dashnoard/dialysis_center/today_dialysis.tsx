@@ -240,7 +240,7 @@ const TodayDialysis = () => {
   const columns: Column<TodayDialysisSession & { shift_name?: string }>[] = [
     {
       key: "patient_image",
-      header: "Image",
+      header: "IMAGE",
       render: (value: string, patient: TodayDialysisSession) => {
         const image = getMediaUrl(patient.patient_image);
         
@@ -278,7 +278,7 @@ const TodayDialysis = () => {
       key: "patient_name" as keyof (TodayDialysisSession & {
         shift_name?: string;
       }),
-      header: "Patient Name",
+      header: "PATIENT NAME",
       sortable: true,
       render: (value, row) => <div className="font-medium">{value}</div>,
     },
@@ -294,7 +294,7 @@ const TodayDialysis = () => {
     },
     {
       key: "bed_name" as keyof (TodayDialysisSession & { shift_name?: string }),
-      header: "Bed",
+      header: "BED",
       sortable: true,
       render: (value, row) => (
         <div className="flex items-center gap-2">
@@ -309,7 +309,7 @@ const TodayDialysis = () => {
       key: "machine_name" as keyof (TodayDialysisSession & {
         shift_name?: string;
       }),
-      header: "Machine",
+      header: "MACHINE",
       sortable: true,
       render: (value) => <Badge variant="secondary">{value}</Badge>,
     },
@@ -317,7 +317,7 @@ const TodayDialysis = () => {
       key: "start_time" as keyof (TodayDialysisSession & {
         shift_name?: string;
       }),
-      header: "Start Time",
+      header: "START TIME",
       sortable: true,
       render: (value, row) => (
         <div className="flex items-center gap-2">
@@ -328,7 +328,7 @@ const TodayDialysis = () => {
     },
     {
       key: "end_time" as keyof (TodayDialysisSession & { shift_name?: string }),
-      header: "End Time",
+      header: "END TIME",
       sortable: true,
       render: (value) => (
         <div className="flex items-center gap-2">
@@ -341,13 +341,13 @@ const TodayDialysis = () => {
       key: "blood_pressure" as keyof (TodayDialysisSession & {
         shift_name?: string;
       }),
-      header: "Before - After Dialysis BP",
+      header: "BEFORE - AFTER DIALYSIS BP",
       sortable: true,
       render: (value, row) => <div className="text-sm">{value ? `${value} - ${row.last_blood_pressure}` : "-"}</div>,
     },
     {
       key: "weight" as keyof (TodayDialysisSession & { shift_name?: string }),
-      header: "Before - After Dialysis Weight",
+      header: "BEFORE - AFTER DIALYSIS WEIGHT",
       sortable: true,
       render: (value, row) => <div className="text-sm">{value ? `${value} - ${row.last_weight}` : "-"}</div>,
     },

@@ -25,9 +25,9 @@ import {
 import { PageHeader } from '@/components/common/PageHeader';
 import { FilterBar, type FilterOption } from '@/components/common/FilterBar';
 import { DataTable, type Column } from '@/components/common/DataTable';
-import { AddDialog } from '@/components/common/AddDialog';
-import { EditDialog } from '@/components/common/EditDialog';
-import { DeleteDialog } from '@/components/common/DeleteDialog';
+import { ResponsiveAddDialog } from '@/components/common';
+import { ResponsiveEditDialog } from '@/components/common';
+import { ResponsiveDeleteDialog } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PlusIcon } from 'lucide-react';
@@ -102,12 +102,12 @@ const ExpenseCategoryComponent = () => {
   const columns: Column<ExpenseCategory>[] = [
     {
       key: 'name',
-      header: 'Name',
+      header: 'NAME',
       sortable: true,
     },
     {
       key: 'description',
-      header: 'Description',
+      header: 'DESCRIPTION',
       sortable: true,
       render: (value: string) => (
         <div className="max-w-xs truncate" title={value}>
@@ -117,7 +117,7 @@ const ExpenseCategoryComponent = () => {
     },
     {
       key: 'category_type',
-      header: 'Category Type',
+      header: 'CATEGORY TYPE',
       sortable: true,
       render: (value: string) => {
         const option = expenseCategoryTypeOptions.find(opt => opt.value === value);
@@ -130,7 +130,7 @@ const ExpenseCategoryComponent = () => {
     },
     {
       key: 'created_at',
-      header: 'Created At',
+      header: 'CREATED AT',
       sortable: true,
       render: (value: string) => new Date(value).toLocaleDateString(),
     },
@@ -283,7 +283,7 @@ const ExpenseCategoryComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={handleAddDialogClose}
         title="Add Expense Category"
@@ -296,7 +296,7 @@ const ExpenseCategoryComponent = () => {
 
       {/* Edit Dialog */}
       {selectedExpenseCategory && (
-        <EditDialog
+        <ResponsiveEditDialog
           open={editDialogOpen}
           onOpenChange={handleEditDialogClose}
           title="Edit Expense Category"
@@ -315,7 +315,7 @@ const ExpenseCategoryComponent = () => {
 
       {/* Delete Dialog */}
       {selectedExpenseCategory && (
-        <DeleteDialog
+        <ResponsiveDeleteDialog
           open={deleteDialogOpen}
           onOpenChange={handleDeleteDialogClose}
           title="Delete Expense Category"

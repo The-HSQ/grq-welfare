@@ -143,7 +143,7 @@ const UpcomingPatientsDialysis = () => {
   const columns: Column<UpcomingPatient>[] = [
     {
       key: "image",
-      header: "Image",
+      header: "IMAGE",
       render: (value: string, patient: UpcomingPatient) => {
         const image = getMediaUrl(patient.image);
         
@@ -179,7 +179,7 @@ const UpcomingPatientsDialysis = () => {
     },
     {
       key: 'name',
-      header: 'Patient Name',
+      header: 'PATIENT NAME',
       sortable: true,
       render: (value, row) => (
         <div className="font-medium">{value}</div>
@@ -192,17 +192,17 @@ const UpcomingPatientsDialysis = () => {
     },
     {
       key: 'phone',
-      header: 'Phone',
+      header: 'PHONE',
       sortable: true,
     },
     {
       key: 'address',
-      header: 'Address',
+      header: 'ADDRESS',
       sortable: true,
     },
     {
       key: 'dialysis_per_week',
-      header: 'Dialysis/Week',
+      header: 'DIALYSIS/WEEK',
       sortable: true,
       render: (value) => (
         <Badge variant="secondary" className={value > 1 ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'}>
@@ -212,7 +212,7 @@ const UpcomingPatientsDialysis = () => {
     },
     {
       key: 'next_dialysis_date',
-      header: 'Next Dialysis',
+      header: 'NEXT DIALYSIS',
       sortable: true,
       render: (value, row) => (
         <div className="flex items-center gap-2">
@@ -223,7 +223,7 @@ const UpcomingPatientsDialysis = () => {
     },
     {
       key: 'days_until_dialysis',
-      header: 'Days Until',
+      header: 'DAYS UNTIL DIALYSIS',
       sortable: true,
       render: (value) => {
         let variant: "default" | "secondary" | "destructive" | "outline" = "default";
@@ -239,7 +239,7 @@ const UpcomingPatientsDialysis = () => {
     },
     {
       key: 'zakat_eligible',
-      header: 'Zakat Eligible',
+      header: 'ZAKAT ELIGIBLE',
       sortable: true,
       render: (value) => (
         <Badge variant={value ? "secondary" : "destructive"} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>

@@ -1,10 +1,10 @@
 export { PageHeader } from './PageHeader';
 export { DataTable } from './DataTable';
-export { AddDialog } from './AddDialog';
-export { EditDialog } from './EditDialog';
-export { DeleteDialog } from './DeleteDialog';
-export { ViewDialog } from './ViewDialog';
-export { SuccessDialog } from './SuccessDialog';
+export { ResponsiveAddDialog } from './ResponsiveAddDialog';
+export { ResponsiveEditDialog } from './ResponsiveEditDialog';
+export { ResponsiveDeleteDialog } from './ResponsiveDeleteDialog';
+export { ResponsiveViewDialog } from './ResponsiveViewDialog';
+export { ResponsiveSuccessDialog } from './ResponsiveSuccessDialog';
 export { FilterBar } from './FilterBar';
 export { DynamicForm } from './DynamicForm';
 export { FormField } from './FormField';

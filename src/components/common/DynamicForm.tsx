@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormField } from './FormField';
 import { Spinner } from '@/components/ui/spinner';
 import type { FormSchema } from './FormSchema';
+import { Button } from '../ui/button';
 
 interface DynamicFormProps {
   schema: FormSchema;
@@ -118,19 +119,18 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
 
         <div className="flex items-center justify-end gap-2 pt-4">
           {showCancelButton && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={handleFormCancel}
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium cursor-pointer text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelText}
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             type="submit"
             disabled={disabled || loading}
-            className="px-4 py-2 text-sm font-medium cursor-pointer text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             ) : (
               submitText
             )}
-          </button>
+          </Button>
         </div>
       </form>
     </FormProvider>

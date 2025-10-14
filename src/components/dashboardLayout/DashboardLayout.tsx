@@ -94,9 +94,9 @@ export default function DashboardLayout() {
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton
             tooltip={item.title}
-            className="justify-between"
+            className="justify-between pr-2"
             onClick={() => toggleSubMenu(item.title)}
-            style={{ paddingLeft: `${paddingLeft}px` }}
+            style={{ paddingLeft: `calc(8px + ${paddingLeft}px)` }}
           >
             <div className="flex items-center">
               {item.icon && <item.icon className="h-4 w-4 mr-2" />}
@@ -128,7 +128,8 @@ export default function DashboardLayout() {
           asChild
           isActive={item.url ? isActive(item.url) : false}
           tooltip={item.title}
-          style={{ paddingLeft: `${paddingLeft}px` }}
+          className="pr-2"
+          style={{ paddingLeft: `calc(8px + ${paddingLeft}px)` }}
         >
           <Link to={item.url || "#"}>
             {item.icon && <item.icon className="h-4 w-4" />}
@@ -600,42 +601,35 @@ export default function DashboardLayout() {
       }
     >
       <Sidebar variant="inset" collapsible="icon">
-        <SidebarHeader>
-          <SidebarMenu className="h-full p-0">
-            <SidebarMenuItem className="h-full">
-              <SidebarMenuButton asChild className="p-0 h-full">
-                <Link to={getUrl()} className="flex items-center gap-2 p-0">
-                  <img
-                    src="/logo.png"
-                    alt="Logo"
-                    className="object-cover w-full h-full"
-                  />
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+        <SidebarHeader className="p-0">
+          <Link to={getUrl()} className="flex items-center group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 group-has-data-[collapsible=icon]/sidebar-wrapper:w-full p-0">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="object-cover rounded-lg w-full h-full group-has-data-[collapsible=icon]/sidebar-wrapper:hidden"
+            />
+            <img
+              src="/collapase_logo.png"
+              alt="Logo"
+              className="object-fit rounded-lg w-full h-full group-has-data-[collapsible=icon]/sidebar-wrapper:block hidden"
+            />
+          </Link>
         </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu className="!p-1.5 overflow-y-auto sidebar-wrapper">
-            {navigationItems.map((item) => renderNavigationItem(item))}
-          </SidebarMenu>
+        <SidebarContent className={`flex w-full group-has-data-[collapsible=icon]/sidebar-wrapper:items-center`}>
+          {navigationItems.map((item) => renderNavigationItem(item))}
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={handleLogout}
-                tooltip="Logout"
-                className="bg-red-500 text-white hover:text-white hover:bg-red-600"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <Button
+            onClick={handleLogout}
+            variant="destructive"
+            className="w-full flex justify-start group-has-data-[collapsible=icon]/sidebar-wrapper:justify-center"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="group-has-data-[collapsible=icon]/sidebar-wrapper:hidden">Logout</span>
+          </Button>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className=" calc(100vw - 16rem)) overflow-x-hidden ">
+      <SidebarInset className="overflow-x-hidden ">
         <SiteHeader user={user} />
         <div className="flex flex-col w-full">
           <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -673,11 +667,7 @@ function SiteHeader({ user }: { user: any }) {
             <span className="hidden sm:inline">Welcome, </span>
             {user?.name || "User"}
           </span>
-          <Button
-            onClick={handleLogout}
-            title="Logout"
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
+          <Button onClick={handleLogout} title="Logout" variant="destructive">
             <LogOut className="h-4 w-4" />
             <span className="hidden md:block">Logout</span>
           </Button>

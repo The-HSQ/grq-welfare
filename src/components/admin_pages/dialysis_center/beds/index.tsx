@@ -5,9 +5,6 @@ import { PlusIcon } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { FilterBar } from '@/components/common/FilterBar';
 import { DataTable } from '@/components/common/DataTable';
-import { AddDialog } from '@/components/common/AddDialog';
-import { EditDialog } from '@/components/common/EditDialog';
-import { DeleteDialog } from '@/components/common/DeleteDialog';
 import { Spinner } from '@/components/ui/spinner';
 import { 
   fetchBeds, 
@@ -22,6 +19,7 @@ import {
 } from '@/store/slices/dialysisSlice';
 import { createBedSchema, editBedSchema, bedTableColumns } from './schemas';
 import type { FilterOption } from '@/components/common/FilterBar';
+import { ResponsiveAddDialog, ResponsiveEditDialog, ResponsiveDeleteDialog } from '@/components/common';
 
 const BedsPageComponent = () => {
   const dispatch = useAppDispatch();
@@ -214,7 +212,7 @@ const BedsPageComponent = () => {
         />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Bed"
@@ -226,7 +224,7 @@ const BedsPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Bed"
@@ -239,7 +237,7 @@ const BedsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Bed"

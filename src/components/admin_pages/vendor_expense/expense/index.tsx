@@ -18,12 +18,12 @@ import { PageHeader } from "../../../common";
 import {
   DataTable,
   Column,
-  AddDialog,
-  EditDialog,
-  DeleteDialog,
+  ResponsiveAddDialog,
+  ResponsiveEditDialog,
+  ResponsiveDeleteDialog,
   FilterBar,
   FilterOption,
-} from "../../../common";
+} from "@/components/common";
 import { getExpenseFormSchema } from "./formSchemas";
 import { Button } from "../../../ui/button";
 import { FileTextIcon, Plus } from "lucide-react";
@@ -265,52 +265,52 @@ const ExpensePageComponent = () => {
   const columns: Column<Expense>[] = [
     {
       key: "title",
-      header: "Name",
+      header: "NAME",
       sortable: true,
       width: "200px",
     },
     {
       key: "category_name",
-      header: "Expense / Category Type",
+      header: "EXPENSE / CATEGORY TYPE",
       sortable: true,
       width: "250px",
     },
     {
       key: "vendor_name",
-      header: "Vendor",
+      header: "VENDER",
       sortable: true,
       width: "150px",
     },
     {
       key: "amount",
-      header: "Amount",
+      header: "AMOUNT",
       sortable: true,
       width: "150px",
       render: (value) => formatCurrency(value),
     },
     {
       key: "due_balance_to_vendor",
-      header: "Due Balance to Vendor",
+      header: "DUE BALANCE TO VENDOR",
       sortable: true,
       width: "210px",
       render: (value) => formatCurrency(value),
     },
     {
       key: "payment_method_display",
-      header: "Payment Method",
+      header: "PAYMENT METHOD",
       sortable: true,
       width: "175px",
     },
     {
       key: "expense_date",
-      header: "Date",
+      header: "DATE",
       sortable: true,
       width: "120px",
       render: (value) => formatDate(value),
     },
     {
       key: "receipt_documents",
-      header: "Documents",
+      header: "DOCUMENTS",
       sortable: true,
       render: (value, expense) => {
         const documentCount = expense.receipt_documents ? expense.receipt_documents.length : 0;
@@ -318,8 +318,7 @@ const ExpensePageComponent = () => {
           <div className="text-gray-600">
             <button
               onClick={() => handleViewDocuments(expense)}
-              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-50 transition-colors"
-            >
+              className="text-primary hover:text-primary border border-primary rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-primary/10 cursor-pointer transition-colors">
               <FileTextIcon className="w-4 h-4" />
               {documentCount}
             </button>
@@ -454,7 +453,7 @@ const ExpensePageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Expense"
@@ -467,7 +466,7 @@ const ExpensePageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Expense"
@@ -484,7 +483,7 @@ const ExpensePageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Expense"

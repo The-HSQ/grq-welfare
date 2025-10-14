@@ -1,17 +1,17 @@
 import * as React from 'react';
 const { useEffect, useState, useMemo, useCallback } = React;
-import LazyImage from '../../../common/LazyImage';
+import LazyImage from '@/components/common/LazyImage';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { 
   PageHeader, 
   DataTable, 
-  AddDialog, 
-  EditDialog, 
-  DeleteDialog, 
+  ResponsiveAddDialog, 
+  ResponsiveEditDialog, 
+  ResponsiveDeleteDialog, 
   FilterBar,
   type Column 
-} from '../../../common';
+} from '@/components/common';
 import { 
   fetchPatients, 
   createPatient, 
@@ -26,7 +26,7 @@ import { patientAddSchema, patientEditSchema } from './schemas';
 import type { RootState } from '../../../../store';
 import { useAppDispatch } from '../../../../store/hooks';
 import { getMediaUrl, formatDate, formatDateTime } from '../../../../lib/utils';
-import { FormSchema } from '../../../common/FormSchema';
+import { FormSchema } from '@/components/common/FormSchema';
 import { PlusIcon, FileTextIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -291,12 +291,12 @@ export const PatientsComponent: React.FC = () => {
   const columns: Column<Patient>[] = [
     {
       key: 'image' as keyof Patient,
-      header: 'Image',
+      header: 'IMAGE',
       render: (value, patient) => <ImageCell patient={patient} />,
     },
     {
       key: 'name',
-      header: 'Name',
+      header: 'NAME',
       sortable: true,
       render: (value, patient) => (
         <div className="font-medium text-gray-900 flex flex-col">
@@ -309,7 +309,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'phone',
-      header: 'Phone',
+      header: 'PHONE',
       sortable: true,
       render: (value, patient) => (
         patient.phone ? (
@@ -321,7 +321,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'address',
-      header: 'Address',
+      header: 'ADDRESS',
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600 max-w-xs" title={patient.address}>
@@ -331,7 +331,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'dialysis_per_week',
-      header: 'Dialysis/Week',
+      header: 'DIALYSIS/WEEK',
       sortable: true,
       render: (value, patient) => (
         patient.dialysis_per_week ? (
@@ -343,7 +343,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'next_dialysis_date',
-      header: 'Next Dialysis',
+      header: 'NEXT DIALYSIS',
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">
@@ -353,7 +353,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'access_type',
-      header: 'Access Type',
+      header: 'ACCESS TYPE',
       sortable: true,
       render: (value, patient) => (
         <Badge variant={patient.access_type === 'av_fistula' ? 'default' : 'secondary'} className={patient.access_type === 'av_fistula' ? 'bg-gray-500 text-white' : 'bg-gray-300 text-white'}>
@@ -363,7 +363,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'handicapped',
-      header: 'Handicapped',
+      header: 'HANDICAPPED',
       sortable: true,
       render: (value, patient) => (
         <Badge variant={patient.handicapped ? 'default' : 'secondary'} className={patient.handicapped ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
@@ -373,7 +373,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'zakat_eligible',
-      header: 'Zakat Eligible',
+      header: 'ZAKAT ELIGIBLE',
       sortable: true,
       render: (value, patient) => (
         <Badge variant={patient.zakat_eligible ? 'default' : 'secondary'} className={patient.zakat_eligible ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
@@ -383,7 +383,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: 'STATUS',
       sortable: true,
       render: (value, patient) => (
         <Badge variant={patient.status === 'active' ? 'default' : 'secondary'} className={patient.status === 'active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
@@ -393,14 +393,14 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'documents_count',
-      header: 'Documents',
+      header: 'DOCUMENTS',
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">
           {patient.documents_count && patient.documents_count > 0 ? (
             <button
               onClick={() => handleViewDocuments(patient)}
-              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-50 transition-colors"
+              className="text-primary hover:text-primary border border-primary rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-primary/10 cursor-pointer transition-colors"
             >
               <FileTextIcon className="w-4 h-4" />
               {patient.documents_count}
@@ -408,7 +408,7 @@ export const PatientsComponent: React.FC = () => {
           ) : (
             <button
               onClick={() => handleViewDocuments(patient)}
-              className="text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-50 transition-colors"
+              className="text-primary hover:text-primary border border-primary rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-primary/10 cursor-pointer transition-colors"
             >
               <FileTextIcon className="w-4 h-4" />
               {patient.documents_count}
@@ -419,7 +419,7 @@ export const PatientsComponent: React.FC = () => {
     },
     {
       key: 'created_at',
-      header: 'Created',
+      header: 'CREATED AT',
       sortable: true,
       render: (value, patient) => (
         <div className="text-gray-600">{formatDate(patient.created_at)}</div>
@@ -594,7 +594,7 @@ export const PatientsComponent: React.FC = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         title="Add New Patient"
@@ -607,7 +607,7 @@ export const PatientsComponent: React.FC = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
           setIsEditDialogOpen(open);
@@ -671,7 +671,7 @@ export const PatientsComponent: React.FC = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);

@@ -16,10 +16,10 @@ import { FilterBar } from '../../common/FilterBar';
 import type { FilterOption } from '../../common/FilterBar';
 import { DataTable } from '../../common/DataTable';
 import type { Column } from '../../common/DataTable';
-import { AddDialog } from '../../common/AddDialog';
-import { EditDialog } from '../../common/EditDialog';
-import { DeleteDialog } from '../../common/DeleteDialog';
-import { ViewDialog } from '../../common/ViewDialog';
+import { ResponsiveAddDialog } from '../../common/ResponsiveAddDialog';
+import { ResponsiveEditDialog } from '../../common/ResponsiveEditDialog';
+import { ResponsiveDeleteDialog } from '../../common/ResponsiveDeleteDialog';
+import { ResponsiveViewDialog } from '../../common/ResponsiveViewDialog';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { PlusIcon } from 'lucide-react';
@@ -248,7 +248,7 @@ const UsersPageComponent: React.FC = () => {
   const columns: Column<User>[] = [
     {
       key: 'name',
-      header: 'Name',
+      header: 'NAME',
       sortable: true,
       render: (value) => (
         <div className="font-medium">{value}</div>
@@ -256,7 +256,7 @@ const UsersPageComponent: React.FC = () => {
     },
     {
       key: 'email',
-      header: 'Email',
+      header: 'EMAIL',
       sortable: true,
       render: (value) => (
         <div className="text-sm text-muted-foreground">{value}</div>
@@ -264,7 +264,7 @@ const UsersPageComponent: React.FC = () => {
     },
     {
       key: 'role',
-      header: 'Role',
+      header: 'ROLE',
       sortable: true,
       render: (value) => {
         const roleOption = roleOptions.find(option => option.value === value);
@@ -277,7 +277,7 @@ const UsersPageComponent: React.FC = () => {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: 'STATUS',
       sortable: true,
       render: (value) => (
         <Badge variant={value === 'active' ? 'default' : 'destructive'}>
@@ -287,7 +287,7 @@ const UsersPageComponent: React.FC = () => {
     },
     {
       key: 'created_at',
-      header: 'Created At',
+      header: 'CREATED AT',
       sortable: true,
       render: (value) => (
         <div className="text-sm text-muted-foreground">
@@ -368,7 +368,7 @@ const UsersPageComponent: React.FC = () => {
         />
 
       {/* Add User Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New User"
@@ -381,7 +381,7 @@ const UsersPageComponent: React.FC = () => {
       />
 
       {/* Edit User Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit User"
@@ -395,7 +395,7 @@ const UsersPageComponent: React.FC = () => {
       />
 
       {/* Delete User Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={(open) => {
           // Don't allow closing the dialog while loading
@@ -418,7 +418,7 @@ const UsersPageComponent: React.FC = () => {
       />
 
       {/* View User Dialog */}
-      <ViewDialog
+      <ResponsiveViewDialog
         open={viewDialogOpen}
         onOpenChange={(open) => {
           setViewDialogOpen(open);

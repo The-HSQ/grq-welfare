@@ -7,9 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { FilterBar, type FilterOption } from "@/components/common/FilterBar";
-import { AddDialog } from "@/components/common/AddDialog";
-import { EditDialog } from "@/components/common/EditDialog";
-import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { ResponsiveAddDialog, ResponsiveEditDialog, ResponsiveDeleteDialog } from "@/components/common";
 import {
   fetchProducts,
   createProduct,
@@ -287,19 +285,19 @@ const ItemsPageComponent = () => {
   const columns: Column<Product>[] = [
     {
       key: "item_name",
-      header: "Item Name",
+      header: "ITEM NAME",
       sortable: true,
       width: "200px",
     },
     {
       key: "item_type",
-      header: "Item Type",
+      header: "ITEM TYPE",
       sortable: true,
       width: "120px",
     },
     {
       key: "used_items",
-      header: "Used Items",
+      header: "USED ITEMS",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -308,7 +306,7 @@ const ItemsPageComponent = () => {
     },
     {
       key: "waste_items",
-      header: "Waste Items",
+      header: "WASTE ITEMS",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -317,7 +315,7 @@ const ItemsPageComponent = () => {
     },
     {
       key: "available_items",
-      header: "Available Items",
+      header: "AVAILABLE ITEMS",
       sortable: true,
       width: "140px",
       render: (value) => (
@@ -326,21 +324,21 @@ const ItemsPageComponent = () => {
     },
     {
       key: "quantity_type",
-      header: "Quantity Type",
+      header: "QUANTITY TYPE",
       sortable: true,
       width: "120px",
       render: (value) => <span className="capitalize">{value}</span>,
     },
     {
       key: "admin_comment",
-      header: "Admin Comment",
+      header: "ADMIN COMMENT",
       sortable: true,
       width: "250px",
       render: (value) => <span className="text-xs text-muted-foreground">{value}</span>,
     },
     {
       key: "created_at",
-      header: "Created",
+      header: "CREATED AT",
       sortable: true,
       width: "180px",
       render: (value) => formatDate(value),
@@ -430,7 +428,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Item"
@@ -444,7 +442,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Item"
@@ -460,7 +458,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Item"
@@ -472,7 +470,7 @@ const ItemsPageComponent = () => {
       /> */}
 
       {/* Update Quantity Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addQuantityDialogOpen}
         onOpenChange={setAddQuantityDialogOpen}
         title="Update Quantity"
@@ -486,7 +484,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Use Items Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={useItemsDialogOpen}
         onOpenChange={setUseItemsDialogOpen}
         title="Use Items"
@@ -500,7 +498,7 @@ const ItemsPageComponent = () => {
       />
 
       {/* Add Waste Items Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addWasteItemsDialogOpen}
         onOpenChange={setAddWasteItemsDialogOpen}
         title="Add Waste Items"

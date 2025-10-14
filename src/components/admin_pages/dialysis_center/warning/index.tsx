@@ -8,9 +8,9 @@ import { FilterBar } from '@/components/common/FilterBar';
 import type { FilterOption } from '@/components/common/FilterBar';
 import { DataTable } from '@/components/common/DataTable';
 import type { Column } from '@/components/common/DataTable';
-import { AddDialog } from '@/components/common/AddDialog';
-import { EditDialog } from '@/components/common/EditDialog';
-import { DeleteDialog } from '@/components/common/DeleteDialog';
+import { ResponsiveAddDialog } from '@/components/common';
+import { ResponsiveEditDialog } from '@/components/common';
+import { ResponsiveDeleteDialog } from '@/components/common';
 import { Spinner } from '@/components/ui/spinner';
 import { 
   fetchWarnings, 
@@ -123,7 +123,7 @@ const WarningPageComponent = () => {
   const columns: Column<Warning>[] = [
     {
       key: 'warning_description',
-      header: 'Description',
+      header: 'WARNING DESCRIPTION',
       render: (value) => (
         <div className="max-w-xs truncate" title={value}>
           {value}
@@ -132,7 +132,7 @@ const WarningPageComponent = () => {
     },
     {
       key: 'machine',
-      header: 'Machine',
+      header: 'MACHINE',
       render: (value) => {
         const machine = machinesArray?.find(m => String(m.id) === String(value));
         return machine ? machine.machine_name : 'Unknown Machine';
@@ -140,7 +140,7 @@ const WarningPageComponent = () => {
     },
     {
       key: 'is_resolved',
-      header: 'Status',
+      header: 'STATUS',
       render: (value) => (
         <Badge variant={value ? 'secondary' : 'destructive'} className={value ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
           {value ? 'Resolved' : 'Active'}
@@ -149,7 +149,7 @@ const WarningPageComponent = () => {
     },
     {
       key: 'fix_count',
-      header: 'Fix Count',
+      header: 'FIX COUNT',
       render: (value) => (
         <span className="text-sm text-muted-foreground">
           {value} fixes
@@ -158,7 +158,7 @@ const WarningPageComponent = () => {
     },
     {
       key: 'created_at',
-      header: 'Created',
+      header: 'CREATED AT',
       render: (value) => (
         <span className="text-sm text-muted-foreground">
           {new Date(value).toLocaleDateString()}
@@ -167,7 +167,7 @@ const WarningPageComponent = () => {
     },
     {
       key: 'updated_at',
-      header: 'Updated',
+      header: 'UPDATED AT',
       render: (value) => (
         <span className="text-sm text-muted-foreground">
           {new Date(value).toLocaleDateString()}
@@ -288,7 +288,7 @@ const WarningPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Warning"
@@ -300,7 +300,7 @@ const WarningPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Warning"
@@ -316,7 +316,7 @@ const WarningPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      {/* <DeleteDialog
+      {/* <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Warning"

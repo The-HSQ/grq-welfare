@@ -20,8 +20,8 @@ import {
 } from "../../../../store/slices/inventorySlice";
 import { PageHeader } from "../../../common/PageHeader";
 import { DataTable, Column } from "../../../common/DataTable";
-import { EditDialog } from "../../../common/EditDialog";
-import { DeleteDialog } from "../../../common/DeleteDialog";
+import { ResponsiveEditDialog } from "@/components/common";
+import { ResponsiveDeleteDialog } from "@/components/common";
 import { FilterBar, FilterOption } from "../../../common/FilterBar";
 import { Badge } from "../../../ui/badge";
 import {
@@ -299,7 +299,7 @@ const TrackingItemsPageComponent = () => {
   const columns: Column<ItemUsageRecord>[] = [
     {
       key: "item_name",
-      header: "Item Name",
+      header: "ITEM NAME",
       sortable: true,
       width: "200px",
       render: (value, row) => (
@@ -313,7 +313,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "taken_items",
-      header: "Taken Items",
+      header: "TAKEN ITEMS",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -322,7 +322,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "itemused",
-      header: "Items Used",
+      header: "ITEMS USED",
       sortable: true,
       width: "120px",
       render: (value) => (
@@ -331,7 +331,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "item_waste",
-      header: "Items Wasted",
+      header: "ITEMS WASTE",
       sortable: true,
       width: "130px",
       render: (value) => (
@@ -340,7 +340,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "taken_by",
-      header: "Taken By",
+      header: "TAKEN BY",
       sortable: true,
       width: "150px",
       render: (value) => (
@@ -351,7 +351,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "comment",
-      header: "Comment",
+      header: "COMMENT",
       sortable: true,
       width: "250px",
       render: (value) => (
@@ -360,7 +360,7 @@ const TrackingItemsPageComponent = () => {
     },
     {
       key: "date",
-      header: "Date",
+      header: "DATE",
       sortable: true,
       width: "120px",
       render: (value) => new Date(value).toLocaleDateString(),
@@ -412,7 +412,7 @@ const TrackingItemsPageComponent = () => {
 
       {/* Edit Usage Record Dialog */}
       {selectedRecord && (
-        <EditDialog
+        <ResponsiveEditDialog
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
           title="Edit Tracking Item Record"
@@ -434,7 +434,7 @@ const TrackingItemsPageComponent = () => {
 
       {/* Delete Usage Record Dialog */}
       {selectedRecord && (
-        <DeleteDialog
+        <ResponsiveDeleteDialog
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           title="Delete Tracking Item Record"

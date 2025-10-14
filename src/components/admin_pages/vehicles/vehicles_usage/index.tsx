@@ -18,10 +18,10 @@ import {
 import { 
   PageHeader, 
   DataTable, 
-  DeleteDialog, 
+  ResponsiveDeleteDialog, 
   FilterBar,
   type Column,
-} from '../../../common';
+} from '@/components/common';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../../ui/dialog';
 import VehicleUsageForm from './VehicleUsageForm';
 import { Button } from '../../../ui/button';
@@ -130,67 +130,67 @@ const VehiclesUsagePageComponent: React.FC = () => {
   const columns: Column<VehicleUsage>[] = [
     {
       key: 'vehicle_name',
-      header: 'Vehicle Name',
+      header: 'VEHICLE NAME',
       sortable: true,
       width: '150px'
     },
     {
       key: 'vehicle_number_plate',
-      header: 'Number Plate',
+      header: 'NUMBER PLATE',
       sortable: true,
       width: '150px'
     },
     {
       key: 'trip_purpose',
-      header: 'Trip Purpose',
+      header: 'TRIP PURPOSE',
       sortable: true,
       width: '150px',
       render: (value) => value.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
     },
     {
       key: 'driver_name',
-      header: 'Driver',
+      header: 'DRIVER NAME',
       sortable: true,
       width: '150px'
     },
     {
       key: 'current_mileage',
-      header: 'Start Odometer (KM)',
+      header: 'START ODOMETER (KM)',
       sortable: true,
       width: '160px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'end_mileage',
-      header: 'End Odometer (KM)',
+      header: 'END ODOMETER (KM)',
       sortable: true,
       width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'total_mileage_used',
-      header: 'Odometer Used (KM)',
+      header: 'ODOMETER USED (KM)',
       sortable: true,
       width: '150px',
       render: (value) => value?.toLocaleString() || '-'
     },
     {
       key: 'paid_amount',
-      header: 'Paid Amount',
+      header: 'PAID AMOUNT',
       sortable: true,
       width: '150px',
       render: (value) => `PKR ${parseFloat(value || '0').toFixed(2)}`
     },
     {
       key: 'total_amount_to_pay',
-      header: 'Total Amount to Pay',
+      header: 'TOTAL AMOUNT TO PAY',
       sortable: true,
       width: '150px',
       render: (value) => `PKR ${parseFloat(value || '0').toFixed(2)}`
     },
     {
       key: 'date',
-      header: 'Date & Time',
+      header: 'DATE & TIME',
       sortable: true,
       width: '150px',
       render: (value) => {
@@ -409,7 +409,7 @@ const VehiclesUsagePageComponent: React.FC = () => {
       )}
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Vehicle Usage"

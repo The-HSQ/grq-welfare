@@ -5,12 +5,12 @@ import {
   PageHeader, 
   DataTable, 
   FilterBar, 
-  AddDialog, 
-  EditDialog, 
-  DeleteDialog,
+  ResponsiveAddDialog, 
+  ResponsiveEditDialog, 
+  ResponsiveDeleteDialog,
   type Column,
   type FilterOption 
-} from '../../../../components/common';
+} from '@/components/common';
 import { 
   fetchVendors, 
   createVendor, 
@@ -133,7 +133,7 @@ const VendorsPageComponent: React.FC = () => {
   const columns: Column<Vendor>[] = [
     {
       key: 'name',
-      header: 'Vendor Name',
+      header: 'VENDER NAME',
       sortable: true,
       render: (value, vendor: Vendor) => (
         <div className="font-medium text-gray-900">
@@ -143,7 +143,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'contact_person',
-      header: 'Contact Person',
+      header: 'CONTACT PERSON',
       sortable: true,
       width: '180px',
       render: (value, vendor: Vendor) => (
@@ -154,7 +154,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'email',
-      header: 'Email',
+      header: 'EMAIL',
       sortable: true,
       width: '250px',
       render: (value, vendor: Vendor) => (
@@ -165,7 +165,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'phone',
-      header: 'Phone',
+      header: 'PHONE',
       sortable: false,
       render: (value, vendor: Vendor) => (
         <div className="text-gray-600">
@@ -175,7 +175,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'vendor_type_display',
-      header: 'Type',
+      header: 'TYPE',
       sortable: true,
       render: (value, vendor: Vendor) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -185,7 +185,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'tax_id',
-      header: 'Tax ID',
+      header: 'TAX ID',
       sortable: true,
       render: (value, vendor: Vendor) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -195,7 +195,7 @@ const VendorsPageComponent: React.FC = () => {
     },
     {
       key: 'payment_terms',
-      header: 'Payment Terms',
+      header: 'PAYMENT TERMS',
       sortable: true,
       width: '180px',
       render: (value, vendor: Vendor) => (
@@ -401,7 +401,7 @@ const VendorsPageComponent: React.FC = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         title="Add New Vendor"
@@ -412,7 +412,7 @@ const VendorsPageComponent: React.FC = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
           setIsEditDialogOpen(open);
@@ -439,7 +439,7 @@ const VendorsPageComponent: React.FC = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
           setIsDeleteDialogOpen(open);

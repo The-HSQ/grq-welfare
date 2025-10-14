@@ -100,17 +100,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FilterIcon className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium">Filters</span>
+          <FilterIcon className="h-4 w-4 text-primary" />
+          <span className="text-sm text-primary font-medium">Filters</span>
         </div>
         
         <div className="flex items-center gap-2">
           {showToggleButton && (
             <Button
-              variant="ghost"
               size="sm"
               onClick={() => setFiltersVisible(!filtersVisible)}
-              className="h-8 px-2"
+              className="h-8 px-2 bg-primary/10 hover:bg-primary/5 border border-primary/20 text-primary"
             >
               {filtersVisible ? (
                 <>
@@ -128,10 +127,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           
           {showClearButton && hasActiveFilters && (
             <Button
-              variant="ghost"
               size="sm"
               onClick={handleClearFilters}
-              className="h-8 px-2"
+              className="h-8 px-2 bg-primary/10 hover:bg-primary/5 border border-primary/20 text-primary"
             >
               <XIcon className="h-4 w-4 mr-1" />
               Clear
@@ -145,7 +143,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {/* Search Input */}
           {searchKey && onSearchChange && (
             <div className="relative flex items-center">
-              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary" />
               <Input
                 placeholder={searchPlaceholder}
                 value={searchValue}
@@ -158,7 +156,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {/* Filter Inputs */}
           {filters.map((filter) => (
             <div key={filter.key} className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">
+              <label className="text-sm font-medium text-primary">
                 {filter.label}
               </label>
               {renderFilterInput(filter)}

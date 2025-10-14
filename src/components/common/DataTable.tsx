@@ -197,16 +197,16 @@ export function DataTable<T extends Record<string, any>>({
       </div>
 
       {/* Table */}
-      <div className="rounded-md border">
+      <div className="rounded-md overflow-hidden border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-primary/10 rounded-t-md">
             <TableRow>
               {columns.map((column) => (
                 <TableHead
                   key={String(column.key)}
-                  className={
-                    column.sortable ? "cursor-pointer hover:bg-muted/50" : ""
-                  }
+                  className={` text-primary font-semibold text-xs
+                    ${column.sortable ? "cursor-pointer" : ""}
+                  `}
                   onClick={() => column.sortable && handleSort(column.key)}
                   style={{ minWidth: column.width || "150px" }}
                 >
@@ -217,7 +217,7 @@ export function DataTable<T extends Record<string, any>>({
                 </TableHead>
               ))}
               {(onEdit || onDelete || onView || actions) && (
-                <TableHead className="w-[100px]">Actions</TableHead>
+                <TableHead className="text-primary w-[100px] text-xs font-semibold">ACTIONS</TableHead>
               )}
             </TableRow>
           </TableHeader>

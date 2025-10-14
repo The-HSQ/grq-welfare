@@ -16,12 +16,12 @@ import {
 import { 
   PageHeader, 
   DataTable, 
-  AddDialog, 
-  EditDialog, 
-  DeleteDialog, 
+  ResponsiveAddDialog, 
+  ResponsiveEditDialog, 
+  ResponsiveDeleteDialog, 
   FilterBar,
   type Column,
-} from '../../../common';
+} from '@/components/common';
 import { Button } from '../../../ui/button';
 import { Plus } from 'lucide-react';
 import { createVehicleSchema, updateVehicleSchema, vehicleFilterOptions } from './schemas';
@@ -104,19 +104,19 @@ const VehiclesPage: React.FC = () => {
   const columns: Column<Vehicle>[] = [
     {
       key: 'name',
-      header: 'Vehicle Name',
+      header: 'VEHICLE NAME',
       sortable: true,
       width: '200px',
     },
     {
       key: 'number_plate',
-      header: 'Number Plate',
+      header: 'NUMBER PLATE',
       sortable: true,
       width: '150px',
     },
     {
       key: 'vehicle_type',
-      header: 'Type',
+      header: 'TYPE',
       sortable: true,
       width: '120px',
       render: (value) => {
@@ -133,7 +133,7 @@ const VehiclesPage: React.FC = () => {
     },
     {
       key: 'donated',
-      header: 'Status',
+      header: 'STATUS',
       sortable: true,
       width: '100px',
       render: (value) => (
@@ -148,35 +148,35 @@ const VehiclesPage: React.FC = () => {
     },
     {
       key: 'donated_by',
-      header: 'Donated By',
+      header: 'DONATED BY',
       sortable: true,
       width: '150px',
       render: (value) => value || '-',
     },
     {
       key: 'rate_per_km',
-      header: 'Rate/KM',
+      header: 'RATE PER KM',
       sortable: true,
       width: '100px',
       render: (value) => `PKR ${value}`,
     },
     {
       key: 'current_mileage',
-      header: 'Current Odometer',
+      header: 'CURRENT ODOMETER (KM)',
       sortable: true,
       width: '100px',
       render: (value) => value?.toLocaleString() || '0',
     },
     {
       key: 'usage_count',
-      header: 'Usage Count',
+      header: 'USAGE COUNT',
       sortable: true,
       width: '120px',
       render: (value) => value || '0',
     },
     {
       key: 'last_used',
-      header: 'Last Used',
+      header: 'LAST USED',
       sortable: true,
       width: '120px',
       render: (value) => {
@@ -312,7 +312,7 @@ const VehiclesPage: React.FC = () => {
       />
 
       {/* Add Vehicle Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Vehicle"
@@ -328,7 +328,7 @@ const VehiclesPage: React.FC = () => {
 
       {/* Edit Vehicle Dialog */}
       {selectedVehicle && (
-        <EditDialog
+        <ResponsiveEditDialog
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
           title="Edit Vehicle"
@@ -344,7 +344,7 @@ const VehiclesPage: React.FC = () => {
 
       {/* Delete Vehicle Dialog */}
       {selectedVehicle && (
-        <DeleteDialog
+        <ResponsiveDeleteDialog
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           title="Delete Vehicle"

@@ -15,10 +15,10 @@ import {
 import { 
   PageHeader, 
   DataTable, 
-  AddDialog, 
-  EditDialog, 
-  DeleteDialog,
-  SuccessDialog,
+  ResponsiveAddDialog, 
+  ResponsiveEditDialog, 
+  ResponsiveDeleteDialog,
+  ResponsiveSuccessDialog,
   type Column 
 } from '@/components/common';
 import { Button } from '@/components/ui/button';
@@ -152,52 +152,52 @@ const DoctorAppointmentPageComponent = () => {
   const columns: Column<Appointment>[] = [
     {
       key: 'id',
-      header: 'Token Number',
+      header: 'TOKEN NUMBER',
       sortable: true,
       width: '150px',
       render: (value) => (
-        <span className="text-sm text-muted-foreground">{value}</span>
+        <span className="text-sm text-primary">{value}</span>
       )
     },
     {
       key: 'patient_name',
-      header: 'Patient Name',
+      header: 'PATIENT NAME',
       sortable: true,
       width: '200px',
       render: (value) => (
         <div className="flex items-center gap-2">
-          <User className="h-4 w-4 text-muted-foreground" />
+          <User className="h-4 w-4 text-primary" />
           <span className="font-medium">{value}</span>
         </div>
       )
     },
     {
       key: 'date',
-      header: 'Date & Time',
+      header: 'DATE & TIME',
       sortable: true,
       width: '180px',
       render: (value) => (
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <Calendar className="h-4 w-4 text-primary" />
           <span>{formatDate(value, 'datetime')}</span>
         </div>
       )
     },
     {
       key: 'doctor_name',
-      header: 'Doctor',
+      header: 'DOCTOR NAME',
       sortable: true,
       width: '150px',
       render: (value) => (
         <div className="flex items-center gap-2">
-          <Stethoscope className="h-4 w-4 text-muted-foreground" />
+          <Stethoscope className="h-4 w-4 text-primary" />
           <span>{value}</span>
         </div>
       )
     },
     {
       key: 'purpose_of_visit',
-      header: 'Purpose',
+      header: 'PURPOSE OF VISIT',
       sortable: true,
       width: '250px',
       render: (value) => (
@@ -208,7 +208,7 @@ const DoctorAppointmentPageComponent = () => {
     },
     {
       key: 'doctor_comment',
-      header: 'Doctor Comment',
+      header: 'DOCTOR COMMENT',
       sortable: false,
       width: '200px',
       render: (value) => (
@@ -219,7 +219,7 @@ const DoctorAppointmentPageComponent = () => {
     },
     {
       key: 'created_at',
-      header: 'Created',
+      header: 'CREATED AT',
       sortable: true,
       width: '120px',
       render: (value) => (
@@ -382,7 +382,7 @@ const DoctorAppointmentPageComponent = () => {
       />
 
       {/* Add Dialog */}
-      <AddDialog
+      <ResponsiveAddDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         title="Add New Appointment"
@@ -394,7 +394,7 @@ const DoctorAppointmentPageComponent = () => {
       />
 
       {/* Edit Dialog */}
-      <EditDialog
+      <ResponsiveEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         title="Edit Appointment"
@@ -407,7 +407,7 @@ const DoctorAppointmentPageComponent = () => {
       />
 
       {/* Delete Dialog */}
-      <DeleteDialog
+      <ResponsiveDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Appointment"
@@ -419,7 +419,7 @@ const DoctorAppointmentPageComponent = () => {
       />
 
       {/* Success Dialog */}
-      <SuccessDialog
+      <ResponsiveSuccessDialog
         open={successDialogOpen}
         onOpenChange={setSuccessDialogOpen}
         title={successDialogTitle}
