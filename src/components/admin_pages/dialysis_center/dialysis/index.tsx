@@ -39,7 +39,7 @@ const DialysisPageComponent = () => {
 
   // Redux state
   const {
-    dialysis,
+    dialysis = [],
     patients,
     beds,
     machines,
@@ -51,6 +51,9 @@ const DialysisPageComponent = () => {
     isUpdating,
     isDeleting,
     error,
+    dialysisCount = 0,
+    dialysisNext = null,
+    dialysisPrevious = null,
   } = useSelector((state: RootState) => state.dialysis);
 
   // Local state
@@ -70,15 +73,32 @@ const DialysisPageComponent = () => {
     month: "",
   });
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   // Fetch data on component mount
   useEffect(() => {
-    dispatch(fetchDialysis());
+    // Build query params from local filters + pagination
+    const params: any = {
+      page,
+      page_size: 10, // keep backend page size in sync (matches PAGE_SIZE below)
+      ordering: '-created_at', // default to newest first
+    };
+
+    if (filters.patient) params.patient = filters.patient;
+    if (filters.bed) params.bed = filters.bed;
+    if (filters.machine) params.machine = filters.machine;
+    if (filters.shift) params.shift = filters.shift;
+    if (filters.date) params.date = filters.date; // YYYY-MM-DD from date input
+    if (filters.month) params.month = Number(filters.month);
+    if (filters.year) params.year = Number(filters.year);
+
+    // Fetch filtered/paginated dialysis and static lookup data
+    dispatch(fetchDialysis(params));
     dispatch(fetchPatients());
     dispatch(fetchBeds());
     dispatch(fetchMachines());
     dispatch(fetchShifts());
-  }, [dispatch]);
+  }, [dispatch, page, filters]);
 
   // Clear errors when dialogs close
   useEffect(() => {
@@ -92,7 +112,7 @@ const DialysisPageComponent = () => {
   const generateYearOptions = () => {
     const currentYear = new Date().getFullYear();
     const years = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 15; i++) {
       const year = currentYear - i;
       years.push({ value: year.toString(), label: year.toString() });
     }
@@ -121,7 +141,7 @@ const DialysisPageComponent = () => {
 
   // Filter dialysis data - memoized for performance
   const filteredDialysis = useMemo(() => {
-    if (!dialysis) return [];
+    if (!Array.isArray(dialysis)) return [];
     
     return dialysis.filter((item) => {
       if (
@@ -554,63 +574,52 @@ const DialysisPageComponent = () => {
     {
       key: "patient_name" as keyof Dialysis,
       header: "PATIENT",
-      sortable: true,
     },
     {
       key: "bed_name" as keyof Dialysis,
       header: "BED",
-      sortable: true,
     },
     {
       key: "machine_name" as keyof Dialysis,
       header: "MACHINE",
-      sortable: true,
     },
     {
       key: "shift_no" as keyof Dialysis,
       header: "SHIFT",
-      sortable: true,
     },
     {
       key: "start_time" as keyof Dialysis,
       header: "START TIME",
-      sortable: true,
     },
     {
       key: "end_time" as keyof Dialysis,
       header: "END TIME",
-      sortable: true,
     },
     {
       key: "blood_pressure" as keyof Dialysis,
       header: "BEFORE - AFTER DIALYSIS BP",
-      sortable: true,
       render: (value: string, patient: Dialysis) =>
         value ? `${value} - ${patient.last_blood_pressure}` : "-",
     },
     {
       key: "weight" as keyof Dialysis,
       header: "BEFORE - AFTER DIALYSIS WEIGHT",
-      sortable: true,
       render: (value: string, patient: Dialysis) =>
         value ? `${value} - ${patient.last_weight}` : "-",
     },
     {
       key: "technician_comment" as keyof Dialysis,
       header: "TECHNICIAN COMMENT",
-      sortable: true,
       render: (value: string) => value || "-",
     },
     {
       key: "doctor_comment" as keyof Dialysis,
       header: "DOCTOR COMMENT",
-      sortable: true,
       render: (value: string) => value || "-",
     },
     {
       key: "created_at" as keyof Dialysis,
       header: "CREATED At",
-      sortable: true,
       render: (value: string) => new Date(value).toLocaleDateString(),
     },
   ];
@@ -710,6 +719,9 @@ const DialysisPageComponent = () => {
     };
   };
 
+  const PAGE_SIZE = 10; // MATCHES BACKEND
+  const totalPages = Math.ceil(dialysisCount / PAGE_SIZE) || 1;
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -731,10 +743,11 @@ const DialysisPageComponent = () => {
       <FilterBar
         filters={filterOptions}
         values={filters}
-        onFilterChange={(key, value) =>
-          setFilters((prev) => ({ ...prev, [key]: value }))
-        }
-        onClearFilters={() =>
+        onFilterChange={(key, value) => {
+          setFilters((prev) => ({ ...prev, [key]: value }));
+          setPage(1);
+        }}
+        onClearFilters={() => {
           setFilters({
             patient: "",
             bed: "",
@@ -743,8 +756,9 @@ const DialysisPageComponent = () => {
             date: "",
             year: "",
             month: "",
-          })
-        }
+          });
+          setPage(1);
+        }}
         defaultFiltersVisible={false}
         showToggleButton={true}
       />
@@ -785,7 +799,11 @@ const DialysisPageComponent = () => {
         loading={isLoadingDialysis}
         emptyMessage="No dialysis sessions found"
         pagination={true}
-        pageSize={10}
+        page={page}
+        pageSize={PAGE_SIZE}
+        totalPages={totalPages}
+        totalItems={dialysisCount}
+        onPageChange={setPage}
         defaultSort={{ key: "created_at", direction: "desc" }}
       />
 

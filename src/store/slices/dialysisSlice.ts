@@ -570,6 +570,9 @@ interface DialysisState {
   shifts: Shift[] | null;
   patients: Patient[] | null;
   dialysis: Dialysis[] | null;
+  dialysisCount: number;
+  dialysisNext: string | null;
+  dialysisPrevious: string | null;
   appointments: Appointment[] | null;
   todayDialysis: TodayDialysisResponse | null;
   upcomingPatients: UpcomingPatientsResponse | null;
@@ -612,7 +615,10 @@ const initialState: DialysisState = {
   beds: null,
   shifts: null,
   patients: null,
-  dialysis: null,
+  dialysis: [],
+  dialysisCount: 0,
+  dialysisNext: null,
+  dialysisPrevious: null,
   appointments: null,
   todayDialysis: null,
   upcomingPatients: null,
@@ -1189,13 +1195,13 @@ export const deletePatientDocument = createAsyncThunk(
 // Async thunk to fetch dialysis sessions
 export const fetchDialysis = createAsyncThunk(
   'dialysis/fetchDialysis',
-  async (_, { rejectWithValue }) => {
+  async (params: { page?: number; page_size?: number } | undefined, { rejectWithValue }) => {
     try {
-      const response = await dialysisAPI.getDialysis();
+      const response = await dialysisAPI.getDialysis(params);
       return response.data;
-          } catch (error: any) {
-        return rejectWithValue(handleAsyncError(error, 'Failed to fetch dialysis sessions'));
-      }
+    } catch (error: any) {
+      return rejectWithValue(handleAsyncError(error, 'Failed to fetch dialysis sessions'));
+    }
   }
 );
 
@@ -2133,9 +2139,26 @@ const dialysisSlice = createSlice({
         state.isLoadingDialysis = true;
         state.error = null;
       })
-      .addCase(fetchDialysis.fulfilled, (state, action: PayloadAction<Dialysis[]>) => {
+      .addCase(fetchDialysis.fulfilled, (state, action) => {
         state.isLoadingDialysis = false;
-        state.dialysis = action.payload;
+        const payload = action.payload;
+        // Accept paginated or non-paginated response
+        if (payload && Array.isArray(payload.results)) {
+          state.dialysis = payload.results;
+          state.dialysisCount = payload.count || 0;
+          state.dialysisNext = payload.next || null;
+          state.dialysisPrevious = payload.previous || null;
+        } else if (Array.isArray(payload)) {
+          state.dialysis = payload;
+          state.dialysisCount = payload.length;
+          state.dialysisNext = null;
+          state.dialysisPrevious = null;
+        } else {
+          state.dialysis = [];
+          state.dialysisCount = 0;
+          state.dialysisNext = null;
+          state.dialysisPrevious = null;
+        }
         state.error = null;
       })
       .addCase(fetchDialysis.rejected, (state, action) => {

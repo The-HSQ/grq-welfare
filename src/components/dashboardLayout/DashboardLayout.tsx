@@ -653,12 +653,12 @@ function SiteHeader({ user }: { user: any }) {
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sm:h-14 md:h-16 lg:h-18">
       <div className="flex w-full items-center gap-1 px-2 sm:gap-2 sm:px-3 md:gap-3 md:px-4 lg:gap-4 lg:px-6">
-        <SidebarTrigger className="-ml-1 h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />
+        <SidebarTrigger className="-ml-1 text-primary hover:bg-primary/10 hover:text-primary h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />
         <Separator
           orientation="vertical"
           className="mx-1 h-4 sm:mx-2 sm:h-5 md:mx-3 md:h-6 data-[orientation=vertical]:h-4 sm:data-[orientation=vertical]:h-5 md:data-[orientation=vertical]:h-6"
         />
-        <h1 className="text-sm font-medium sm:text-base md:text-lg lg:text-xl xl:text-2xl truncate">
+        <h1 className="text-sm text-primary font-medium sm:text-base md:text-lg lg:text-xl xl:text-2xl truncate">
           <span className="hidden sm:inline">GRQ Welfare</span>
           <span className="sm:hidden">GRQ</span>
         </h1>
