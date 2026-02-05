@@ -1,23 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from './button';
-import { Input } from './input';
-import { Badge } from './badge';
-import { Checkbox } from './checkbox';
+import React, { useState, useEffect } from "react";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Badge } from "./badge";
+import { Checkbox } from "./checkbox";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from './dialog';
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './table';
-import { Search, Package, Stethoscope, X } from 'lucide-react';
+} from "./dialog";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "./table";
+import { Search, Package, Stethoscope, X } from "lucide-react";
 
 export interface ItemData {
   id: number;
@@ -37,7 +31,7 @@ interface ItemSelectorModalProps {
   selectedItems: string[];
   onSelectionChange: (selectedIds: string[]) => void;
   title: string;
-  type: 'inventory' | 'medical';
+  type: "inventory" | "medical";
   loading?: boolean;
 }
 
@@ -51,18 +45,20 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
   type,
   loading = false,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredItems, setFilteredItems] = useState<ItemData[]>(items);
-  const [tempSelectedItems, setTempSelectedItems] = useState<string[]>(selectedItems);
+  const [tempSelectedItems, setTempSelectedItems] =
+    useState<string[]>(selectedItems);
 
   // Update filtered items when search term or items change
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredItems(items);
     } else {
-      const filtered = items.filter(item =>
-        item.item_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.item_type.toLowerCase().includes(searchTerm.toLowerCase())
+      const filtered = items.filter(
+        (item) =>
+          item.item_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.item_type.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setFilteredItems(filtered);
     }
@@ -74,9 +70,9 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
   }, [selectedItems]);
 
   const handleItemToggle = (itemId: string) => {
-    setTempSelectedItems(prev => {
+    setTempSelectedItems((prev) => {
       if (prev.includes(itemId)) {
-        return prev.filter(id => id !== itemId);
+        return prev.filter((id) => id !== itemId);
       } else {
         return [...prev, itemId];
       }
@@ -84,7 +80,7 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
   };
 
   const handleSelectAll = () => {
-    const allIds = filteredItems.map(item => item.id.toString());
+    const allIds = filteredItems.map((item) => item.id.toString());
     setTempSelectedItems(allIds);
   };
 
@@ -111,22 +107,28 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
   };
 
   const getAvailabilityColor = (available: number) => {
-    if (available === 0) return 'text-red-600 bg-red-50';
-    if (available < 10) return 'text-yellow-600 bg-yellow-50';
-    return 'text-green-600 bg-green-50';
+    if (available === 0) return "text-red-600 bg-red-50";
+    if (available < 10) return "text-yellow-600 bg-yellow-50";
+    return "text-green-600 bg-green-50";
   };
 
   const getAvailabilityText = (available: number) => {
-    if (available === 0) return 'Out of Stock';
-    if (available < 10) return 'Low Stock';
-    return 'In Stock';
+    if (available === 0) return "Out of Stock";
+    if (available < 10) return "Low Stock";
+    return "In Stock";
   };
 
   const getStockStatus = () => {
-    const outOfStock = filteredItems.filter(item => item.available_items === 0).length;
-    const lowStock = filteredItems.filter(item => item.available_items > 0 && item.available_items < 10).length;
-    const inStock = filteredItems.filter(item => item.available_items >= 10).length;
-    
+    const outOfStock = filteredItems.filter(
+      (item) => item.available_items === 0,
+    ).length;
+    const lowStock = filteredItems.filter(
+      (item) => item.available_items > 0 && item.available_items < 10,
+    ).length;
+    const inStock = filteredItems.filter(
+      (item) => item.available_items >= 10,
+    ).length;
+
     return { outOfStock, lowStock, inStock };
   };
 
@@ -135,7 +137,7 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
       <DialogContent className="max-w-6xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {type === 'inventory' ? (
+            {type === "inventory" ? (
               <Package className="h-5 w-5 text-blue-600" />
             ) : (
               <Stethoscope className="h-5 w-5 text-green-600" />
@@ -199,7 +201,10 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
                   <TableRow>
                     <TableHead className="w-12">
                       <Checkbox
-                        checked={filteredItems.length > 0 && tempSelectedItems.length === filteredItems.length}
+                        checked={
+                          filteredItems.length > 0 &&
+                          tempSelectedItems.length === filteredItems.length
+                        }
                         onCheckedChange={(checked) => {
                           if (checked) {
                             handleSelectAll();
@@ -229,28 +234,43 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
                               </tr>
                             ) : filteredItems.length === 0 ? (
                               <tr>
-                                <td colSpan={2} className="text-center py-8 text-gray-500">
-                                  {searchTerm ? 'No items found matching your search.' : 'No items available.'}
+                                <td
+                                  colSpan={2}
+                                  className="text-center py-8 text-gray-500"
+                                >
+                                  {searchTerm
+                                    ? "No items found matching your search."
+                                    : "No items available."}
                                 </td>
                               </tr>
                             ) : (
                               filteredItems.map((item) => {
-                                const isSelected = tempSelectedItems.includes(item.id.toString());
-                                
+                                const isSelected = tempSelectedItems.includes(
+                                  item.id.toString(),
+                                );
+
                                 return (
                                   <tr
                                     key={item.id}
                                     className={`cursor-pointer hover:bg-gray-50 ${
-                                      isSelected ? 'bg-blue-50' : ''
+                                      isSelected ? "bg-blue-50" : ""
                                     }`}
-                                    onClick={() => handleItemToggle(item.id.toString())}
+                                    onClick={() =>
+                                      handleItemToggle(item.id.toString())
+                                    }
                                   >
-                                    <td className="px-4 py-2">
+                                    <td
+                                      className="px-4 py-2"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
                                       <Checkbox
                                         checked={isSelected}
-                                        onCheckedChange={() => handleItemToggle(item.id.toString())}
+                                        onCheckedChange={() =>
+                                          handleItemToggle(item.id.toString())
+                                        }
                                       />
                                     </td>
+
                                     <td className="px-4 py-2 font-medium">
                                       {item.item_name}
                                     </td>
@@ -272,16 +292,15 @@ export const ItemSelectorModal: React.FC<ItemSelectorModalProps> = ({
         <DialogFooter className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600">
-              {getSelectedCount()} item{getSelectedCount() !== 1 ? 's' : ''} selected
+              {getSelectedCount()} item{getSelectedCount() !== 1 ? "s" : ""}{" "}
+              selected
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button onClick={handleApply}>
-              Apply Selection
-            </Button>
+            <Button onClick={handleApply}>Apply Selection</Button>
           </div>
         </DialogFooter>
       </DialogContent>
