@@ -13,7 +13,12 @@ import {
   CreateExpenseData,
   UpdateExpenseData,
 } from "../../../../store/slices/expenseSlice";
-import { expenseCategoryAPI, vendorAPI, dialysisAPI, inventoryAPI } from "../../../../services/api";
+import {
+  expenseCategoryAPI,
+  vendorAPI,
+  dialysisAPI,
+  inventoryAPI,
+} from "../../../../services/api";
 import { PageHeader } from "../../../common";
 import {
   DataTable,
@@ -51,11 +56,27 @@ const ExpensePageComponent = () => {
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
   const [categories, setCategories] = useState<{ id: number; name: string }[]>(
-    []
+    [],
   );
   const [vendors, setVendors] = useState<{ id: number; name: string }[]>([]);
-  const [medicalProducts, setMedicalProducts] = useState<{ id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[]>([]);
-  const [inventoryItems, setInventoryItems] = useState<{ id: number; item_name: string; item_type: string; available_items: number; quantity_type: string }[]>([]);
+  const [medicalProducts, setMedicalProducts] = useState<
+    {
+      id: number;
+      item_name: string;
+      item_type: string;
+      available_items: number;
+      quantity_type: string;
+    }[]
+  >([]);
+  const [inventoryItems, setInventoryItems] = useState<
+    {
+      id: number;
+      item_name: string;
+      item_type: string;
+      available_items: number;
+      quantity_type: string;
+    }[]
+  >([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingVendors, setLoadingVendors] = useState(false);
   const [loadingMedicalProducts, setLoadingMedicalProducts] = useState(false);
@@ -84,7 +105,12 @@ const ExpensePageComponent = () => {
       setLoadingMedicalProducts(true);
       setLoadingInventoryItems(true);
 
-      const [categoriesResponse, vendorsResponse, medicalProductsResponse, inventoryItemsResponse] = await Promise.all([
+      const [
+        categoriesResponse,
+        vendorsResponse,
+        medicalProductsResponse,
+        inventoryItemsResponse,
+      ] = await Promise.all([
         expenseCategoryAPI.getExpenseCategories(),
         vendorAPI.getVendors(),
         dialysisAPI.getProducts(),
@@ -148,7 +174,7 @@ const ExpensePageComponent = () => {
 
     try {
       await dispatch(
-        updateExpense({ id: selectedExpense.id, expenseData }) as any
+        updateExpense({ id: selectedExpense.id, expenseData }) as any,
       );
       setEditDialogOpen(false);
       setSelectedExpense(null);
@@ -241,7 +267,9 @@ const ExpensePageComponent = () => {
     // Filter by receipt number
     if (filters.receipt_number) {
       const hasMatchingReceipt = expense.receipt_documents?.some((doc: any) =>
-        doc.receipt_number?.toLowerCase().includes(filters.receipt_number.toLowerCase())
+        doc.receipt_number
+          ?.toLowerCase()
+          .includes(filters.receipt_number.toLowerCase()),
       );
       if (!hasMatchingReceipt) {
         return false;
@@ -313,12 +341,15 @@ const ExpensePageComponent = () => {
       header: "DOCUMENTS",
       sortable: true,
       render: (value, expense) => {
-        const documentCount = expense.receipt_documents ? expense.receipt_documents.length : 0;
+        const documentCount = expense.receipt_documents
+          ? expense.receipt_documents.length
+          : 0;
         return (
           <div className="text-gray-600">
             <button
               onClick={() => handleViewDocuments(expense)}
-              className="text-primary hover:text-primary border border-primary rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-primary/10 cursor-pointer transition-colors">
+              className="text-primary hover:text-primary border border-primary rounded-md px-2 py-1 flex justify-center items-center gap-2 hover:bg-primary/10 cursor-pointer transition-colors"
+            >
               <FileTextIcon className="w-4 h-4" />
               {documentCount}
             </button>
@@ -328,7 +359,8 @@ const ExpensePageComponent = () => {
     },
   ];
 
-  const getFormSchema = () => getExpenseFormSchema(categories, vendors, medicalProducts, inventoryItems);
+  const getFormSchema = () =>
+    getExpenseFormSchema(categories, vendors, medicalProducts, inventoryItems);
 
   // Filter configuration
   const filterOptions: FilterOption[] = [
@@ -384,8 +416,14 @@ const ExpensePageComponent = () => {
       payment_method: selectedExpense.payment_method,
       due_balance_to_vendor: selectedExpense.due_balance_to_vendor,
       notes: selectedExpense.notes || "",
-      inventory_items: selectedExpense.inventory_items?.map((item: any) => item.id.toString()) || [],
-      dialysis_products: selectedExpense.dialysis_product?.map((product: any) => product.id.toString()) || [],
+      inventory_items:
+        selectedExpense.inventory_items?.map((item: any) =>
+          item.id.toString(),
+        ) || [],
+      dialysis_products:
+        selectedExpense.dialysis_product?.map((product: any) =>
+          product.id.toString(),
+        ) || [],
     };
   };
 
@@ -400,6 +438,8 @@ const ExpensePageComponent = () => {
     }
     return "An error occurred";
   };
+
+  console.log(error);
 
   return (
     <div className="space-y-6">

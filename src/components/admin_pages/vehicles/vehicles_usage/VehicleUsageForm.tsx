@@ -253,7 +253,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
               </SelectContent>
             </Select>
             {errors.vehicle && (
-              <p className="text-sm text-red-600">{errors.vehicle.message}</p>
+              <p className="text-sm text-red-600">{String(errors.vehicle.message)}</p>
             )}
           </div>
 
@@ -280,7 +280,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
               className={errors.date ? "border-red-500" : ""}
             />
             {errors.date && (
-              <p className="text-sm text-red-600">{errors.date.message}</p>
+              <p className="text-sm text-red-600">{String(errors.date.message)}</p>
             )}
           </div>
 
@@ -305,7 +305,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             </Select>
             {errors.trip_purpose && (
               <p className="text-sm text-red-600">
-                {errors.trip_purpose.message}
+                {String(errors.trip_purpose.message)}
               </p>
             )}
           </div>
@@ -331,7 +331,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             />
             {errors.current_mileage && (
               <p className="text-sm text-red-600">
-                {errors.current_mileage.message}
+                {String(errors.current_mileage.message)}
               </p>
             )}
             {mode === "create" && selectedVehicle && (
@@ -373,7 +373,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             />
             {errors.end_mileage && (
               <p className="text-sm text-red-600">
-                {errors.end_mileage.message}
+                {String(errors.end_mileage.message)}
               </p>
             )}
             {watchedStartMileage && typeof watchedStartMileage === "string" ? (
@@ -449,7 +449,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             />
             {errors.driver_name && (
               <p className="text-sm text-red-600">
-                {errors.driver_name.message}
+                {String(errors.driver_name.message)}
               </p>
             )}
           </div>
@@ -473,7 +473,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             />
             {errors.personal_used_by && (
               <p className="text-sm text-red-600">
-                {errors.personal_used_by.message}
+                {String(errors.personal_used_by.message)}
               </p>
             )}
             {watchedTripPurpose === "personal_use" && (
@@ -499,7 +499,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             />
             {errors.paid_amount && (
               <p className="text-sm text-red-600">
-                {errors.paid_amount.message}
+                {String(errors.paid_amount.message)}
               </p>
             )}
             {amountCalculation && (
@@ -528,7 +528,7 @@ const VehicleUsageForm: React.FC<VehicleUsageFormProps> = ({
             )}
             {errors.admin_comment && (
               <p className="text-sm text-red-600">
-                {errors.admin_comment.message}
+                {String(errors.admin_comment.message)}
               </p>
             )}
           </div>

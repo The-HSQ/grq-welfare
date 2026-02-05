@@ -51,7 +51,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor
@@ -121,7 +121,7 @@ api.interceptors.response.use(
               "Content-Type": "application/json",
             },
             withCredentials: true,
-          }
+          },
         );
 
         const { access, refresh } = response.data;
@@ -166,7 +166,7 @@ api.interceptors.response.use(
     // Handle other common errors
     if (error.response?.status === 403) {
       toast.error(
-        "Access denied. You don't have permission to perform this action."
+        "Access denied. You don't have permission to perform this action.",
       );
     }
 
@@ -182,13 +182,13 @@ api.interceptors.response.use(
     if (!error.response) {
       if (error.message.includes("Network Error")) {
         toast.error(
-          "Network error. Please check your connection and try again."
+          "Network error. Please check your connection and try again.",
         );
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // Helper functions for common API operations
@@ -220,8 +220,9 @@ export const apiHelpers = {
       const refreshToken = getRefreshToken();
       if (refreshToken) {
         // Call logout endpoint if it exists
-        await api.post("/auth/logout/", { refresh: refreshToken }).catch(() => {
-        });
+        await api
+          .post("/auth/logout/", { refresh: refreshToken })
+          .catch(() => {});
       }
     } catch (error) {
       console.error("Logout API call failed:", error);

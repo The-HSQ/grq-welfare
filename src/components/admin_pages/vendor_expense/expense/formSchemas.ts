@@ -83,7 +83,7 @@ export const getExpenseFormSchema = (
       {
         name: 'payment_method',
         label: 'Payment Method',
-        type: 'text',
+        type: 'select',
         required: true,
         options: paymentMethodOptions,
         placeholder: 'Enter payment method',

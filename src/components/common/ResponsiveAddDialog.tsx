@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
-} from '@/components/ui/drawer';
-import { DynamicForm } from './DynamicForm';
-import { FormSchema } from './FormSchema';
+} from "@/components/ui/drawer";
+import { DynamicForm } from "./DynamicForm";
+import { FormSchema } from "./FormSchema";
 
 interface ResponsiveAddDialogProps {
   open: boolean;
@@ -47,10 +47,10 @@ const useIsMobile = () => {
     checkIsMobile();
 
     // Add event listener
-    window.addEventListener('resize', checkIsMobile);
+    window.addEventListener("resize", checkIsMobile);
 
     // Cleanup
-    return () => window.removeEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
   return isMobile;
@@ -71,7 +71,7 @@ export const ResponsiveAddDialog: React.FC<ResponsiveAddDialogProps> = ({
   defaultValues,
   error,
   getMediaUrl,
-  showCancelButton = true
+  showCancelButton = true,
 }) => {
   const isMobile = useIsMobile();
 
@@ -86,6 +86,8 @@ export const ResponsiveAddDialog: React.FC<ResponsiveAddDialogProps> = ({
     onSubmit(data);
   };
 
+  console.log(error);
+
   // Common content component
   const FormContent = () => (
     <>
@@ -95,7 +97,7 @@ export const ResponsiveAddDialog: React.FC<ResponsiveAddDialogProps> = ({
           {error}
         </div>
       )}
-      
+
       <DynamicForm
         schema={schema}
         defaultValues={defaultValues}
@@ -122,7 +124,7 @@ export const ResponsiveAddDialog: React.FC<ResponsiveAddDialogProps> = ({
               <DialogDescription>{description}</DialogDescription>
             )}
           </DialogHeader>
-          
+
           <div className="py-4">
             <FormContent />
           </div>
@@ -137,11 +139,9 @@ export const ResponsiveAddDialog: React.FC<ResponsiveAddDialogProps> = ({
       <DrawerContent className="max-h-[85vh]">
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
-          {description && (
-            <DrawerDescription>{description}</DrawerDescription>
-          )}
+          {description && <DrawerDescription>{description}</DrawerDescription>}
         </DrawerHeader>
-        
+
         <div className="px-4 pb-4 overflow-y-auto flex-1">
           <FormContent />
         </div>

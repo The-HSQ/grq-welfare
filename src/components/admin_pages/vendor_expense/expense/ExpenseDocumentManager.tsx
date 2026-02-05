@@ -92,7 +92,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
     setIsLoading(true);
     try {
       const response = await api.get(
-        `/financial/receipt-documents/by_expense/?expense_id=${expense.id}`
+        `/financial/receipt-documents/by_expense/?expense_id=${expense.id}`,
       );
       const fetchedDocuments = response.data.map((doc: any) => ({
         ...doc,
@@ -133,7 +133,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
     } catch (error: any) {
       console.error("Error deleting document:", error);
       setDeleteError(
-        error?.response?.data?.message || "Failed to delete document"
+        error?.response?.data?.message || "Failed to delete document",
       );
       throw error; // Re-throw to let DocumentManager handle the error
     } finally {
@@ -188,7 +188,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       // Reset form
@@ -220,6 +220,16 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      console.log(file.size);
+
+      if (file.size && file.size > 10 * 1024 * 1024) {
+        setUploadError("File size must be less than 10 MB");
+        setUploadForm((prev) => ({ ...prev, document_path: null }));
+        return;
+      } else {
+        setUploadError(null);
+      }
+
       setUploadForm((prev) => ({ ...prev, document_path: file }));
     }
   };
@@ -270,7 +280,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
               <span>Add Receipt Document</span>
             </Button>
           ) : (
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-sm h-56 overflow-auto">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-4">
@@ -381,24 +391,32 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                       PDF and image files only (max 10MB)
                     </p>
                   </div>
-                  {uploadForm.document_path && (
-                    <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <FileIcon className="w-4 h-4 text-green-600" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-green-800 truncate">
-                          {uploadForm.document_path.name}
-                        </p>
-                        <p className="text-xs text-green-600">
-                          {(
-                            uploadForm.document_path.size /
-                            1024 /
-                            1024
-                          ).toFixed(2)}{" "}
-                          MB
-                        </p>
+                  {uploadForm?.document_path &&
+                    uploadForm.document_path.size <= 10 * 1024 * 1024 && (
+                      <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <FileIcon className="w-4 h-4 text-green-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-green-800 truncate">
+                            {uploadForm?.document_path?.name}
+                          </p>
+                          <p className="text-xs text-green-600">
+                            {(
+                              uploadForm?.document_path?.size /
+                              1024 /
+                              1024
+                            ).toFixed(2)}{" "}
+                            MB
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  {uploadError &&
+                    uploadError === "File size must be less than 10 MB" && (
+                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                        <AlertCircleIcon className="h-4 w-4 flex-shrink-0" />
+                        <span className="text-sm">{uploadError}</span>
+                      </div>
+                    )}
                 </div>
 
                 <Separator />
@@ -508,7 +526,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                                 <div className="flex items-center gap-1">
                                   <span>
                                     {new Date(
-                                      doc.uploaded_at
+                                      doc.uploaded_at,
                                     ).toLocaleDateString()}
                                   </span>
                                 </div>
@@ -522,7 +540,7 @@ export const ExpenseDocumentManager: React.FC<ExpenseDocumentManagerProps> = ({
                                 onClick={() =>
                                   window.open(
                                     doc.file_url || doc.file,
-                                    "_blank"
+                                    "_blank",
                                   )
                                 }
                                 className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-none"

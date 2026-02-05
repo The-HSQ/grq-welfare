@@ -438,7 +438,7 @@ const ExpenseDetailPage: React.FC = () => {
           <CardContent>
             <div className="space-y-4">
               {expense.receipt_documents.map((doc) => (
-                <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={doc.id} className="flex flex-wrap gap-3 items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-muted-foreground" />
                     <div>
