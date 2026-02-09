@@ -8,20 +8,25 @@
  * @param baseUrl - The base URL. If not provided, uses the current origin
  * @returns Full URL to the media file
  */
-export function getFullMediaUrl(relativePath: string | null | undefined, baseUrl?: string): string | null {
+export function getFullMediaUrl(
+  relativePath: string | null | undefined,
+  baseUrl?: string,
+): string | null {
   if (!relativePath) {
     return null;
   }
 
   // Remove leading slash if present
-  const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  const cleanPath = relativePath.startsWith("/")
+    ? relativePath.slice(1)
+    : relativePath;
 
   // Use provided base URL or current origin
-  // const base = baseUrl || "https://mzas.site";
-  const base = baseUrl || "http://127.0.0.1:8000";
+  const base = baseUrl || "https://mzas.site";
+  // const base = baseUrl || "http://127.0.0.1:8000";
 
   // Remove trailing slash from base URL if present
-  const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+  const cleanBase = base.endsWith("/") ? base.slice(0, -1) : base;
 
   return `${cleanBase}/media/${cleanPath}`;
 }
@@ -31,14 +36,16 @@ export function getFullMediaUrl(relativePath: string | null | undefined, baseUrl
  * @param fullUrl - Full URL to the media file
  * @returns Relative path without domain and /media/ prefix
  */
-export function getRelativeMediaPath(fullUrl: string | null | undefined): string | null {
+export function getRelativeMediaPath(
+  fullUrl: string | null | undefined,
+): string | null {
   if (!fullUrl) {
     return null;
   }
 
   // Remove domain and /media/ prefix
-  if (fullUrl.includes('/media/')) {
-    return fullUrl.split('/media/')[1];
+  if (fullUrl.includes("/media/")) {
+    return fullUrl.split("/media/")[1];
   }
 
   return fullUrl;
@@ -54,7 +61,7 @@ export function isRelativePath(path: string | null | undefined): boolean {
     return false;
   }
 
-  return !(path.startsWith('http://') || path.startsWith('https://'));
+  return !(path.startsWith("http://") || path.startsWith("https://"));
 }
 
 /**
@@ -64,8 +71,8 @@ export function isRelativePath(path: string | null | undefined): boolean {
 export function getApiBaseUrl(): string {
   // In development, this will be http://localhost:8000
   // In production, this will be the actual domain
-  // const apiUrl = import.meta.env.VITE_API_URL || "https://mzas.site";
-  const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  const apiUrl = import.meta.env.VITE_API_URL || "https://mzas.site";
+  // const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
   return apiUrl;
 }
 
@@ -76,7 +83,7 @@ export function getApiBaseUrl(): string {
 export function getServerBaseUrl(): string {
   const apiUrl = getApiBaseUrl();
   // Remove /api suffix if present to get the server base URL
-  return apiUrl.replace(/\/api$/, '');
+  return apiUrl.replace(/\/api$/, "");
 }
 
 /**
@@ -84,7 +91,9 @@ export function getServerBaseUrl(): string {
  * @param relativePath - The relative path
  * @returns Full URL to the media file
  */
-export function getMediaUrl(relativePath: string | null | undefined): string | null {
+export function getMediaUrl(
+  relativePath: string | null | undefined,
+): string | null {
   const serverBaseUrl = getServerBaseUrl();
   const fullUrl = getFullMediaUrl(relativePath, serverBaseUrl);
   return fullUrl;
