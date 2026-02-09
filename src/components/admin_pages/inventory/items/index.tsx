@@ -389,8 +389,6 @@ const InventoryPageComponent = () => {
       setUsageRecordLoading(false);
       
       if (createItemUsageRecord.fulfilled.match(result)) {
-        // Success
-        console.log("Item usage record created successfully:", result.payload);
         setUsageRecordDialogOpen(false);
         setSelectedItemForUsage(null);
         setUsageRecordError(null);

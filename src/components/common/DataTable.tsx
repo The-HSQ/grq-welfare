@@ -24,6 +24,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { getCookie } from "@/lib/getCookie";
 
 export interface Column<T> {
   key: keyof T;
@@ -82,7 +83,20 @@ export function DataTable<T extends Record<string, any>>({
   }>(defaultSort || { key: null, direction: "asc" });
   const [internalPage, setInternalPage] = useState(1);
 
-  const { isViewer } = useAuth();
+  const isViewer = useMemo(() => {
+    try {
+      const cookie = getCookie("userData");
+      if (!cookie) return false;
+
+      const user = JSON.parse(cookie);
+      return user?.role === "viewer";
+    } catch (err) {
+      console.error("Failed to parse userData cookie", err);
+      return false;
+    }
+  }, []);
+
+  console.log("is Viewer: ", isViewer);
 
   // Choose page for client or controlled
   const activePage =

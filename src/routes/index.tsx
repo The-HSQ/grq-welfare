@@ -35,6 +35,7 @@ import InventoryPage from "@/pages/dashnoard/inventory/items/page";
 import InventoryDetail from "../components/admin_pages/inventory/items/InventoryDetail";
 import OfficeManagementDashboard from "@/pages/dashnoard/office/page";
 import TrackingItemsPage from "@/pages/dashnoard/inventory/tracking_items/page";
+import DashboardViewer from "@/pages/dashnoard/viewer/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -73,7 +74,7 @@ const router = createBrowserRouter([
         path: "viewer",
         element: (
           <ProtectedRoute requiredRole="viewer">
-            <>Hello this is Viewer page</>
+            <DashboardViewer />
           </ProtectedRoute>
         ),
       },
@@ -93,7 +94,12 @@ const router = createBrowserRouter([
         path: "dialysis-center/doctor-appointment",
         element: (
           <ProtectedRoute
-            requiredRole={["admin", "medical_admin", "accountant_medical", 'viewer']}
+            requiredRole={[
+              "admin",
+              "medical_admin",
+              "accountant_medical",
+              "viewer",
+            ]}
           >
             <DoctorAppointmentPage />
           </ProtectedRoute>

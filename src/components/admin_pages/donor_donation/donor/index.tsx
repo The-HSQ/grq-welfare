@@ -239,7 +239,6 @@ const DonorManagement: React.FC = () => {
   const handleAddDonor = async (data: FormData) => {
     try {
       // Debug: Log FormData contents to verify binary data
-      console.log('Create FormData contents:');
       for (let [key, value] of data.entries()) {
         if (value instanceof File) {
           console.log(`${key}: File object (${value.name}, ${value.size} bytes, ${value.type})`);
