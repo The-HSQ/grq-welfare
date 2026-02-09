@@ -8,6 +8,7 @@ export const roleOptions = [
     { value: 'accountant_medical', label: 'Dialysis Reception' },
     { value: 'vehicle_user', label: 'Vehicle User' },
     { value: 'lab_accountant', label: 'Lab Reception' },
+    { value: 'viewer', label: 'Viewer' },
 ];
 
 // Schema for adding a new user

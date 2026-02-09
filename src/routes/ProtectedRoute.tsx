@@ -27,6 +27,8 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
         return '/office-management/inventory/tracking-items'; // Lab Accountant Dashboard
       case 'vehicle_user':
         return '/office-management/vehicles-usage'; // Vehicles Usage
+      case 'viewer':
+        return '/viewer'; // Viewer Dashboard
       default:
         return '/'; // Default to main dashboard
     }

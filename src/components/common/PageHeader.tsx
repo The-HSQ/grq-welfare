@@ -1,4 +1,5 @@
-import React from 'react';
+import { useAuth } from "@/hooks/useAuth";
+import React from "react";
 
 // PageHeader component with action support
 interface PageHeaderProps {
@@ -8,12 +9,13 @@ interface PageHeaderProps {
   action?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ 
-  title, 
-  description, 
+export const PageHeader: React.FC<PageHeaderProps> = ({
+  title,
+  description,
   children,
-  action
+  action,
 }) => {
+  const { isViewer } = useAuth();
   return (
     <div className="flex text-primary flex-col gap-4 sm:pb-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -23,7 +25,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <p className="text-muted-foreground">{description}</p>
           )}
         </div>
-        {(action || children) && (
+        {!isViewer && (action || children) && (
           <div className="flex items-center gap-2">
             {action}
             {children}

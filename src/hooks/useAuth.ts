@@ -20,6 +20,7 @@ export const useAuth = () => {
   const isOfficeAdmin = () => hasRole('office_admin');
   const isDriver = () => hasRole('vehicle_user');
   const isLabAccountant = () => hasRole('lab_accountant');
+  const isViewer = () => hasRole('viewer');
 
   return {
     user,
@@ -30,6 +31,7 @@ export const useAuth = () => {
     isMedicalAdmin,
     isAccountantMedical,
     isOfficeAdmin,
+    isViewer,
     isDriver,
     isLabAccountant,
   };

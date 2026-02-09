@@ -39,6 +39,8 @@ export default function Login() {
         return '/office-management/vehicles-usage'; // Vehicles Usage
       case 'lab_accountant':
         return '/office-management/inventory/tracking-items'; // Lab Accountant Dashboard
+      case 'viewer':
+        return '/viewer'; // Viewer Dashboard
       default:
         return '/'; // Default to main dashboard
     }

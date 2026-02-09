@@ -51,6 +51,7 @@ export default function DashboardLayout() {
     isOfficeAdmin,
     isDriver,
     isLabAccountant,
+    isViewer,
   } = useAuth();
 
   // State for tracking expanded/collapsed sub-menus (supports multiple levels)
@@ -113,7 +114,7 @@ export default function DashboardLayout() {
           {expanded && (
             <SidebarMenu className="group-has-data-[collapsible=icon]/sidebar-wrapper:pl-0">
               {item.items!.map((subItem) =>
-                renderNavigationItem(subItem, level + 1)
+                renderNavigationItem(subItem, level + 1),
               )}
             </SidebarMenu>
           )}
@@ -321,6 +322,120 @@ export default function DashboardLayout() {
         },
       ],
     },
+  ];
+
+  // Viewer-specific navigation items
+  const viewerNavigationItems: NavigationItem[] = [
+    {
+      title: "Viewer Dashboard",
+      url: "/viewer",
+      icon: Home,
+    },
+    {
+      title: "Doctor Appointment",
+      url: "/dialysis-center/doctor-appointment",
+      icon: Calendar,
+    },
+    {
+      title: "Patients",
+      url: "/dialysis-center/patients",
+      icon: User,
+    },
+    {
+      title: "Dialysis",
+      url: "/dialysis-center/dialysis",
+      icon: Calendar,
+    },
+    {
+      title: "Today Dialysis",
+      url: "/dialysis-center/today-dialysis",
+      icon: Calendar,
+    },
+    {
+      title: "Upcoming Dialysis",
+      url: "/dialysis-center/upcoming-patients-dialysis",
+      icon: Calendar,
+    },
+    // {
+    //   title: "Welfare Office Management",
+    //   icon: Building2,
+    //   items: [
+    //     {
+    //       title: "Dashboard",
+    //       url: "/office-management",
+    //       icon: Home,
+    //     },
+    //     {
+    //       title: "Welfare Inventory",
+    //       icon: SquaresExclude,
+    //       items: [
+    //         {
+    //           title: "Items",
+    //           url: "/office-management/inventory",
+    //           icon: Package,
+    //         },
+    //         {
+    //           title: "Tracking Items",
+    //           url: "/office-management/inventory/tracking-items",
+    //           icon: Package,
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: "Welfare Donation",
+    //       icon: Euro,
+    //       items: [
+    //         {
+    //           title: "Donors",
+    //           url: "/office-management/donors",
+    //           icon: Users,
+    //         },
+    //         {
+    //           title: "Donations",
+    //           url: "/office-management/donations",
+    //           icon: Euro,
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: "Welfare Expense",
+    //       icon: Users,
+    //       items: [
+    //         {
+    //           title: "Vendor",
+    //           url: "/office-management/vendor",
+    //           icon: Users,
+    //         },
+    //         {
+    //           title: "Expense Category",
+    //           url: "/office-management/expense-category",
+    //           icon: Users,
+    //         },
+    //         {
+    //           title: "Expense",
+    //           url: "/office-management/expense",
+    //           icon: Users,
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: "Welfare Vehicles",
+    //       icon: Car,
+    //       items: [
+    //         {
+    //           title: "Vehicles",
+    //           url: "/office-management/vehicles",
+    //           icon: Car,
+    //         },
+    //         {
+    //           title: "Vehicles Usage",
+    //           url: "/office-management/vehicles-usage",
+    //           icon: Car,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
   ];
 
   // Medical Admin-specific navigation items
@@ -564,6 +679,10 @@ export default function DashboardLayout() {
       items.push(...labAccountantNavigationItems);
     }
 
+    if (isViewer()) {
+      items.push(...viewerNavigationItems);
+    }
+
     return items;
   };
 
@@ -588,6 +707,9 @@ export default function DashboardLayout() {
     if (isLabAccountant()) {
       return `/office-management/inventory/tracking-items`;
     }
+    if (isViewer()) {
+      return `/viewer`;
+    }
     return `/`;
   };
 
@@ -602,7 +724,10 @@ export default function DashboardLayout() {
     >
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader className="p-0">
-          <Link to={getUrl()} className="flex items-center group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 group-has-data-[collapsible=icon]/sidebar-wrapper:w-full p-0">
+          <Link
+            to={getUrl()}
+            className="flex items-center group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 group-has-data-[collapsible=icon]/sidebar-wrapper:w-full p-0"
+          >
             <img
               src="/logo.png"
               alt="Logo"
@@ -615,7 +740,9 @@ export default function DashboardLayout() {
             />
           </Link>
         </SidebarHeader>
-        <SidebarContent className={`flex w-full group-has-data-[collapsible=icon]/sidebar-wrapper:items-center`}>
+        <SidebarContent
+          className={`flex w-full group-has-data-[collapsible=icon]/sidebar-wrapper:items-center`}
+        >
           {navigationItems.map((item) => renderNavigationItem(item))}
         </SidebarContent>
         <SidebarFooter>
@@ -625,7 +752,9 @@ export default function DashboardLayout() {
             className="w-full flex justify-start group-has-data-[collapsible=icon]/sidebar-wrapper:justify-center"
           >
             <LogOut className="h-4 w-4" />
-            <span className="group-has-data-[collapsible=icon]/sidebar-wrapper:hidden">Logout</span>
+            <span className="group-has-data-[collapsible=icon]/sidebar-wrapper:hidden">
+              Logout
+            </span>
           </Button>
         </SidebarFooter>
       </Sidebar>

@@ -23,6 +23,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface Column<T> {
   key: keyof T;
@@ -81,9 +82,13 @@ export function DataTable<T extends Record<string, any>>({
   }>(defaultSort || { key: null, direction: "asc" });
   const [internalPage, setInternalPage] = useState(1);
 
+  const { isViewer } = useAuth();
+
   // Choose page for client or controlled
-  const activePage = typeof page === "number" && typeof onPageChange === "function"
-    ? page : internalPage;
+  const activePage =
+    typeof page === "number" && typeof onPageChange === "function"
+      ? page
+      : internalPage;
 
   // Run page change logic properly
   const doPageChange = (newPage: number) => {
@@ -97,7 +102,10 @@ export function DataTable<T extends Record<string, any>>({
     if (searchTerm && searchKey) {
       filtered = data.filter((item) => {
         const value = item[searchKey];
-        return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        return value
+          ?.toString()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
       });
     }
     if (sortConfig.key) {
@@ -130,8 +138,12 @@ export function DataTable<T extends Record<string, any>>({
   }, [searchTerm, data]);
 
   // Pagination calculations
-  const countTotalItems = typeof totalItems === "number" ? totalItems : filteredAndSortedData.length;
-  const countTotalPages = typeof totalPages === "number" ? totalPages : Math.ceil(filteredAndSortedData.length / pageSize);
+  const countTotalItems =
+    typeof totalItems === "number" ? totalItems : filteredAndSortedData.length;
+  const countTotalPages =
+    typeof totalPages === "number"
+      ? totalPages
+      : Math.ceil(filteredAndSortedData.length / pageSize);
 
   // Prepare page numbers for buttons (unchanged)
   const getPageNumbers = () => {
@@ -144,17 +156,18 @@ export function DataTable<T extends Record<string, any>>({
     } else {
       if (activePage <= 3) {
         for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
+        pages.push("...");
         pages.push(countTotalPages);
       } else if (activePage >= countTotalPages - 2) {
         pages.push(1);
-        pages.push('...');
-        for (let i = countTotalPages - 3; i <= countTotalPages; i++) pages.push(i);
+        pages.push("...");
+        for (let i = countTotalPages - 3; i <= countTotalPages; i++)
+          pages.push(i);
       } else {
         pages.push(1);
-        pages.push('...');
+        pages.push("...");
         for (let i = activePage - 1; i <= activePage + 1; i++) pages.push(i);
-        pages.push('...');
+        pages.push("...");
         pages.push(countTotalPages);
       }
     }
@@ -220,8 +233,10 @@ export function DataTable<T extends Record<string, any>>({
                   </div>
                 </TableHead>
               ))}
-              {(onEdit || onDelete || onView || actions) && (
-                <TableHead className="text-primary w-[100px] text-xs font-semibold">ACTIONS</TableHead>
+              {!isViewer && (onEdit || onDelete || onView || actions) && (
+                <TableHead className="text-primary w-[100px] text-xs font-semibold">
+                  ACTIONS
+                </TableHead>
               )}
             </TableRow>
           </TableHeader>
@@ -235,7 +250,7 @@ export function DataTable<T extends Record<string, any>>({
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
                   ))}
-                  {(onEdit || onDelete || onView || actions) && (
+                  {!isViewer && (onEdit || onDelete || onView || actions) && (
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Skeleton className="h-8 w-16" />
@@ -267,7 +282,7 @@ export function DataTable<T extends Record<string, any>>({
                         : row[column.key]?.toString() || "-"}
                     </TableCell>
                   ))}
-                  {(onEdit || onDelete || onView || actions) && (
+                  {!isViewer && (onEdit || onDelete || onView || actions) && (
                     <TableCell>
                       <div className="flex items-center gap-2">
                         {actions && actions(row)}
@@ -318,13 +333,11 @@ export function DataTable<T extends Record<string, any>>({
       {pagination && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground text-center sm:text-left">
-            {countTotalItems === 0 ? (
-              'No results'
-            ) : countTotalPages === 1 ? (
-              `Showing all ${countTotalItems} results`
-            ) : (
-              `Showing ${activePage * pageSize - pageSize + 1} to ${Math.min(activePage * pageSize, countTotalItems)} of ${countTotalItems} results`
-            )}
+            {countTotalItems === 0
+              ? "No results"
+              : countTotalPages === 1
+                ? `Showing all ${countTotalItems} results`
+                : `Showing ${activePage * pageSize - pageSize + 1} to ${Math.min(activePage * pageSize, countTotalItems)} of ${countTotalItems} results`}
           </div>
           <div className="flex items-center space-x-1 sm:space-x-2">
             <Button
@@ -347,10 +360,10 @@ export function DataTable<T extends Record<string, any>>({
             >
               <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
-            
+
             {getPageNumbers().map((page, index) => (
               <React.Fragment key={index}>
-                {page === '...' ? (
+                {page === "..." ? (
                   <span className="px-2 text-muted-foreground">...</span>
                 ) : (
                   <Button
@@ -366,7 +379,7 @@ export function DataTable<T extends Record<string, any>>({
                 )}
               </React.Fragment>
             ))}
-            
+
             <Button
               variant="outline"
               size="sm"
@@ -384,7 +397,7 @@ export function DataTable<T extends Record<string, any>>({
               disabled={activePage === countTotalPages || countTotalPages <= 1}
               title="Last Page"
               className="h-8 w-8 sm:h-9 sm:w-9 p-0"
-              >
+            >
               <ChevronsRight className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
